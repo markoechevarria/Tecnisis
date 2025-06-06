@@ -1,6 +1,8 @@
-package com.example.tecnisis.ui.screens.inicio
+package com.example.tecnisis.ui.screens.evaluadorArtistico
 
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,26 +16,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
 
 @Composable
-fun PantallaInicio( navController: NavController ) {
+fun PantallaDetalleSolicitud(
+    navController: NavController,
+    artista: String = "DNI: 000000\nNombre: Marko\nDirección: su casa\nTeléfono: 0000000",
+    obra: String = "Obra: La noche de\nTécnica: Cubismo\nFecha: 01/02/2005\nDimensiones: 100 cm",
+    experto: String = "Nombre: Jack Zavaleta\nDNI: 11100011",
+    estado: String = "Solicitud aprobada"
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +62,6 @@ fun PantallaInicio( navController: NavController ) {
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(48.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "TECNISIS",
                     style = MaterialTheme.typography.titleLarge,
@@ -65,56 +70,64 @@ fun PantallaInicio( navController: NavController ) {
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "Bienvenido Marko",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            textAlign = TextAlign.Center
-        )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .clickable { }
+        ) {
+            IconButton( onClick = {navController.navigate(Rutas.SOLICITUDES_REGISTRADAS)} ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Detalle de solicitud", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Avatar",
-                modifier = Modifier.size(96.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Has iniciado sesión como:", style = MaterialTheme.typography.bodyMedium)
-            Text(
-                text = "Administrador",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.primary
-            )
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text("Datos Artista", style = MaterialTheme.typography.titleSmall)
+                InfoCard(content = artista)
+
+                Text("Datos Obra", style = MaterialTheme.typography.titleSmall)
+                InfoCard(content = obra)
+
+                Text("Datos Experto", style = MaterialTheme.typography.titleSmall)
+                InfoCard(content = experto)
+
+                Text("Estado de solicitud", style = MaterialTheme.typography.titleSmall)
+                InfoCard(content = estado)
+            }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+        /*
+        Button(
+            onClick = {},
             modifier = Modifier
-                .padding(horizontal = 24.dp)
                 .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            crearCarta("Busqueda Artista", rutaNavegacion = Rutas.BUSQUEDA_ARTISTA, navController)
-            crearCarta("Solicitudes Registradas", rutaNavegacion = Rutas.SOLICITUDES_REGISTRADAS, navController)
-            crearCarta("Obras aprobadas para evaluacion Economica", rutaNavegacion = Rutas.LISTA_OBRAS_APROBADAS, navController)
-            crearCarta("Gestion Tecnicas", rutaNavegacion = Rutas.GESTION_TECNICAS, navController)
-            crearCarta("Gestion Expertos", rutaNavegacion = Rutas.GESTION_EXPERTOS, navController)
-            crearCarta("Reportes", rutaNavegacion = Rutas.DASHBOARD_REPORTES, navController)
+            Text("Volver")
         }
+        Lo usaremos? :v
+         */
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -136,22 +149,17 @@ fun PantallaInicio( navController: NavController ) {
 }
 
 @Composable
-fun crearCarta(texto: String, rutaNavegacion: String, navController: NavController) {
+fun InfoCard(content: String) {
     ElevatedCard(
-        onClick = { navController.navigate(rutaNavegacion) },
-        shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.elevatedCardElevation(6.dp)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(24.dp))
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(texto, style = MaterialTheme.typography.titleMedium)
-        }
+        Text(
+            text = content,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(16.dp),
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
     }
 }

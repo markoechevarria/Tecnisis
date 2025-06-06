@@ -23,30 +23,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.tecnisis.R
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
+import androidx.navigation.NavController
+import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit = {},
-    onRegisterClick: () -> Unit = {}
+    navController: NavController
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceVariant)
-            /*
-            .background(Brush.verticalGradient(
-                listOf(
-                    MaterialTheme.colorScheme.primary,
-                    MaterialTheme.colorScheme.onPrimary
-                )
-            ))*/
     ) {
         Column(
             modifier = Modifier
@@ -111,7 +104,7 @@ fun LoginScreen(
                     )
 
                     Button(
-                        onClick = onLoginClick,
+                        onClick = { navController.navigate(Rutas.SELECCION_PERFIL) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium
                     ) {
@@ -119,7 +112,7 @@ fun LoginScreen(
                     }
 
                     TextButton(
-                        onClick = onRegisterClick,
+                        onClick = { },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text("¿No tienes cuenta? Regístrate")
@@ -130,7 +123,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "© Galería Nacional del Perú",
+                text = "© 2025 Todos los derechos reservados",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)

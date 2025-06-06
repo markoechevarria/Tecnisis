@@ -1,6 +1,8 @@
-package com.example.tecnisis.ui.screens.inicio
+package com.example.tecnisis.ui.screens.anfitrion
 
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,26 +16,34 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
 
 @Composable
-fun PantallaInicio( navController: NavController ) {
+fun PantallaConfirmarSolicitud(
+    navController: NavController,
+    datos: List<Pair<String, String>> = listOf(
+        "Artista" to "Juan Perez",
+        "Obra" to "Obra artística",
+        "Fecha" to "20/06/2025",
+        "Experto asignado" to "Juan Evaluador"
+    )
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +66,6 @@ fun PantallaInicio( navController: NavController ) {
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(48.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "TECNISIS",
                     style = MaterialTheme.typography.titleLarge,
@@ -65,55 +74,69 @@ fun PantallaInicio( navController: NavController ) {
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "Bienvenido Marko",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            textAlign = TextAlign.Center
-        )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .clickable {  }
+        ) {
+            IconButton(onClick = {navController.navigate(Rutas.LISTAR_EXPERTOS_DISPONIBLES)}) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Confirmar solicitud", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Avatar",
-                modifier = Modifier.size(96.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Has iniciado sesión como:", style = MaterialTheme.typography.bodyMedium)
-            Text(
-                text = "Administrador",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text("Datos", style = MaterialTheme.typography.titleMedium)
 
-        Spacer(modifier = Modifier.height(32.dp))
+                datos.forEach { (label, valor) ->
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            Icon(Icons.Default.Person, contentDescription = null)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(label, style = MaterialTheme.typography.labelSmall)
+                                Text(valor, style = MaterialTheme.typography.titleSmall)
+                            }
+                        }
+                    }
+                }
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .fillMaxWidth()
-        ) {
-            crearCarta("Busqueda Artista", rutaNavegacion = Rutas.BUSQUEDA_ARTISTA, navController)
-            crearCarta("Solicitudes Registradas", rutaNavegacion = Rutas.SOLICITUDES_REGISTRADAS, navController)
-            crearCarta("Obras aprobadas para evaluacion Economica", rutaNavegacion = Rutas.LISTA_OBRAS_APROBADAS, navController)
-            crearCarta("Gestion Tecnicas", rutaNavegacion = Rutas.GESTION_TECNICAS, navController)
-            crearCarta("Gestion Expertos", rutaNavegacion = Rutas.GESTION_EXPERTOS, navController)
-            crearCarta("Reportes", rutaNavegacion = Rutas.DASHBOARD_REPORTES, navController)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { navController.navigate(Rutas.SOLICITUD_EXITOSA) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Confirmar solicitud")
+                }
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -131,27 +154,6 @@ fun PantallaInicio( navController: NavController ) {
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(vertical = 12.dp)
             )
-        }
-    }
-}
-
-@Composable
-fun crearCarta(texto: String, rutaNavegacion: String, navController: NavController) {
-    ElevatedCard(
-        onClick = { navController.navigate(rutaNavegacion) },
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.elevatedCardElevation(6.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(24.dp))
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(texto, style = MaterialTheme.typography.titleMedium)
         }
     }
 }
