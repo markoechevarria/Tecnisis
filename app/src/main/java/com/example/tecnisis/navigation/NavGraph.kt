@@ -5,26 +5,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.tecnisis.ui.screens.anfitrion.PantallaBusquedaArtista
-import com.example.tecnisis.ui.screens.anfitrion.PantallaConfirmarSolicitud
-import com.example.tecnisis.ui.screens.anfitrion.PantallaListarExpertosDisponibles
-import com.example.tecnisis.ui.screens.anfitrion.PantallaRegistrarArtista
-import com.example.tecnisis.ui.screens.anfitrion.PantallaRegistrarObra
-import com.example.tecnisis.ui.screens.anfitrion.PantallaSolicitudExitosa
-import com.example.tecnisis.ui.screens.evaluadorArtistico.PantallaDetalleSolicitud
-import com.example.tecnisis.ui.screens.evaluadorArtistico.PantallaEvaluarSolicitud
-import com.example.tecnisis.ui.screens.evaluadorArtistico.PantallaSolicitudesRegistradas
-import com.example.tecnisis.ui.screens.evaluadorEconomico.PantallaEvaluacionEconomica
-import com.example.tecnisis.ui.screens.evaluadorEconomico.PantallaListarObrasAprobadas
-import com.example.tecnisis.ui.screens.gerente.PantallaDashboardReportes
-import com.example.tecnisis.ui.screens.gerente.PantallaGestionExpertos
-import com.example.tecnisis.ui.screens.gerente.PantallaGestionTecnicas
-import com.example.tecnisis.ui.screens.gerente.PantallaNuevaTecnica
-import com.example.tecnisis.ui.screens.gerente.PantallaNuevoExperto
-import com.example.tecnisis.ui.screens.gerente.PantallaReporte
-import com.example.tecnisis.ui.screens.inicio.PantallaInicio
-import com.example.tecnisis.ui.screens.login.LoginScreen
-import com.example.tecnisis.ui.screens.login.SeleccionPerfilScreen
+import com.example.tecnisis.ui.casosDeUso.anfitrion.busquedaArtista.PantallaBusquedaArtista
+import com.example.tecnisis.ui.casosDeUso.anfitrion.confirmarSolicitud.PantallaConfirmarSolicitud
+import com.example.tecnisis.ui.casosDeUso.anfitrion.listarExpertosDisponibles.PantallaListarExpertosDisponibles
+import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarArtista.PantallaRegistrarArtista
+import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarObra.PantallaRegistrarObra
+import com.example.tecnisis.ui.casosDeUso.anfitrion.solicitudExitosa.PantallaSolicitudExitosa
+import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.detalleSolicitud.PantallaDetalleSolicitud
+import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.evaluarSolicitud.PantallaEvaluarSolicitud
+import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistradas.PantallaSolicitudesRegistradas
+import com.example.tecnisis.ui.casosDeUso.evaluadorEconomico.evaluacionEconomica.PantallaEvaluacionEconomica
+import com.example.tecnisis.ui.casosDeUso.evaluadorEconomico.listaObrasAprobadas.PantallaListarObrasAprobadas
+import com.example.tecnisis.ui.casosDeUso.gerente.dashboardReportes.PantallaDashboardReportes
+import com.example.tecnisis.ui.casosDeUso.gerente.gestionExpertos.PantallaGestionExpertos
+import com.example.tecnisis.ui.casosDeUso.gerente.gestionTecnicas.PantallaGestionTecnicas
+import com.example.tecnisis.ui.casosDeUso.gerente.nuevaTecnica.PantallaNuevaTecnica
+import com.example.tecnisis.ui.casosDeUso.gerente.nuevoExperto.PantallaNuevoExperto
+import com.example.tecnisis.ui.casosDeUso.gerente.reporte.PantallaReporte
+import com.example.tecnisis.ui.casosDeUso.inicio.PantallaInicio
+import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreen
+import com.example.tecnisis.ui.casosDeUso.login.seleccionarPerfil.SeleccionPerfilScreen
 
 @Composable
 fun AppNavGraph(
@@ -44,7 +44,7 @@ fun AppNavGraph(
         composable(Rutas.REGISTRAR_OBRA) { PantallaRegistrarObra(navController) }
         composable(Rutas.SOLICITUD_EXITOSA) { PantallaSolicitudExitosa(navController) }
         composable(Rutas.DETALLE_SOLICITUD) { PantallaDetalleSolicitud(navController) }
-        // composable(Rutas.EVALUAR_SOLICITUD) { PantallaEvaluarSolicitud(navController) }
+        composable(Rutas.EVALUAR_SOLICITUD) { PantallaEvaluarSolicitud(navController) }
         composable(Rutas.SOLICITUDES_REGISTRADAS) { PantallaSolicitudesRegistradas(navController) }
         composable(Rutas.EVALUACION_ECONOMICA) { PantallaEvaluacionEconomica(navController) }
         composable(Rutas.LISTA_OBRAS_APROBADAS) { PantallaListarObrasAprobadas(navController) }
