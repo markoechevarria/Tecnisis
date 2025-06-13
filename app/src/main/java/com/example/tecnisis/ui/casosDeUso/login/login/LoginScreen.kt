@@ -1,4 +1,5 @@
 package com.example.tecnisis.ui.casosDeUso.login.login
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,10 +61,9 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                Image(
+                    painter = painterResource(id = R.drawable.image_fx_redondeada),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(80.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
