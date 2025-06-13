@@ -1,5 +1,6 @@
 package com.example.tecnisis.ui.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,13 +30,29 @@ import androidx.compose.ui.unit.dp
 import com.example.tecnisis.R
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+
+
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    auth: FirebaseAuth
 ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -87,33 +104,108 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = email,
+                        onValueChange = {
+                            email = it
+                            errorMessage = "" // Limpiar error al escribir
+                        },
                         label = { Text("Correo electrónico") },
                         leadingIcon = { Icon(Icons.Default.Email, null) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading,
+                        isError = errorMessage.isNotEmpty()
                     )
 
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = password,
+                        onValueChange = {
+                            password = it
+                            errorMessage = "" // Limpiar error al escribir
+                        },
                         label = { Text("Contraseña") },
                         leadingIcon = { Icon(Icons.Default.Lock, null) },
                         visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading,
+                        isError = errorMessage.isNotEmpty()
                     )
 
+                    // Mostrar mensaje de error si existe
+                    if (errorMessage.isNotEmpty()) {
+                        Text(
+                            text = errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
                     Button(
-                        onClick = { navController.navigate(Rutas.SELECCION_PERFIL) },
+                        onClick = {
+                            // Validaciones básicas
+                            if (email.isBlank()) {
+                                errorMessage = "Por favor ingresa tu correo electrónico"
+                                return@Button
+                            }
+                            if (password.isBlank()) {
+                                errorMessage = "Por favor ingresa tu contraseña"
+                                return@Button
+                            }
+                            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                                errorMessage = "Por favor ingresa un correo válido"
+                                return@Button
+                            }
+
+                            isLoading = true
+                            errorMessage = ""
+
+                            // USAR signInWithEmailAndPassword para LOGIN
+                            Log.d("aris", "Intentando login con: $email")
+                            auth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    isLoading = false
+                                    Log.d("aris", "Login completado. ¿Exitoso? ${task.isSuccessful}")
+
+                                    if (task.isSuccessful) {
+                                        Log.i("aris", "LOGIN OK - Usuario autenticado correctamente")
+                                        Log.d("aris", "Navegando a SELECCION_PERFIL")
+                                        // Navegar a la siguiente pantalla
+                                        navController.navigate(Rutas.SELECCION_PERFIL)
+                                    } else {
+                                        val exception = task.exception
+                                        Log.e("aris", "LOGIN ERROR: ${exception?.message}")
+                                        Log.e("aris", "LOGIN ERROR TYPE: ${exception?.javaClass?.simpleName}")
+
+                                        // Mensajes de error más específicos
+                                        errorMessage = when {
+                                            exception?.message?.contains("badly formatted") == true -> "Formato de correo inválido"
+                                            exception?.message?.contains("no user record") == true -> "Usuario no encontrado"
+                                            exception?.message?.contains("password is invalid") == true -> "Contraseña incorrecta"
+                                            exception?.message?.contains("temporarily disabled") == true -> "Cuenta temporalmente bloqueada"
+                                            exception?.message?.contains("network error") == true -> "Error de conexión"
+                                            else -> "Error: ${exception?.message ?: "Error desconocido"}"
+                                        }
+                                    }
+                                }
+                        },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
+                        enabled = !isLoading
                     ) {
-                        Text("Iniciar sesión")
+                        if (isLoading) {
+                            Text("Iniciando sesión...")
+                        } else {
+                            Text("Iniciar sesión")
+                        }
                     }
 
                     TextButton(
-                        onClick = { },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                        onClick = {
+                            // Aquí puedes navegar a una pantalla de registro
+                            // navController.navigate(Rutas.REGISTRO)
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        enabled = !isLoading
                     ) {
                         Text("¿No tienes cuenta? Regístrate")
                     }

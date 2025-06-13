@@ -25,16 +25,19 @@ import com.example.tecnisis.ui.screens.gerente.PantallaReporte
 import com.example.tecnisis.ui.screens.inicio.PantallaInicio
 import com.example.tecnisis.ui.screens.login.LoginScreen
 import com.example.tecnisis.ui.screens.login.SeleccionPerfilScreen
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 
 @Composable
 fun AppNavGraph(
+    auth: FirebaseAuth,
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
         startDestination = Rutas.LOGIN
     ) {
-        composable(Rutas.LOGIN) { LoginScreen( navController) }
+        composable(Rutas.LOGIN) { LoginScreen( navController,auth) }
         composable(Rutas.SELECCION_PERFIL) { SeleccionPerfilScreen(navController) }
         composable(Rutas.INICIO) { PantallaInicio(navController) }
         composable(Rutas.BUSQUEDA_ARTISTA) { PantallaBusquedaArtista(navController) }
