@@ -1,4 +1,5 @@
-package com.example.tecnisis.ui.casosDeUso.login.login
+package com.example.tecnisis.ui.screens.login
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,11 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.example.tecnisis.R
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
 
@@ -40,10 +36,6 @@ import com.example.tecnisis.navigation.Rutas
 fun LoginScreen(
     navController: NavController
 ) {
-
-    var correo: String by remember { mutableStateOf("") }
-    var contrasena by remember { mutableStateOf("") }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,6 +48,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(modifier = Modifier.height(16.dp))
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -94,16 +87,16 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     OutlinedTextField(
-                        value = correo,
-                        onValueChange = { correo = it},
+                        value = "",
+                        onValueChange = {},
                         label = { Text("Correo electrónico") },
                         leadingIcon = { Icon(Icons.Default.Email, null) },
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
-                        value = contrasena,
-                        onValueChange = { contrasena = it },
+                        value = "",
+                        onValueChange = {},
                         label = { Text("Contraseña") },
                         leadingIcon = { Icon(Icons.Default.Lock, null) },
                         visualTransformation = PasswordVisualTransformation(),
@@ -111,7 +104,7 @@ fun LoginScreen(
                     )
 
                     Button(
-                        onClick = { navController.navigate(Rutas.INICIO) },
+                        onClick = { navController.navigate(Rutas.SELECCION_PERFIL) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium
                     ) {
