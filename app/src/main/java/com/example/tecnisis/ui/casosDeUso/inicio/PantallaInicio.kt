@@ -1,5 +1,6 @@
 package com.example.tecnisis.ui.casosDeUso.inicio
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,11 +31,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
+import com.example.tecnisis.R
 
 @Composable
 fun PantallaInicio( navController: NavController ) {
@@ -54,11 +57,10 @@ fun PantallaInicio( navController: NavController ) {
                 modifier = Modifier.padding(vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada) ,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(50.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
