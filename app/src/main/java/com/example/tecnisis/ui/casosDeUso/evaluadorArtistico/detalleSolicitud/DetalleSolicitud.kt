@@ -1,5 +1,6 @@
 package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.detalleSolicitud
 
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,8 +30,10 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
 
 @Composable
@@ -38,8 +41,7 @@ fun PantallaDetalleSolicitud(
     navController: NavController,
     artista: String = "DNI: 000000\nNombre: Marko\nDirección: su casa\nTeléfono: 0000000",
     obra: String = "Obra: La noche de\nTécnica: Cubismo\nFecha: 01/02/2005\nDimensiones: 100 cm",
-    experto: String = "Nombre: Jack Zavaleta\nDNI: 11100011",
-    estado: String = "Solicitud aprobada"
+    experto: String = "Nombre: Jack Zavaleta\nDNI: 11100011"
 ) {
     Column(
         modifier = Modifier
@@ -57,11 +59,10 @@ fun PantallaDetalleSolicitud(
                 modifier = Modifier.padding(vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada) ,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(50.dp)
                 )
                 Text(
                     text = "TECNISIS",
@@ -109,9 +110,6 @@ fun PantallaDetalleSolicitud(
 
                 Text("Datos Experto", style = MaterialTheme.typography.titleSmall)
                 InfoCard(content = experto)
-
-                Text("Estado de solicitud", style = MaterialTheme.typography.titleSmall)
-                InfoCard(content = estado)
             }
         }
 
