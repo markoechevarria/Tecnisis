@@ -25,6 +25,7 @@ import com.example.tecnisis.ui.casosDeUso.gerente.reporte.PantallaReporte
 import com.example.tecnisis.ui.casosDeUso.inicio.PantallaInicio
 import com.example.tecnisis.ui.casosDeUso.login.seleccionarPerfil.SeleccionPerfilScreen
 import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreen
+import com.example.tecnisis.ui.casosDeUso.register.register.RegisterScreen
 
 @Composable
 fun AppNavGraph(
@@ -54,5 +55,6 @@ fun AppNavGraph(
         composable(Rutas.NUEVA_TECNICA) { PantallaNuevaTecnica(navController) }
         composable(Rutas.NUEVO_EXPERTO) { PantallaNuevoExperto(navController) }
         composable(Rutas.REPORTE) { PantallaReporte(navController) }
+        composable(Rutas.REGISTER) { RegisterScreen(navController) }
     }
 }

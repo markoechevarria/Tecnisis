@@ -158,7 +158,7 @@ fun LoginScreen(
                     }
 
                     TextButton(
-                        onClick = { },
+                        onClick = { navController.navigate(Rutas.REGISTER) },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text("¿No tienes cuenta? Regístrate")

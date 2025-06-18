@@ -27,4 +27,5 @@ object Rutas {
     const val NUEVO_EXPERTO = "nuevo_experto"
     const val REPORTE = "reporte"
 
+    const val REGISTER = "register"
 }
