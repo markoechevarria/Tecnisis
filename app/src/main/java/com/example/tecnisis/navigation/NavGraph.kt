@@ -24,7 +24,7 @@ import com.example.tecnisis.ui.casosDeUso.gerente.nuevoExperto.PantallaNuevoExpe
 import com.example.tecnisis.ui.casosDeUso.gerente.reporte.PantallaReporte
 import com.example.tecnisis.ui.casosDeUso.inicio.PantallaInicio
 import com.example.tecnisis.ui.casosDeUso.login.seleccionarPerfil.SeleccionPerfilScreen
-import com.example.tecnisis.ui.screens.login.LoginScreen
+import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreen
 
 @Composable
 fun AppNavGraph(

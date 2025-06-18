@@ -42,7 +42,6 @@ android {
 }
 
 dependencies {
-
     // Firebase BoM actualizado
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
@@ -70,4 +69,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+
+    // Retrofit para llamadas a la API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }
