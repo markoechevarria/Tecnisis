@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Column(name = "fecha_registro", insertable = false, updatable = false)
     private String id_usuario;
 
     private String nombre;

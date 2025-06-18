@@ -45,12 +45,17 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.remember
+import com.example.tecnisis.data.UserPreferences
+import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreenViewModelFactory
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: LoginScreenViewModel = viewModel()
+    userPreferences: UserPreferences
 ) {
+    val viewModel: LoginScreenViewModel = viewModel(
+        factory = LoginScreenViewModelFactory(userPreferences)
+    )
     val uiState: LoginUiState = viewModel.uiState.collectAsState().value
     val passwordFocusRequester = remember { FocusRequester() }
 

@@ -38,9 +38,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
 import com.example.tecnisis.R
+import com.example.tecnisis.data.UserPreferences
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun PantallaInicio( navController: NavController ) {
+fun PantallaInicio(navController: NavController, userPreferences: UserPreferences) {
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,6 +126,20 @@ fun PantallaInicio( navController: NavController ) {
             crearCarta("Gestion Tecnicas", rutaNavegacion = Rutas.GESTION_TECNICAS, navController)
             crearCarta("Gestion Expertos", rutaNavegacion = Rutas.GESTION_EXPERTOS, navController)
             crearCarta("Reportes", rutaNavegacion = Rutas.DASHBOARD_REPORTES, navController)
+            Button(
+                onClick = {
+                    scope.launch {
+                        userPreferences.clearUserSession()
+                        navController.navigate(Rutas.LOGIN) {
+                            popUpTo(0)
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cerrar sesión", color = MaterialTheme.colorScheme.onError)
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))

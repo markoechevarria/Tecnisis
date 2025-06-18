@@ -11,8 +11,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
+import com.example.tecnisis.data.UserPreferences
 
-class LoginScreenViewModel : ViewModel() {
+class LoginScreenViewModel(private val userPreferences: UserPreferences) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
@@ -35,8 +36,10 @@ class LoginScreenViewModel : ViewModel() {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 val response = api.login(LoginRequest(_uiState.value.email, _uiState.value.password))
-                if (response.success) {
-                    _uiState.update { 
+                if (response.success && response.id_usuario != null && response.tipo_usuario != null) {
+                    // Guardar sesión en DataStore
+                    userPreferences.saveUserSession(response.id_usuario, response.tipo_usuario)
+                    _uiState.update {
                         it.copy(
                             isLoginSuccessful = true,
                             idUsuario = response.id_usuario,
@@ -45,7 +48,7 @@ class LoginScreenViewModel : ViewModel() {
                         )
                     }
                 } else {
-                    _uiState.update { 
+                    _uiState.update {
                         it.copy(
                             error = "Credenciales inválidas",
                             isLoading = false
@@ -53,7 +56,7 @@ class LoginScreenViewModel : ViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                _uiState.update { 
+                _uiState.update {
                     it.copy(
                         error = "Error de conexión: ${e.message}",
                         isLoading = false
