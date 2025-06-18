@@ -39,13 +39,20 @@ import com.example.tecnisis.ui.casosDeUso.login.login.LoginUiState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.runtime.remember
 
 @Composable
 fun LoginScreen(
     navController: NavController,
     viewModel: LoginScreenViewModel = viewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState: LoginUiState = viewModel.uiState.collectAsState().value
+    val passwordFocusRequester = remember { FocusRequester() }
 
     // Navegación manual clásica después del login exitoso
     if (uiState.isLoginSuccessful) {
@@ -106,7 +113,13 @@ fun LoginScreen(
                         onValueChange = { viewModel.updateEmail(it) },
                         label = { Text("Correo electrónico") },
                         leadingIcon = { Icon(Icons.Default.Email, null) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = { passwordFocusRequester.requestFocus() }
+                        )
                     )
 
                     OutlinedTextField(
@@ -115,7 +128,14 @@ fun LoginScreen(
                         label = { Text("Contraseña") },
                         leadingIcon = { Icon(Icons.Default.Lock, null) },
                         visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(passwordFocusRequester),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = { viewModel.login() }
+                        )
                     )
 
                     if (uiState.isLoading) {
