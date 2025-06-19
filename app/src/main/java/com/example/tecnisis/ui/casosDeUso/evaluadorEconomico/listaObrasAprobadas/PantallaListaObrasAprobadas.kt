@@ -27,22 +27,30 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
-import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun PantallaListarObrasAprobadas(
-    navController: NavController,
-    obras: List<Triple<String, String, String>> = List(4) {
-        Triple("Juan Perez", "01/05/25", "Técnica nueva")
-    }
+    id: Int,
+    id_perfil: Int,
+    pantallaListaObrasAprobadasViewModel: PantallaListaObrasAprobadasViewModel = viewModel(),
+    verDetalleSolicitud: (Int, Int, Int) -> Unit
 ) {
+    val pantallaListaObrasAprobadasUiState by pantallaListaObrasAprobadasViewModel.uiState.collectAsState()
+    LaunchedEffect(id, id_perfil) {
+        pantallaListaObrasAprobadasViewModel.actualizarDatos(id, id_perfil)
+        pantallaListaObrasAprobadasViewModel.obtenerDatosSolicitudes()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,11 +87,11 @@ fun PantallaListarObrasAprobadas(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
         ) {
-            IconButton(onClick = { navController.navigate(Rutas.INICIO)}) {
+            IconButton(onClick = { }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Lista obras aprobadas", style = MaterialTheme.typography.titleMedium)
+            Text("Solicitudes aprobadas", style = MaterialTheme.typography.titleMedium)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -93,33 +101,8 @@ fun PantallaListarObrasAprobadas(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(obras) { (autor, fecha, tecnica) ->
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    onClick = { navController.navigate(Rutas.EVALUACION_ECONOMICA) }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column {
-                            Text(autor, style = MaterialTheme.typography.titleSmall)
-                            Text(fecha, style = MaterialTheme.typography.labelSmall)
-                            Text(tecnica, style = MaterialTheme.typography.labelSmall)
-                        }
-
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Técnica",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
-                }
+            items( pantallaListaObrasAprobadasUiState.listaObrasAprobadas ) { obra ->
+                carta( autor=obra.nombre, fecha=obra.fecha, tecnica=obra.tecnica, { verDetalleSolicitud(obra.id_solicitud, id, id_perfil) } )
             }
         }
 
@@ -135,6 +118,36 @@ fun PantallaListarObrasAprobadas(
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun carta(autor: String, fecha: String, tecnica: String, verSolicitudes: () -> Unit) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        onClick = verSolicitudes
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text(autor, style = MaterialTheme.typography.titleSmall)
+                Text(fecha, style = MaterialTheme.typography.labelSmall)
+                Text(tecnica, style = MaterialTheme.typography.labelSmall)
+            }
+
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Técnica",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(32.dp)
             )
         }
     }

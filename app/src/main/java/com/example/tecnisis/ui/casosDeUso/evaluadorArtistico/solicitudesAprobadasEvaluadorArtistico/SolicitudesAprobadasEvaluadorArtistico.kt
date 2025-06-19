@@ -1,4 +1,4 @@
-package com.example.tecnisis.ui.casosDeUso.gerente.gestionTecnicas
+package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesAprobadasEvaluadorArtistico
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,35 +16,42 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
-import com.example.tecnisis.navigation.Rutas
 
 @Composable
-fun PantallaGestionTecnicas(
+fun PantallaSolicitudesAprobadasEvaluadorArtistico(
     id: Int,
     id_perfil: Int,
-    tecnicas: List<String> = listOf("Cubismo", "Realismo", "Técnica nueva", "Técnica nueva")
+    pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel: SolicitudesAprobadasEvaluadorArtisticoViewModel = viewModel()
 ) {
+    val pantallaSolicitudesAprobadasEvaluadorArtisticoUiState by pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.uiState.collectAsState()
+
+    LaunchedEffect(id, id_perfil) {
+        pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.actualizarDatos(id, id_perfil)
+        pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.obtenerDatosSolicitudes()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,68 +87,52 @@ fun PantallaGestionTecnicas(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(horizontal = 24.dp)
-                .clickable { }
+                .clickable {  }
         ) {
-            IconButton(onClick = {}) {
+            IconButton( onClick = {}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Técnicas", style = MaterialTheme.typography.titleMedium)
+            Text("Solicitudes Registradas", style = MaterialTheme.typography.titleMedium)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-            shape = RoundedCornerShape(16.dp)
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxWidth().height(640.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                tecnicas.forEach { tecnica ->
-                    ElevatedCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(tecnica, style = MaterialTheme.typography.titleSmall)
-
-                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                                IconButton(onClick = {  }) {
-                                    Icon(Icons.Default.Edit, contentDescription = "Editar")
-                                }
-                                IconButton(onClick = { }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Eliminar")
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Button(
-                    onClick = {},
+            items( pantallaSolicitudesAprobadasEvaluadorArtisticoUiState.listaSolicitudesAprobadas ) { solicitud ->
+                ElevatedCard(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                 ) {
-                    Text("Registrar nueva técnica")
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Column {
+                            Text(text = solicitud.nombre, style = MaterialTheme.typography.titleSmall)
+                            Text(text = solicitud.fecha, style = MaterialTheme.typography.labelSmall)
+                            Text(text = solicitud.tecnica, style = MaterialTheme.typography.labelSmall)
+                        }
+
+                        Icon(
+                            imageVector = Icons.Default.Face,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer( modifier = Modifier.height(20.dp))
 
         Box(
             modifier = Modifier

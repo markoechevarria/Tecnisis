@@ -17,17 +17,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +34,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.tecnisis.navigation.Rutas
 import com.example.tecnisis.R
 
 @Composable
-fun PantallaInicio( navController: NavController ) {
+fun PantallaInicio(
+    id: Int,
+    id_perfil: Int,
+    navegarOpcion: (Int, Int) -> Unit,
+    volverInicio: () -> Unit,
+    pantallaInicioViewModel: PantallaInicioViewModel = viewModel()
+) {
+    val pantallaInicioUiState by pantallaInicioViewModel.uiState.collectAsState()
+    pantallaInicioViewModel.asignarIds(id, id_perfil)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,13 +75,18 @@ fun PantallaInicio( navController: NavController ) {
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
+                Text(
+                    text = "Tu id de usuario es ${id}",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Bienvenido Marko",
+            text = "Bienvenido ${pantallaInicioViewModel.obtenerUsuario().nombre}",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
@@ -100,7 +112,7 @@ fun PantallaInicio( navController: NavController ) {
             Spacer(modifier = Modifier.height(8.dp))
             Text("Has iniciado sesión como:", style = MaterialTheme.typography.bodyMedium)
             Text(
-                text = "Administrador",
+                text = pantallaInicioViewModel.obtenerPerfil(),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )
@@ -114,12 +126,21 @@ fun PantallaInicio( navController: NavController ) {
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth()
         ) {
-            crearCarta("Busqueda Artista", rutaNavegacion = Rutas.BUSQUEDA_ARTISTA, navController)
-            crearCarta("Solicitudes Registradas", rutaNavegacion = Rutas.SOLICITUDES_REGISTRADAS, navController)
-            crearCarta("Obras aprobadas para evaluacion Economica", rutaNavegacion = Rutas.LISTA_OBRAS_APROBADAS, navController)
-            crearCarta("Gestion Tecnicas", rutaNavegacion = Rutas.GESTION_TECNICAS, navController)
-            crearCarta("Gestion Expertos", rutaNavegacion = Rutas.GESTION_EXPERTOS, navController)
-            crearCarta("Reportes", rutaNavegacion = Rutas.DASHBOARD_REPORTES, navController)
+            pantallaInicioUiState.opciones.forEach { opcion ->
+                crearCarta( opcion.texto, {navegarOpcion(opcion.id, id_perfil )} )
+            }
+            Spacer(modifier = Modifier.height(40.dp))
+            Button(
+                onClick = volverInicio,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Salir")
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -142,9 +163,9 @@ fun PantallaInicio( navController: NavController ) {
 }
 
 @Composable
-fun crearCarta(texto: String, rutaNavegacion: String, navController: NavController) {
+fun crearCarta(texto: String, navegar: () -> Unit ) { // id: Int, id_perfil: Int,
     ElevatedCard(
-        onClick = { navController.navigate(rutaNavegacion) },
+        onClick = navegar,
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),

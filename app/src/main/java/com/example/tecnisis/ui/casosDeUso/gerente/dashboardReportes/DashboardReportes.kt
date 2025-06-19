@@ -38,7 +38,8 @@ import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun PantallaDashboardReportes(
-    navController: NavController,
+    id: Int,
+    id_perfil: Int,
     reportes: List<String> = listOf(
         "Obras totales",
         "Ventas totales",
@@ -84,7 +85,7 @@ fun PantallaDashboardReportes(
                 .padding(horizontal = 24.dp)
                 .clickable {}
         ) {
-            IconButton(onClick = { navController.navigate(Rutas.INICIO) }) {
+            IconButton(onClick = {  }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -111,7 +112,7 @@ fun PantallaDashboardReportes(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                        onClick = { navController.navigate(Rutas.REPORTE) }
+                        onClick = { }
                     ) {
                         Row(
                             modifier = Modifier

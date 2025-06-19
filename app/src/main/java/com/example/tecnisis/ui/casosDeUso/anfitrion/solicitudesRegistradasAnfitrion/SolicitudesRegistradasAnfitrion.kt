@@ -1,4 +1,4 @@
-package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistradas
+package com.example.tecnisis.ui.casosDeUso.anfitrion.solicitudesRegistradasAnfitrion
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -35,14 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.tecnisis.R
-import com.example.tecnisis.navigation.Rutas
-import kotlinx.serialization.builtins.TripleSerializer
 
 @Composable
-fun PantallaSolicitudesRegistradas(
-    navController: NavController,
+fun PantallaSolicitudesRegistradasAnfitrion(
+    id: Int,
+    id_perfil: Int,
     solicitudes: List<Triple<String, String, String>> = listOf(
         Triple("Juan Perez", "01/05/25", "Técnica nueva"),
         Triple("Juan Perez", "01/05/25", "Técnica nueva"),
@@ -93,7 +89,7 @@ fun PantallaSolicitudesRegistradas(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {navController.navigate(Rutas.INICIO)}) {
+            IconButton( onClick = { /* navController.navigate(Rutas.INICIO) */} ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -112,7 +108,7 @@ fun PantallaSolicitudesRegistradas(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    onClick = { navController.navigate(Rutas.DETALLE_SOLICITUD) }
+                    onClick = { /* navController.navigate(Rutas.DETALLE_SOLICITUD) */ }
                 ) {
                     Row(
                         modifier = Modifier

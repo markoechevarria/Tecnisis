@@ -1,4 +1,4 @@
-package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.detalleSolicitud
+package com.example.tecnisis.ui.casosDeUso.evaluadorEconomico.solicitudesRegistradasEvaluadorEconomico
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,34 +16,45 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
-import com.example.tecnisis.navigation.Rutas
+import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.evaluarSolicitud.PantallaEvaluarSolicitudViewModel
+import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistradasEvaluadorArtistico.SolicitudesRegistradasViewModelEvaluadorArtistico
 
 @Composable
-fun PantallaDetalleSolicitud(
-    navController: NavController,
-    artista: String = "DNI: 000000\nNombre: Marko\nDirección: su casa\nTeléfono: 0000000",
-    obra: String = "Obra: La noche de\nTécnica: Cubismo\nFecha: 01/02/2005\nDimensiones: 100 cm",
-    experto: String = "Nombre: Jack Zavaleta\nDNI: 11100011"
+fun PantallaSolicitudesRegistradasEvaluadorEconomico(
+    id: Int,
+    id_perfil: Int,
+    navegarEvaluarSolicitudEconomico: (Int, Int, Int) -> Unit,
+    solicitudesRegistradasViewModelEvaluadorEconomico: SolicitudesRegistradasViewModelEvaluadorEconomico = viewModel()
 ) {
+    val solicitudesRegistradasUiStateEvaluadorEconomico by solicitudesRegistradasViewModelEvaluadorEconomico.uiState.collectAsState()
+
+    LaunchedEffect(id, id_perfil) {
+        solicitudesRegistradasViewModelEvaluadorEconomico.actualizarDatos(id, id_perfil)
+        solicitudesRegistradasViewModelEvaluadorEconomico.obtenerDatosSolicitudes()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,56 +90,53 @@ fun PantallaDetalleSolicitud(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(horizontal = 24.dp)
-                .clickable { }
+                .clickable {  }
         ) {
-            IconButton(onClick = { navController.navigate(Rutas.SOLICITUDES_REGISTRADAS) }) {
+            IconButton( onClick = {}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Detalle de solicitud", style = MaterialTheme.typography.titleMedium)
+            Text("Solicitudes Registradas", style = MaterialTheme.typography.titleMedium)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(4.dp)
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxWidth().height(640.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text("Datos Artista", style = MaterialTheme.typography.titleSmall)
-                InfoCard(content = artista)
+            items( solicitudesRegistradasUiStateEvaluadorEconomico.listaSolicitudes) { it ->
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                    onClick = { navegarEvaluarSolicitudEconomico(id, id_perfil, it.id_solicitud) }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Column {
+                            Text(text = it.nombre, style = MaterialTheme.typography.titleSmall)
+                            Text(text = it.fecha, style = MaterialTheme.typography.labelSmall)
+                            Text(text = it.tecnica, style = MaterialTheme.typography.labelSmall)
+                        }
 
-                Text("Datos Obra", style = MaterialTheme.typography.titleSmall)
-                InfoCard(content = obra)
-
-                Text("Datos Experto", style = MaterialTheme.typography.titleSmall)
-                InfoCard(content = experto)
+                        Icon(
+                            imageVector = Icons.Default.Face,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row( modifier = Modifier, horizontalArrangement = Arrangement.SpaceBetween ) {
-            Button(
-                onClick = { navController.navigate(Rutas.EVALUAR_SOLICITUD) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text("Evaluar")
-            }
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer( modifier = Modifier.height(20.dp))
 
         Box(
             modifier = Modifier
@@ -143,21 +152,5 @@ fun PantallaDetalleSolicitud(
                 modifier = Modifier.padding(vertical = 12.dp)
             )
         }
-    }
-}
-
-@Composable
-fun InfoCard(content: String) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        Text(
-            text = content,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp),
-            color = MaterialTheme.colorScheme.onPrimaryContainer
-        )
     }
 }
