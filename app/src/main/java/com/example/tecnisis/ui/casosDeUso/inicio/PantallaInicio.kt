@@ -16,11 +16,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -110,6 +112,21 @@ fun PantallaInicio(navController: NavController, userPreferences: UserPreference
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )
+            Button(
+                onClick = {
+                    scope.launch {
+                        userPreferences.clearUserSession()
+                        navController.navigate(Rutas.LOGIN) { popUpTo(0) }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .height(36.dp)
+            ) {
+                Text("Cerrar sesión", color = MaterialTheme.colorScheme.onError)
+            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -126,20 +143,6 @@ fun PantallaInicio(navController: NavController, userPreferences: UserPreference
             crearCarta("Gestion Tecnicas", rutaNavegacion = Rutas.GESTION_TECNICAS, navController)
             crearCarta("Gestion Expertos", rutaNavegacion = Rutas.GESTION_EXPERTOS, navController)
             crearCarta("Reportes", rutaNavegacion = Rutas.DASHBOARD_REPORTES, navController)
-            Button(
-                onClick = {
-                    scope.launch {
-                        userPreferences.clearUserSession()
-                        navController.navigate(Rutas.LOGIN) {
-                            popUpTo(0)
-                        }
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Cerrar sesión", color = MaterialTheme.colorScheme.onError)
-            }
         }
 
         Spacer(modifier = Modifier.weight(1f))

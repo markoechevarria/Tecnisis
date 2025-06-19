@@ -2,8 +2,6 @@ package com.example.tecnisis.navigation
 
 object Rutas {
     const val LOGIN = "login"
-    const val SELECCION_PERFIL = "seleccion_perfil"
-
     const val INICIO = "inicio"
 
     const val BUSQUEDA_ARTISTA = "busqueda_artista"

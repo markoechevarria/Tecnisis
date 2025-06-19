@@ -23,7 +23,6 @@ import com.example.tecnisis.ui.casosDeUso.gerente.nuevaTecnica.PantallaNuevaTecn
 import com.example.tecnisis.ui.casosDeUso.gerente.nuevoExperto.PantallaNuevoExperto
 import com.example.tecnisis.ui.casosDeUso.gerente.reporte.PantallaReporte
 import com.example.tecnisis.ui.casosDeUso.inicio.PantallaInicio
-import com.example.tecnisis.ui.casosDeUso.login.seleccionarPerfil.SeleccionPerfilScreen
 import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreen
 import com.example.tecnisis.ui.casosDeUso.register.register.RegisterScreen
 import com.example.tecnisis.data.UserPreferences
@@ -38,7 +37,6 @@ fun AppNavGraph(
         startDestination = Rutas.LOGIN
     ) {
         composable(Rutas.LOGIN) { LoginScreen(navController, userPreferences) }
-        composable(Rutas.SELECCION_PERFIL) { SeleccionPerfilScreen(navController) }
         composable(Rutas.INICIO) { PantallaInicio(navController, userPreferences) }
         composable(Rutas.BUSQUEDA_ARTISTA) { PantallaBusquedaArtista(navController) }
         composable(Rutas.CONFIRMAR_SOLICITUD) { PantallaConfirmarSolicitud(navController) }

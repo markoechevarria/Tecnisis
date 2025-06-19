@@ -59,11 +59,6 @@ fun LoginScreen(
     val uiState: LoginUiState = viewModel.uiState.collectAsState().value
     val passwordFocusRequester = remember { FocusRequester() }
 
-    // Navegación manual clásica después del login exitoso
-    if (uiState.isLoginSuccessful) {
-        navController.navigate(Rutas.SELECCION_PERFIL)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
