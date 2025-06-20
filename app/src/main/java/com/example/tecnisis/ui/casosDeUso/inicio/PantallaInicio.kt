@@ -126,8 +126,12 @@ fun PantallaInicio(
             Button(
                 onClick = {
                     scope.launch {
+                        // Limpiar sesión en DataStore
                         userPreferences.clearUserSession()
-                        navController.navigate(Rutas.LOGIN) { popUpTo(0) }
+                        // Navegar a login y limpiar el stack de navegación
+                        navController.navigate(Rutas.LOGIN) { 
+                            popUpTo(0) { inclusive = true }
+                        }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),

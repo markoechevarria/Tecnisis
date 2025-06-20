@@ -23,6 +23,11 @@ class LoginScreenViewModel(private val userPreferences: UserPreferences) : ViewM
         .build()
         .create(LoginApi::class.java)
 
+    init {
+        // Resetear estado al inicializar el ViewModel
+        resetState()
+    }
+
     fun updateEmail(email: String) {
         _uiState.update { it.copy(email = email) }
     }
@@ -72,6 +77,32 @@ class LoginScreenViewModel(private val userPreferences: UserPreferences) : ViewM
 
     fun clearError() {
         _uiState.update { it.copy(error = null) }
+    }
+
+    // Método para resetear completamente el estado del ViewModel
+    fun resetState() {
+        _uiState.update { 
+            LoginUiState(
+                email = "",
+                password = "",
+                isLoading = false,
+                error = null,
+                isLoginSuccessful = false,
+                idUsuario = null,
+                tipoUsuario = null
+            )
+        }
+    }
+
+    // Método para limpiar solo las credenciales
+    fun clearCredentials() {
+        _uiState.update { 
+            it.copy(
+                email = "",
+                password = "",
+                error = null
+            )
+        }
     }
 }
 

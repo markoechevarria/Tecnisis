@@ -26,17 +26,24 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val userPreferences = UserPreferences(applicationContext)
                 val userId by userPreferences.userIdFlow.collectAsState(initial = null)
+                
+                // Mejorada la lógica de navegación inicial
                 LaunchedEffect(userId) {
                     if (userId != null) {
+                        // Si hay sesión activa, ir a inicio
                         navController.navigate(Rutas.INICIO) {
-                            popUpTo(0)
+                            // Limpiar todo el stack de navegación
+                            popUpTo(0) { inclusive = true }
                         }
                     } else {
+                        // Si no hay sesión, ir a login
                         navController.navigate(Rutas.LOGIN) {
-                            popUpTo(0)
+                            // Limpiar todo el stack de navegación
+                            popUpTo(0) { inclusive = true }
                         }
                     }
                 }
+                
                 AppNavGraph(navController = navController, userPreferences = userPreferences)
             }
         }

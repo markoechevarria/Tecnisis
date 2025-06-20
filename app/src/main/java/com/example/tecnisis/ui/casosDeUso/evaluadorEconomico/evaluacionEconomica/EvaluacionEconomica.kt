@@ -88,7 +88,7 @@ fun PantallaEvaluacionEconomica(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {navController.navigate(Rutas.LISTA_OBRAS_APROBADAS)} ) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

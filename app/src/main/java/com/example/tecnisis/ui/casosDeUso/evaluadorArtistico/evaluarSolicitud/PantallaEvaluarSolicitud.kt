@@ -82,7 +82,7 @@ fun PantallaEvaluarSolicitud(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = { navController.navigate(Rutas.DETALLE_SOLICITUD)}) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
