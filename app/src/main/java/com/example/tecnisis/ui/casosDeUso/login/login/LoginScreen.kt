@@ -45,6 +45,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import com.example.tecnisis.data.UserPreferences
 import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreenViewModelFactory
 
@@ -59,6 +60,21 @@ fun LoginScreen(
     //collectAsState ACTUALIZA AUTOMATICAMENTE
     val uiState: LoginUiState = viewModel.uiState.collectAsState().value
     val passwordFocusRequester = remember { FocusRequester() }
+
+    // Resetear estado cuando se entra a la pantalla de login
+    LaunchedEffect(Unit) {
+        viewModel.resetState()
+    }
+
+    // Observar cambios en el estado de login exitoso
+    LaunchedEffect(uiState.isLoginSuccessful) {
+        if (uiState.isLoginSuccessful) {
+            // Navegar a inicio y limpiar el stack de navegación
+            navController.navigate(Rutas.INICIO) {
+                popUpTo(Rutas.LOGIN) { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier

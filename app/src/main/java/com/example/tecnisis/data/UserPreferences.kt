@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 object UserPreferencesKeys {
@@ -25,6 +26,11 @@ class UserPreferences(private val context: Context) {
         prefs[UserPreferencesKeys.USER_TYPE]
     }
 
+    // Flujo combinado para verificar si hay sesión activa
+    val isLoggedInFlow: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[UserPreferencesKeys.USER_ID] != null && prefs[UserPreferencesKeys.USER_TYPE] != null
+    }
+
     suspend fun saveUserSession(userId: String, userType: String) {
         context.dataStore.edit { prefs ->
             prefs[UserPreferencesKeys.USER_ID] = userId
@@ -37,5 +43,12 @@ class UserPreferences(private val context: Context) {
             prefs.remove(UserPreferencesKeys.USER_ID)
             prefs.remove(UserPreferencesKeys.USER_TYPE)
         }
+    }
+
+    // Método para verificar si hay sesión activa de forma síncrona
+    suspend fun isLoggedIn(): Boolean {
+        return context.dataStore.data.map { prefs ->
+            prefs[UserPreferencesKeys.USER_ID] != null && prefs[UserPreferencesKeys.USER_TYPE] != null
+        }.first()
     }
 } 
