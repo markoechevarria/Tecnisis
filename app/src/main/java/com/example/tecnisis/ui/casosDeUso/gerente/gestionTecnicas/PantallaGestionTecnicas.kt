@@ -40,8 +40,7 @@ import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun PantallaGestionTecnicas(
-    id: Int,
-    id_perfil: Int,
+    navController: NavController,
     tecnicas: List<String> = listOf("Cubismo", "Realismo", "Técnica nueva", "Técnica nueva")
 ) {
     Column(
@@ -81,7 +80,7 @@ fun PantallaGestionTecnicas(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {navController.navigate(Rutas.INICIO)}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -131,7 +130,7 @@ fun PantallaGestionTecnicas(
                 }
 
                 Button(
-                    onClick = {},
+                    onClick = {navController.navigate(Rutas.NUEVA_TECNICA)},
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
                 ) {

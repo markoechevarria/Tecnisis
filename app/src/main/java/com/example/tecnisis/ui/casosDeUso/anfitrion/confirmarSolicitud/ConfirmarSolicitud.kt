@@ -84,7 +84,7 @@ fun PantallaConfirmarSolicitud(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = {navController.navigate(Rutas.LISTAR_EXPERTOS_DISPONIBLES)}) {
+            IconButton(onClick = {navController.navigate(Rutas.INICIO)}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -132,7 +132,7 @@ fun PantallaConfirmarSolicitud(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { navController.navigate(Rutas.SOLICITUD_EXITOSA) },
+                    onClick = { navController.navigate(Rutas.INICIO) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
                 ) {

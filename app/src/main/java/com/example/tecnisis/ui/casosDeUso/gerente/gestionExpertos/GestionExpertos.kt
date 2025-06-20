@@ -40,8 +40,7 @@ import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun PantallaGestionExpertos(
-    id: Int,
-    id_perfil: Int,
+    navController: NavController,
     tecnicasAsociadas: List<String> = listOf("LeonardoDaVinci", "Picasso", "Van Gogh", "Salavador Dali", "Francisco Goya")
 ) {
     Column(
@@ -81,7 +80,7 @@ fun PantallaGestionExpertos(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton( onClick = {} ) {
+            IconButton( onClick = {navController.navigate(Rutas.INICIO)} ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -131,7 +130,7 @@ fun PantallaGestionExpertos(
                 }
 
                 Button(
-                    onClick = {},
+                    onClick = {navController.navigate(Rutas.NUEVO_EXPERTO)},
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
                 ) {

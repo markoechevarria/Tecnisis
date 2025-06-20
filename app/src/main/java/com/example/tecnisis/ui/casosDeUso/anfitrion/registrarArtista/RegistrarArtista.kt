@@ -46,9 +46,7 @@ import com.example.tecnisis.navigation.Rutas
 import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarObra.camposTexto
 
 @Composable
-fun PantallaRegistrarArtista(
-    id: Int,
-    id_perfil: Int,
+fun PantallaRegistrarArtista(navController: NavController,
     registrarArtistaViewModel: RegistrarArtistaViewModel = viewModel()
 ) {
     val scrollState = rememberScrollState()
@@ -92,7 +90,7 @@ fun PantallaRegistrarArtista(
                 .clickable { }
         ) {
             IconButton(
-                onClick = {/*navController.navigate(Rutas.BUSQUEDA_ARTISTA*/}
+                onClick = { navController.popBackStack() }
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
@@ -139,7 +137,7 @@ fun PantallaRegistrarArtista(
                     }
                 } else {
                     Button(
-                        onClick = { /* navController.navigate(Rutas.INICIO) */ },
+                        onClick = { navController.navigate(Rutas.INICIO) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
