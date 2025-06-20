@@ -16,11 +16,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,9 +41,25 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
 import com.example.tecnisis.R
+import com.example.tecnisis.data.UserPreferences
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun PantallaInicio( navController: NavController ) {
+fun PantallaInicio(
+    navController: NavController, 
+    userPreferences: UserPreferences
+) {
+    val viewModel: PantallaInicioViewModel = viewModel(
+        factory = PantallaInicioViewModelFactory(userPreferences)
+    )
+    //Utiliza collectAsState para observar los cambios del viewModel
+    val uiState by viewModel.uiState.collectAsState()
+    val scope = rememberCoroutineScope()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,7 +93,7 @@ fun PantallaInicio( navController: NavController ) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Bienvenido Marko",
+            text = "Bienvenido",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
@@ -100,26 +119,60 @@ fun PantallaInicio( navController: NavController ) {
             Spacer(modifier = Modifier.height(8.dp))
             Text("Has iniciado sesión como:", style = MaterialTheme.typography.bodyMedium)
             Text(
-                text = "Administrador",
+                text = uiState.userName,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )
+            Button(
+                onClick = {
+                    scope.launch {
+                        // Limpiar sesión en DataStore
+                        userPreferences.clearUserSession()
+                        // Navegar a login y limpiar el stack de navegación
+                        navController.navigate(Rutas.LOGIN) { 
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .height(36.dp)
+            ) {
+                Text("Cerrar sesión", color = MaterialTheme.colorScheme.onError)
+            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .fillMaxWidth()
-        ) {
-            crearCarta("Busqueda Artista", rutaNavegacion = Rutas.BUSQUEDA_ARTISTA, navController)
-            crearCarta("Solicitudes Registradas", rutaNavegacion = Rutas.SOLICITUDES_REGISTRADAS, navController)
-            crearCarta("Obras aprobadas para evaluacion Economica", rutaNavegacion = Rutas.LISTA_OBRAS_APROBADAS, navController)
-            crearCarta("Gestion Tecnicas", rutaNavegacion = Rutas.GESTION_TECNICAS, navController)
-            crearCarta("Gestion Expertos", rutaNavegacion = Rutas.GESTION_EXPERTOS, navController)
-            crearCarta("Reportes", rutaNavegacion = Rutas.DASHBOARD_REPORTES, navController)
+        // Menú dinámico basado en el tipo de usuario
+        if (uiState.menuOptions.isNotEmpty()) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth()
+            ) {
+                uiState.menuOptions.forEach { option ->
+                    crearCartaDinamica(option, navController)
+                }
+            }
+        } else {
+            // Mensaje cuando no hay opciones disponibles
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No hay opciones disponibles para tu rol",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -141,6 +194,37 @@ fun PantallaInicio( navController: NavController ) {
     }
 }
 
+@Composable
+fun crearCartaDinamica(option: MenuOption, navController: NavController) {
+    ElevatedCard(
+        onClick = { navController.navigate(option.route) },
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        elevation = CardDefaults.elevatedCardElevation(6.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(24.dp))
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text(option.title, style = MaterialTheme.typography.titleMedium)
+                if (option.description.isNotEmpty()) {
+                    Text(
+                        option.description, 
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
+
+// Función original mantenida para compatibilidad
 @Composable
 fun crearCarta(texto: String, rutaNavegacion: String, navController: NavController) {
     ElevatedCard(

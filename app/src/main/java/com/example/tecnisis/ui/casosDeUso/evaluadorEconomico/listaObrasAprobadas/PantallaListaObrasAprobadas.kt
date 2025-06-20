@@ -2,6 +2,8 @@ package com.example.tecnisis.ui.casosDeUso.evaluadorEconomico.listaObrasAprobada
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
@@ -39,10 +43,10 @@ import com.example.tecnisis.navigation.Rutas
 @Composable
 fun PantallaListarObrasAprobadas(
     navController: NavController,
-    obras: List<Triple<String, String, String>> = List(4) {
-        Triple("Juan Perez", "01/05/25", "Técnica nueva")
-    }
+    viewModel: ListaObrasAprobadasViewModel = viewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,7 +83,7 @@ fun PantallaListarObrasAprobadas(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
         ) {
-            IconButton(onClick = { navController.navigate(Rutas.INICIO)}) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -88,36 +92,47 @@ fun PantallaListarObrasAprobadas(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(obras) { (autor, fecha, tecnica) ->
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    onClick = { navController.navigate(Rutas.EVALUACION_ECONOMICA) }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+        // Mostrar loading si está cargando
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(uiState.obrasFiltradas) { obra ->
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                        onClick = { navController.navigate(Rutas.EVALUACION_ECONOMICA) }
                     ) {
-                        Column {
-                            Text(autor, style = MaterialTheme.typography.titleSmall)
-                            Text(fecha, style = MaterialTheme.typography.labelSmall)
-                            Text(tecnica, style = MaterialTheme.typography.labelSmall)
-                        }
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(obra.artistaNombre, style = MaterialTheme.typography.titleSmall)
+                                Text(obra.tituloObra, style = MaterialTheme.typography.labelSmall)
+                                Text(obra.fechaAprobacion, style = MaterialTheme.typography.labelSmall)
+                                Text(obra.tecnica, style = MaterialTheme.typography.labelSmall)
+                            }
 
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Técnica",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
-                        )
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = "Técnica",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                     }
                 }
             }

@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -32,11 +33,49 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
 import androidx.navigation.NavController
 import com.example.tecnisis.navigation.Rutas
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreenViewModel
+import com.example.tecnisis.ui.casosDeUso.login.login.LoginUiState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import com.example.tecnisis.data.UserPreferences
+import com.example.tecnisis.ui.casosDeUso.login.login.LoginScreenViewModelFactory
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    userPreferences: UserPreferences
 ) {
+    val viewModel: LoginScreenViewModel = viewModel(
+        factory = LoginScreenViewModelFactory(userPreferences)
+    )
+    //collectAsState ACTUALIZA AUTOMATICAMENTE
+    val uiState: LoginUiState = viewModel.uiState.collectAsState().value
+    val passwordFocusRequester = remember { FocusRequester() }
+
+    // Resetear estado cuando se entra a la pantalla de login
+    LaunchedEffect(Unit) {
+        viewModel.resetState()
+    }
+
+    // Observar cambios en el estado de login exitoso
+    LaunchedEffect(uiState.isLoginSuccessful) {
+        if (uiState.isLoginSuccessful) {
+            // Navegar a inicio y limpiar el stack de navegación
+            navController.navigate(Rutas.INICIO) {
+                popUpTo(Rutas.LOGIN) { inclusive = true }
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -87,24 +126,48 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = uiState.email,
+                        onValueChange = { viewModel.updateEmail(it) },
                         label = { Text("Correo electrónico") },
                         leadingIcon = { Icon(Icons.Default.Email, null) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = { passwordFocusRequester.requestFocus() }
+                        )
                     )
 
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = uiState.password,
+                        onValueChange = { viewModel.updatePassword(it) },
                         label = { Text("Contraseña") },
                         leadingIcon = { Icon(Icons.Default.Lock, null) },
                         visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(passwordFocusRequester),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = { viewModel.login() }
+                        )
                     )
 
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
+                    uiState.error?.let { errorMsg ->
+                        Text(
+                            text = errorMsg,
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+
                     Button(
-                        onClick = { navController.navigate(Rutas.SELECCION_PERFIL) },
+                        onClick = { viewModel.login() },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium
                     ) {
@@ -112,7 +175,7 @@ fun LoginScreen(
                     }
 
                     TextButton(
-                        onClick = { },
+                        onClick = { navController.navigate(Rutas.REGISTER) },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text("¿No tienes cuenta? Regístrate")

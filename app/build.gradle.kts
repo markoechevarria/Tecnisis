@@ -42,7 +42,6 @@ android {
 }
 
 dependencies {
-
     // Firebase BoM actualizado
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
@@ -52,11 +51,20 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Compose BOM: todas las dependencias de compose sin versión explícita
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.ui:ui-text-google-fonts")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -65,9 +73,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.8.2")
-    implementation("androidx.navigation:navigation-compose:2.9.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    // Retrofit para llamadas a la API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
 }
