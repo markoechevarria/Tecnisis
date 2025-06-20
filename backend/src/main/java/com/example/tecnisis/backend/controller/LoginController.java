@@ -34,8 +34,14 @@ public class LoginController {
             logger.debug("Hash en BD: {}", usuario.getPassword_hash());
             boolean matches = passwordEncoder.matches(request.getPassword(), usuario.getPassword_hash());
             logger.info("¿Coincide la contraseña?: {}", matches);
+            //AQUI SE RETORNAN ESTOS DATOS PARA EL USO DE LA PANTALLA INICIO DINAMICA
             if (matches) {
-                return new LoginResponse(true, usuario.getId_usuario(), usuario.getCorreo(), usuario.getTipo_usuario());
+                return new LoginResponse(
+                    true, 
+                    usuario.getId_usuario(), 
+                    usuario.getCorreo(), 
+                    usuario.getTipo_usuario()
+                );
             }
         } else {
             logger.info("Intento de login fallido: usuario no encontrado para correo {}", request.getEmail());

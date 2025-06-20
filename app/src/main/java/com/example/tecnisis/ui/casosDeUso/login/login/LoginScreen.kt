@@ -56,6 +56,7 @@ fun LoginScreen(
     val viewModel: LoginScreenViewModel = viewModel(
         factory = LoginScreenViewModelFactory(userPreferences)
     )
+    //collectAsState ACTUALIZA AUTOMATICAMENTE
     val uiState: LoginUiState = viewModel.uiState.collectAsState().value
     val passwordFocusRequester = remember { FocusRequester() }
 

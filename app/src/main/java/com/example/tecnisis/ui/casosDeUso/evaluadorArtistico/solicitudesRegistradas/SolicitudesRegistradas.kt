@@ -2,6 +2,8 @@ package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistr
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +27,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,27 +38,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
-import kotlinx.serialization.builtins.TripleSerializer
 
 @Composable
 fun PantallaSolicitudesRegistradas(
     navController: NavController,
-    solicitudes: List<Triple<String, String, String>> = listOf(
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva")
-    )
-
+    viewModel: SolicitudesRegistradasViewModel = viewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,36 +96,47 @@ fun PantallaSolicitudesRegistradas(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth().height(640.dp)
-        ) {
-            items(solicitudes) { (nombre, fecha, tecnica) ->
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    onClick = { navController.navigate(Rutas.DETALLE_SOLICITUD) }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
+        // Mostrar loading si está cargando
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth().height(640.dp)
+            ) {
+                items(uiState.solicitudesFiltradas) { solicitud ->
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                        onClick = { navController.navigate(Rutas.DETALLE_SOLICITUD) }
                     ) {
-                        Column {
-                            Text(text = nombre, style = MaterialTheme.typography.titleSmall)
-                            Text(text = fecha, style = MaterialTheme.typography.labelSmall)
-                            Text(text = tecnica, style = MaterialTheme.typography.labelSmall)
-                        }
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(text = solicitud.artistaNombre, style = MaterialTheme.typography.titleSmall)
+                                Text(text = solicitud.tituloObra, style = MaterialTheme.typography.labelSmall)
+                                Text(text = solicitud.fechaSolicitud, style = MaterialTheme.typography.labelSmall)
+                                Text(text = solicitud.estado, style = MaterialTheme.typography.labelSmall)
+                            }
 
-                        Icon(
-                            imageVector = Icons.Default.Face,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
-                        )
+                            Icon(
+                                imageVector = Icons.Default.Face,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                     }
                 }
             }

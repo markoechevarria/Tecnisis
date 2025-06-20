@@ -35,10 +35,14 @@ class LoginScreenViewModel(private val userPreferences: UserPreferences) : ViewM
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
+                //LLAMA AL BACKEND
                 val response = api.login(LoginRequest(_uiState.value.email, _uiState.value.password))
                 if (response.success && response.id_usuario != null && response.tipo_usuario != null) {
                     // Guardar sesión en DataStore
-                    userPreferences.saveUserSession(response.id_usuario, response.tipo_usuario)
+                    userPreferences.saveUserSession(
+                        response.id_usuario, 
+                        response.tipo_usuario //VALOR QUE SE USA PARA LA PANTALLA DE INICIO DINAMICA
+                    )
                     _uiState.update {
                         it.copy(
                             isLoginSuccessful = true,
