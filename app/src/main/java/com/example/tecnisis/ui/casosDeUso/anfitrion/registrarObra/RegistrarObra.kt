@@ -155,7 +155,7 @@ fun PantallaRegistrarObra(
                     }
                 } else {
                     Button(
-                        onClick = { navController.navigate(Rutas.LISTAR_EXPERTOS_DISPONIBLES) },
+                        onClick = { navController.navigate(Rutas.INICIO) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
