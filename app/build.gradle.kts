@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.1.21"
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -57,6 +59,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation("androidx.appcompat:appcompat:1.6.1")
+
     implementation("androidx.compose.ui:ui-text-google-fonts:1.8.2")
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
@@ -67,4 +71,10 @@ dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-compiler:2.51.1")
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
 }
