@@ -108,7 +108,7 @@ fun LoginScreen(
                     if (loginScreenUiState.botonHabilitado) {
                         Button(
                             onClick = {
-                                loginScreenViewModel.BuscarUsuario()
+                                loginScreenViewModel.IngresarUsuario()
                             },
                             modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium
