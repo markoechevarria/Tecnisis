@@ -32,12 +32,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun LoginScreen(
     navigateToPrincipal:(Int, Int) -> Unit,
-    loginScreenViewModel: LoginScreenViewModel = viewModel()
+    loginScreenViewModel: LoginScreenViewModel = hiltViewModel()
 ) {
     val loginScreenUiState by loginScreenViewModel.uiState.collectAsState()
     Box(

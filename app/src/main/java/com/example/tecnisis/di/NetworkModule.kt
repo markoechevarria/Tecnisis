@@ -1,6 +1,5 @@
 package com.example.tecnisis.di
 
-/**
 import com.example.tecnisis.data.remote.InterfazRemoteDataSource
 import com.example.tecnisis.data.remote.RemoteDataSource
 import com.example.tecnisis.data.remote.services.ApiService
@@ -16,34 +15,22 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+object AppModule {
 
-    @Provides
+    private const val BASE_URL = "http://10.0.2.2:8000/tecnisis/"
+
     @Singleton
+    @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8000/tecnisis/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    @Provides
     @Singleton
+    @Provides
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
-
-    @Provides
-    @Singleton
-    fun provideRemoteDataSource(apiService: ApiService): InterfazRemoteDataSource {
-        return RemoteDataSource(apiService)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUsuarioRepository(remoteDataSource: InterfazRemoteDataSource): InterfazUsuarioRepository {
-        return UsuarioRepositoryImplementacion(remoteDataSource)
-    }
 }
-
-**/

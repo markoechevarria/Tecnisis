@@ -1,10 +1,8 @@
 package com.example.tecnisis.data.remote
-/*
+
 import com.example.tecnisis.data.remote.services.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-// solo inicia retrofit e inicializa la url de la api
 
 object RetrofitClient {
     private const val BASE_URL = "http://127.0.0.1:8000/tecnisis/"
@@ -17,5 +15,3 @@ object RetrofitClient {
             .create(ApiService::class.java)
     }
 }
-
- */

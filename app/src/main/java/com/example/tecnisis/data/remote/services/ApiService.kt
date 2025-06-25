@@ -1,5 +1,5 @@
 package com.example.tecnisis.data.remote.services
-/*
+
 import com.example.tecnisis.data.remote.InterfazRemoteDataSource
 import com.example.tecnisis.data.remote.models.UsuarioRequestVerificacion
 import com.example.tecnisis.data.remote.models.UsuarioResponse
@@ -9,15 +9,17 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// declaramos la interfaz metodos para la llamada a la api
-
 interface ApiService {
 
-    @POST("ingresar/")
-    suspend fun ingresarUsuario(@Body usuarioCredentials: UsuarioRequestVerificacion ): Response<UsuarioResponse>
+    @GET("usuarios/ingresar/")
+    suspend fun ingresarUsuario(
+        @Query("correo") correo: String,
+        @Query("contrasena") contrasena: String
+    ): Response<UsuarioResponse>
 
     /**
     @POST("registro/")
@@ -34,7 +36,5 @@ interface ApiService {
 
     @GET("posts")
     suspend fun getPosts(@Query("userId") userId: Int? = null): Response<List<PostResponse>>
-
+*/
 }
-
- */
