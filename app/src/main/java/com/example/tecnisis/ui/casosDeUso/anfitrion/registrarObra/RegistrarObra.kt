@@ -95,7 +95,7 @@ fun PantallaRegistrarObra(
                 .clickable {  }
         ) {
             IconButton(
-                    onClick = { navController.popBackStack() }
+                onClick = { navController.navigate(Rutas.BUSQUEDA_ARTISTA) }
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
@@ -155,7 +155,7 @@ fun PantallaRegistrarObra(
                     }
                 } else {
                     Button(
-                        onClick = { navController.navigate(Rutas.INICIO) },
+                        onClick = { navController.navigate(Rutas.LISTAR_EXPERTOS_DISPONIBLES) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {

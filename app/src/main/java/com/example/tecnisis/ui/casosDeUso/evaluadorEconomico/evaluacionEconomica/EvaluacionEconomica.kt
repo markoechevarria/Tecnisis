@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,18 +40,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun PantallaEvaluacionEconomica(
-    navController: NavController,
-    datosObra: String = "Obra: La noche de\nTécnica: Cubismo\nFecha: 01/02/2005\nDimensiones: 100 cm",
-    datosExperto: String = "Nombre: Jack Zavaleta\nDNI: 11100011"
+    id: Int,
+    id_perfil: Int,
+    id_solicitud: Int,
+    navegarInicio: (Int, Int) -> Unit,
+    evaluacionEconomicaViewModel: EvaluacionEconomicaViewModel = viewModel(),
 ) {
-    var precio by remember { mutableStateOf("") }
-    var porcentaje by remember { mutableStateOf("") }
+    val evaluacionEconomicaUiState by evaluacionEconomicaViewModel.uiState.collectAsState()
+
+    evaluacionEconomicaViewModel.asignarIds(id_solicitud, id, id_perfil)
+    evaluacionEconomicaViewModel.asignarDatos()
 
     Column(
         modifier = Modifier
@@ -88,7 +94,7 @@ fun PantallaEvaluacionEconomica(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton( onClick = {  } ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -110,11 +116,11 @@ fun PantallaEvaluacionEconomica(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Datos Obra", style = MaterialTheme.typography.titleSmall)
-                InfoCard(content = datosObra)
+                Text("Obra", style = MaterialTheme.typography.titleSmall)
+                InfoCardObra( tecnica=evaluacionEconomicaUiState.tecnica, fecha=evaluacionEconomicaUiState.fecha ,dimensiones=evaluacionEconomicaUiState.dimensiones, experto = evaluacionEconomicaUiState.nombre_experto)
 
-                Text("Datos Experto", style = MaterialTheme.typography.titleSmall)
-                InfoCard(content = datosExperto)
+                Text("Experto", style = MaterialTheme.typography.titleSmall)
+                InfoCardExperto( nombre = evaluacionEconomicaUiState.nombre_experto )
 
                 Text("Ver obra", style = MaterialTheme.typography.titleSmall)
                 Box(
@@ -129,8 +135,8 @@ fun PantallaEvaluacionEconomica(
                 }
 
                 OutlinedTextField(
-                    value = precio,
-                    onValueChange = { precio = it },
+                    value = evaluacionEconomicaUiState.precioVenta.toString(),
+                    onValueChange = { it -> if (it.toDoubleOrNull() == null) {evaluacionEconomicaViewModel.asignarVenta(0.0)} else {evaluacionEconomicaViewModel.asignarVenta(it.toDouble())} },
                     label = { Text("Precio de venta") },
                     leadingIcon = { Icon(Icons.Default.ShoppingCart, null) },
                     modifier = Modifier.fillMaxWidth(),
@@ -138,8 +144,8 @@ fun PantallaEvaluacionEconomica(
                 )
 
                 OutlinedTextField(
-                    value = porcentaje,
-                    onValueChange = { porcentaje = it },
+                    value = evaluacionEconomicaUiState.porcentajeGanancia.toString(),
+                    onValueChange = { it -> if (it.toDoubleOrNull() == null || it == "" ) {evaluacionEconomicaViewModel.asignarPorcentajeVenta(0.0)} else {evaluacionEconomicaViewModel.asignarPorcentajeVenta(it.toDouble())} },
                     label = { Text("Porcentaje de ganancia") },
                     leadingIcon = { Icon(Icons.Default.ShoppingCart, null) },
                     modifier = Modifier.fillMaxWidth(),
@@ -149,7 +155,7 @@ fun PantallaEvaluacionEconomica(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { navController.navigate(Rutas.INICIO) },
+                    onClick = { evaluacionEconomicaViewModel.cambiarVentanaAprobado(); evaluacionEconomicaViewModel.asignarAprobacion(true) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
                 ) {
@@ -176,20 +182,64 @@ fun PantallaEvaluacionEconomica(
             )
         }
     }
+    if (evaluacionEconomicaUiState.showDialogAprobado) {
+        AlertDialog(
+            onDismissRequest = { evaluacionEconomicaViewModel.cambiarVentanaAprobado(); navegarInicio(id, id_perfil) },
+            text = { Text("Evaluacion Registrada.") },
+            confirmButton = { Button( onClick = { evaluacionEconomicaViewModel.cambiarVentanaAprobado(); navegarInicio(id, id_perfil) }) { Text("Aceptar") } },
+        )
+    }
 }
 
 @Composable
-fun InfoCard(content: String) {
+fun InfoCardObra(tecnica: String, fecha: String, dimensiones: String, experto: String) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
-        Text(
-            text = content,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp),
-            color = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        Column(
+            modifier = Modifier.padding(4.dp)
+        ) {
+            Text(
+                text = tecnica,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(4.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Text(
+                text = fecha,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(4.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+            Text(
+                text = dimensiones + experto,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(4.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+
+    }
+}
+
+@Composable
+fun InfoCardExperto(nombre: String) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+    ) {
+        Column(
+            modifier = Modifier.padding(4.dp)
+        ) {
+            Text(
+                text = nombre,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(4.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
     }
 }

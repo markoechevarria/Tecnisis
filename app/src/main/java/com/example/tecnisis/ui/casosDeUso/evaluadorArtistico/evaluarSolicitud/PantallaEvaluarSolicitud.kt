@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -29,22 +29,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
-import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun PantallaEvaluarSolicitud(
-    navController: NavController,
-    artista: String = "DNI: 000000\nNombre: Marko\nDirección: su casa\nTeléfono: 0000000",
-    obra: String = "Obra: La noche de\nTécnica: Cubismo\nFecha: 01/02/2005\nDimensiones: 100 cm",
-    experto: String = "Nombre: Jack Zavaleta\nDNI: 11100011"
+    id_solicitud: Int,
+    id_perfil: Int,
+    id_usuario: Int,
+    navegarInicio: (Int, Int) -> Unit,
+    pantallaEvaluarSolicitudViewModel: PantallaEvaluarSolicitudViewModel = viewModel()
 ) {
+    val pantallaEvaluarSolicitudUiState by pantallaEvaluarSolicitudViewModel.uiState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,7 +85,7 @@ fun PantallaEvaluarSolicitud(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = { }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -104,16 +107,7 @@ fun PantallaEvaluarSolicitud(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Datos Artista", style = MaterialTheme.typography.titleSmall)
-                InfoCards(content = artista)
-
-                Text("Datos Obra", style = MaterialTheme.typography.titleSmall)
-                InfoCards(content = obra)
-
-                Text("Datos Experto", style = MaterialTheme.typography.titleSmall)
-                InfoCards(content = experto)
-
-                Text("Ver obra", style = MaterialTheme.typography.titleSmall)
+                Image( painter = painterResource(R.drawable.maxresdefault), contentDescription = "" )
 
                 Box(
                     modifier = Modifier
@@ -133,7 +127,7 @@ fun PantallaEvaluarSolicitud(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Button(
-                        onClick = { navController.navigate(Rutas.INICIO) },
+                        onClick = { pantallaEvaluarSolicitudViewModel.cambiarVentanaAprobado(); pantallaEvaluarSolicitudViewModel.asignarAprobacion(true) },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
@@ -141,7 +135,7 @@ fun PantallaEvaluarSolicitud(
                     }
 
                     OutlinedButton(
-                        onClick = { navController.navigate(Rutas.INICIO) },
+                        onClick = { pantallaEvaluarSolicitudViewModel.cambiarVentanaDesaprobado(); pantallaEvaluarSolicitudViewModel.asignarAprobacion(false) },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Rechazar")
@@ -167,20 +161,19 @@ fun PantallaEvaluarSolicitud(
             )
         }
     }
-}
 
-@Composable
-fun InfoCards(content: String) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-    ) {
-        Text(
-            text = content,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp),
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+    if (pantallaEvaluarSolicitudUiState.showDialogAprobado) {
+        AlertDialog(
+            onDismissRequest = { pantallaEvaluarSolicitudViewModel.cambiarVentanaAprobado(); navegarInicio(id_usuario, id_perfil) },
+            text = { Text("Evaluacion Registrada.") },
+            confirmButton = { Button( onClick = { pantallaEvaluarSolicitudViewModel.cambiarVentanaAprobado(); navegarInicio(id_usuario, id_perfil) }) { Text("Aceptar") } },
+        )
+    }
+    if (pantallaEvaluarSolicitudUiState.showDialogDesaprobado) {
+        AlertDialog(
+            onDismissRequest = { pantallaEvaluarSolicitudViewModel.cambiarVentanaDesaprobado(); navegarInicio(id_usuario, id_perfil) },
+            text = { Text("Evaluacion Desestimada.") },
+            confirmButton = { Button( onClick = { pantallaEvaluarSolicitudViewModel.cambiarVentanaDesaprobado(); navegarInicio(id_usuario, id_perfil) }) { Text("Aceptar") } },
         )
     }
 }

@@ -45,10 +45,10 @@ import androidx.navigation.NavController
 import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
 
-
 @Composable
 fun PantallaBusquedaArtista(
-    navController: NavController,
+    id: Int,
+    id_perfil: Int,
     busquedaArtistaViewModel: BusquedaArtistaViewModel = viewModel()
 ) {
     val busquedaArtistaUiState by busquedaArtistaViewModel.uiState.collectAsState()
@@ -76,9 +76,8 @@ fun PantallaBusquedaArtista(
                     contentDescription = null,
                     modifier = Modifier.size(50.dp)
                 )
-
                 Text(
-                    text = "TECNISIS",
+                    text = "TECNISIS ${id.toString()}",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -93,7 +92,7 @@ fun PantallaBusquedaArtista(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(modifier = Modifier, onClick = {navController.navigate(Rutas.INICIO)}) {
+            IconButton(modifier = Modifier, onClick = { /* navController.navigate(Rutas.INICIO) */} ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -184,7 +183,7 @@ fun PantallaBusquedaArtista(
                 ) {
                     if (busquedaArtistaUiState.seEncontro) {
                         Button(
-                            onClick = { navController.navigate(Rutas.REGISTRAR_OBRA) },
+                            onClick = { /* navController.navigate(Rutas.REGISTRAR_OBRA) */ },
                             modifier = Modifier.weight(1f)
                         ) {
                             Text("Registrar obra")
@@ -211,7 +210,7 @@ fun PantallaBusquedaArtista(
                             Text("Registrar obra")
                         }
                         OutlinedButton(
-                            onClick = { navController.navigate(Rutas.REGISTRAR_ARTISTA) },
+                            onClick = { /* navController.navigate(Rutas.REGISTRAR_ARTISTA) */ },
                             modifier = Modifier.weight(1f)
                         ) {
                             Text("Registrar artista")
