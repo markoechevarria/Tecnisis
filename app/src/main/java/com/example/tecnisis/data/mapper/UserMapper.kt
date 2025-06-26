@@ -1,6 +1,8 @@
 package com.example.tecnisis.data.mapper
 
+import com.example.tecnisis.data.remote.models.OpcionResponse
 import com.example.tecnisis.data.remote.models.UsuarioResponse
+import com.example.tecnisis.domain.models.Opcion
 import com.example.tecnisis.domain.models.Usuario
 
 fun UsuarioResponse.toDomain(): Usuario {
@@ -13,5 +15,10 @@ fun UsuarioResponse.toDomain(): Usuario {
     )
 }
 
-
-// mapear los modelos de datos de la capa de red/persistencia a modelos de dominio
+fun OpcionResponse.toDomain(): Opcion {
+    return Opcion(
+        id = this.id,
+        texto = this.texto,
+        id_perfil = this.id_perfil
+    )
+}

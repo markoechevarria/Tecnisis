@@ -1,6 +1,7 @@
 package com.example.tecnisis.ui.casosDeUso.inicio
 
-import com.example.tecnisis.data.Opcion
+import com.example.tecnisis.domain.models.Opcion
+
 
 data class PantallaInicioUiState (
     val id: Int = 0,

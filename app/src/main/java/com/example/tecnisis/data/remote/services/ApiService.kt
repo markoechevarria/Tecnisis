@@ -1,9 +1,7 @@
 package com.example.tecnisis.data.remote.services
 
-import com.example.tecnisis.data.remote.InterfazRemoteDataSource
-import com.example.tecnisis.data.remote.models.UsuarioRequestVerificacion
+import com.example.tecnisis.data.remote.models.OpcionResponse
 import com.example.tecnisis.data.remote.models.UsuarioResponse
-import com.example.tecnisis.domain.repository.InterfazUsuarioRepository
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -20,6 +18,11 @@ interface ApiService {
         @Query("correo") correo: String,
         @Query("contrasena") contrasena: String
     ): Response<UsuarioResponse>
+
+    @GET("opciones/{id_perfil}")
+    suspend fun obtenerOpciones(
+        @Path("id_perfil") id_perfil: Int
+    ): Response<List<OpcionResponse>>
 
     /**
     @POST("registro/")

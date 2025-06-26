@@ -45,11 +45,8 @@ class LoginScreenViewModel @Inject constructor(
     */
     fun IngresarUsuario() {
         viewModelScope.launch {
-            Log.d("viewmodel", "llamda a la corrutina")
             try {
-                Log.d("viewmodel", "esta consultado la api")
                 val usuarioRegistrado = usuarioRepository.verificarUsuario( correo = _uiState.value.correo, contrasena = _uiState.value.contrasena )
-                Log.d("viewmodel", "ya llamo la api")
                 _uiState.update { currentState -> currentState.copy(
                     id = usuarioRegistrado.id,
                     id_perfil = usuarioRegistrado.id_perfil,
@@ -57,7 +54,6 @@ class LoginScreenViewModel @Inject constructor(
                 ) }
             } catch (e: Exception) {
                 Log.d("viewmodel", e.message.toString())
-                Log.d("viewmodel", "fallo a la corrutina")
             }
         }
     }

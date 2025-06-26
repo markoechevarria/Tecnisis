@@ -2,6 +2,7 @@ package com.example.tecnisis.data.repository
 
 import com.example.tecnisis.data.mapper.toDomain
 import com.example.tecnisis.data.remote.InterfazRemoteDataSource
+import com.example.tecnisis.domain.models.Opcion
 import com.example.tecnisis.domain.models.Usuario
 import com.example.tecnisis.domain.repository.InterfazUsuarioRepository
 import javax.inject.Inject
@@ -16,6 +17,9 @@ class UsuarioRepositoryImplementacion @Inject constructor(
 
     override suspend fun verificarUsuario(correo: String, contrasena: String): Usuario {
         return remoteDataSource.verificarUsuario( correo= correo, contrasena = contrasena ).toDomain()
+    }
+    override suspend fun obtenerOpciones( id_perfil: Int ): List<Opcion> {
+        return remoteDataSource.obtenerOpciones( id_perfil = id_perfil ).map{ it.toDomain() }
     }
 }
 
