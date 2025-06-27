@@ -10,23 +10,23 @@ class RegistrarObraViewModel: ViewModel() {
     private val _uiState = MutableStateFlow( RegistrarObraUiState() )
     val uiState: StateFlow<RegistrarObraUiState> = _uiState.asStateFlow()
 
-    fun actualizarNombre( nombre: String) {
+    fun actualizarNombreObra( nombre: String) {
         _uiState.update { currentState -> currentState.copy( nombre = nombre) }
-        habilitarBoton()
+        habilitarBotonObra()
     }
-    fun actualizarFecha( fecha: String) {
+    fun actualizarFechaObra( fecha: String) {
         _uiState.update { currentState -> currentState.copy( fecha = fecha) }
-        habilitarBoton()
+        habilitarBotonObra()
     }
-    fun actualizarTecnica( tecnica: String) {
+    fun actualizarTecnicaObra( tecnica: String) {
         _uiState.update { currentState -> currentState.copy( tecnica = tecnica) }
-        habilitarBoton()
+        habilitarBotonObra()
     }
-    fun actualizarDimensiones( dimensiones: String) {
+    fun actualizarDimensionesObra( dimensiones: String) {
         _uiState.update { currentState -> currentState.copy( dimensiones = dimensiones) }
-        habilitarBoton()
+        habilitarBotonObra()
     }
-    fun habilitarBoton() {
+    fun habilitarBotonObra() {
         if ( _uiState.value.nombre != "" && _uiState.value.fecha != "" && _uiState.value.dimensiones != "" && _uiState.value.tecnica != "" ) {
             _uiState.update { currentState -> currentState.copy( habilitadoBoton = true ) }
         }

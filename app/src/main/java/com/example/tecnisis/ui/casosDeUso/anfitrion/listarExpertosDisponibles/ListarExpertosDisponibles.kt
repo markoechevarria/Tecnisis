@@ -38,19 +38,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
+import com.example.tecnisis.ui.casosDeUso.anfitrion.RegistrarSolicitudViewModel
 
 @Composable
 fun PantallaListarExpertosDisponibles (
-    navController: NavController,
-    expertos: List<String> = listOf("Picasso", "Dali", "Van Gogh", "Da Vinci", "Rembrandt", "Monet"),
-    listarExpertosDisponiblesViewModel: ListarExpertosDisponiblesViewModel = viewModel()
+    id: Int,
+    id_perfil: Int,
+    id_artista: Int,
+    id_obra: Int,
+    confirmarSolicitud: (Int, Int, Int, Int, Int) -> Unit,
+    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
-    val listarExpertosDisponiblesUiState by listarExpertosDisponiblesViewModel.uiState.collectAsState()
+    val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
+    registrarSolicitudViewModel.imprimirId4(id, id_perfil, id_artista, id_obra)
+    registrarSolicitudViewModel.obtenerDatosSolicitud(id, id_perfil, id_artista, id_obra, 0)
+    registrarSolicitudViewModel.listarEvaluadoresArtisticos()
+    registrarSolicitudViewModel.imprimirId4(registrarSolicitudUIState.id, registrarSolicitudUIState.id_perfil, registrarSolicitudUIState.artista.id, registrarSolicitudUIState.id_obra)
 
     Column(
         modifier = Modifier
@@ -90,7 +99,7 @@ fun PantallaListarExpertosDisponibles (
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {navController.navigate(Rutas.REGISTRAR_OBRA)}) {
+            IconButton( onClick = {}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -112,13 +121,13 @@ fun PantallaListarExpertosDisponibles (
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                expertos.forEachIndexed { index, nombre->
-                    cartaExperto( nombre, index , ( index == listarExpertosDisponiblesUiState.expertoSeleccionado ), { listarExpertosDisponiblesViewModel.elegirExperto(it) } )
+                 registrarSolicitudUIState.listaEvaluadoresArtisticos.forEach {
+                    cartaExperto( it.nombre, it.id , ( it.id == registrarSolicitudUIState.expertoSeleccionadoId ), { registrarSolicitudViewModel.seleccionarExperto(it.id) } )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (listarExpertosDisponiblesUiState.habilitadoBoton == false) {
+                if (registrarSolicitudUIState.habilitadoBotonExpertoSeleccionado == false) {
                     Button(
                         onClick = {},
                         shape = RoundedCornerShape(12.dp),
@@ -132,7 +141,7 @@ fun PantallaListarExpertosDisponibles (
                     }
                 } else {
                     Button(
-                        onClick = { navController.navigate(Rutas.CONFIRMAR_SOLICITUD) },
+                        onClick = { confirmarSolicitud(id, id_perfil, id_artista, id_obra, registrarSolicitudUIState.expertoSeleccionadoId) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
@@ -162,7 +171,7 @@ fun PantallaListarExpertosDisponibles (
 }
 
 @Composable
-fun cartaExperto( nombreExperto: String, numeroExperto: Int, seleccionado: Boolean, selecionarExperto: (Int) -> Unit ) {
+fun cartaExperto( nombreExperto: String, numeroExperto: Int, seleccionado: Boolean, selecionarExperto: () -> Unit ) {
     ElevatedCard(
         colors = CardDefaults.elevatedCardColors(
             containerColor = when {
@@ -170,7 +179,7 @@ fun cartaExperto( nombreExperto: String, numeroExperto: Int, seleccionado: Boole
                 else -> MaterialTheme.colorScheme.primaryContainer
             }
         ),
-        onClick = { selecionarExperto(numeroExperto) },
+        onClick =  selecionarExperto ,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(

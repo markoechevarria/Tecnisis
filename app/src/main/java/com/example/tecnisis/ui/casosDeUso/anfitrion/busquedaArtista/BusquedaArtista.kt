@@ -21,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,16 +39,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tecnisis.R
-import com.example.tecnisis.navigation.Rutas
 
 @Composable
 fun PantallaBusquedaArtista(
     id: Int,
     id_perfil: Int,
-    busquedaArtistaViewModel: BusquedaArtistaViewModel = viewModel()
+    navegarRegistarArtista: (Int, Int) -> Unit,
+    navegarRegistrarObra: (Int, Int, Int) -> Unit,
+    busquedaArtistaViewModel: BusquedaArtistaViewModel = hiltViewModel()
 ) {
     val busquedaArtistaUiState by busquedaArtistaViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -181,9 +180,9 @@ fun PantallaBusquedaArtista(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (busquedaArtistaUiState.seEncontro) {
+                    if (busquedaArtistaUiState.seEncontro ) {
                         Button(
-                            onClick = { /* navController.navigate(Rutas.REGISTRAR_OBRA) */ },
+                            onClick = { navegarRegistrarObra(id, id_perfil, busquedaArtistaUiState.id) },
                             modifier = Modifier.weight(1f)
                         ) {
                             Text("Registrar obra")
@@ -198,7 +197,7 @@ fun PantallaBusquedaArtista(
                         ) {
                             Text("Registrar artista")
                         }
-                    } else {
+                    } else if ( busquedaArtistaUiState.habilitadoBotonArtista == false ) {
                         Button(
                             onClick = {},
                             colors = ButtonDefaults.buttonColors(
@@ -210,7 +209,7 @@ fun PantallaBusquedaArtista(
                             Text("Registrar obra")
                         }
                         OutlinedButton(
-                            onClick = { /* navController.navigate(Rutas.REGISTRAR_ARTISTA) */ },
+                            onClick = { navegarRegistarArtista(id, id_perfil )},
                             modifier = Modifier.weight(1f)
                         ) {
                             Text("Registrar artista")

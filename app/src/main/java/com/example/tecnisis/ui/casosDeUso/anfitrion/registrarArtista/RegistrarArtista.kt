@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -49,7 +50,7 @@ import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarObra.camposTexto
 fun PantallaRegistrarArtista(
     id: Int,
     id_perfil: Int,
-    registrarArtistaViewModel: RegistrarArtistaViewModel = viewModel()
+    registrarArtistaViewModel: RegistrarArtistaViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
     val registrarArtistaUiState by registrarArtistaViewModel.uiState.collectAsState()
@@ -121,7 +122,6 @@ fun PantallaRegistrarArtista(
                 camposTexto("Tecnica",{ registrarArtistaViewModel.actualizarNombre(nombre = it) }, registrarArtistaUiState.nombre )
                 camposTexto("Fecha", { registrarArtistaViewModel.actualizarDireccion(direccion = it) }, registrarArtistaUiState.direccion )
                 camposTexto("Diemsiones", { registrarArtistaViewModel.actualizarTelefono(telefono = it) }, registrarArtistaUiState.telefono )
-                camposTexto("Diemsiones", { registrarArtistaViewModel.actualizarCorreo(correo = it) }, registrarArtistaUiState.correo )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -139,7 +139,7 @@ fun PantallaRegistrarArtista(
                     }
                 } else {
                     Button(
-                        onClick = { /* navController.navigate(Rutas.INICIO) */ },
+                        onClick = { registrarArtistaViewModel.registrarArtista() },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {

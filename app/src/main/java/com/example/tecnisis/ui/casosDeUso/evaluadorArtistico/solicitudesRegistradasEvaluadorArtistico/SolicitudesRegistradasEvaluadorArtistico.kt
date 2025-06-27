@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
 
@@ -44,14 +45,14 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
     id: Int,
     id_perfil: Int,
     verDetalleSolicitud: (Int, Int, Int) -> Unit,
-    solicitudesRegistradasViewModelEvaluadorArtistico: SolicitudesRegistradasViewModelEvaluadorArtistico = viewModel(),
+    solicitudesRegistradasViewModelEvaluadorArtistico: SolicitudesRegistradasViewModelEvaluadorArtistico = hiltViewModel(),
 ) {
 
     val solicitudesRegistradasUiStateEvaluadorArtistico by solicitudesRegistradasViewModelEvaluadorArtistico.uiState.collectAsState()
 
     LaunchedEffect(id, id_perfil) {
         solicitudesRegistradasViewModelEvaluadorArtistico.actualizarDatos(id, id_perfil)
-        solicitudesRegistradasViewModelEvaluadorArtistico.obtenerDatosSolicitudes()
+        solicitudesRegistradasViewModelEvaluadorArtistico.obtenerDatosExtra()
     }
 
     Column(
@@ -100,39 +101,53 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth().height(640.dp)
-        ) {
-            items(solicitudesRegistradasUiStateEvaluadorArtistico.listaSolicitudes) { solicitud ->
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    onClick = { verDetalleSolicitud( solicitud.id_solicitud, id , id_perfil) }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Column {
-                            Text(text = solicitud.nombre, style = MaterialTheme.typography.titleSmall)
-                            Text(text = solicitud.fecha, style = MaterialTheme.typography.labelSmall)
-                            Text(text = solicitud.tecnica, style = MaterialTheme.typography.labelSmall)
-                        }
 
-                        Icon(
-                            imageVector = Icons.Default.Face,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
-                        )
+        if (solicitudesRegistradasUiStateEvaluadorArtistico.solicitudesDatosArtista.size == 0) {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth().height(640.dp)
+            ) {
+                items(solicitudesRegistradasUiStateEvaluadorArtistico.solicitudesDatosArtista) { solicitud ->
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                        onClick = { verDetalleSolicitud(solicitud.id_solicitud, id, id_perfil) }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Column {
+                                Text(
+                                    text = solicitud.nombre,
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                Text(
+                                    text = solicitud.fecha,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                                Text(
+                                    text = solicitud.tecnica,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+
+                            Icon(
+                                imageVector = Icons.Default.Face,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                     }
                 }
             }
+        } else {
+            Text( text = "No tiene solicitudes asignadas")
         }
 
         Spacer( modifier = Modifier.height(20.dp))
