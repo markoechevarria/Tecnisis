@@ -125,5 +125,3 @@ class Solicitud (
     val porcentaje_ganancia: Double = 0.0,
     val valor: Double = 0.0
 )
-
-

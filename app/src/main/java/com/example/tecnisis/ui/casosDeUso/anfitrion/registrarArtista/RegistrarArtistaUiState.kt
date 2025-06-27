@@ -5,6 +5,5 @@ data class RegistrarArtistaUiState(
     val nombre: String = "",
     val direccion: String = "",
     val telefono: String = "",
-    val correo: String = "",
     val habilitadoBoton: Boolean = false
 )

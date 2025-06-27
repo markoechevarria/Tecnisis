@@ -1,5 +1,6 @@
 package com.example.tecnisis.ui.casosDeUso.anfitrion.confirmarSolicitud
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -28,25 +30,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
+import com.example.tecnisis.ui.casosDeUso.anfitrion.RegistrarSolicitudViewModel
 
 @Composable
 fun PantallaConfirmarSolicitud(
-    navController: NavController,
-    datos: List<Pair<String, String>> = listOf(
-        "Artista" to "Juan Perez",
-        "Obra" to "Obra artística",
-        "Fecha" to "20/06/2025",
-        "Experto asignado" to "Juan Evaluador"
-    )
+    id: Int,
+    id_perfil: Int,
+    id_artista: Int,
+    id_obra: Int,
+    id_evaluador_artistico: Int,
+    solicitudExitosa: (Int, Int) -> Unit,
+    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel()
 ) {
+    val scrollState = rememberScrollState()
+    val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
+
+    registrarSolicitudViewModel.obtenerDatosSolicitud(id, id_perfil, id_artista, id_obra, id_evaluador_artistico)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,7 +96,7 @@ fun PantallaConfirmarSolicitud(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = {navController.navigate(Rutas.LISTAR_EXPERTOS_DISPONIBLES)}) {
+            IconButton(onClick = {}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -106,25 +118,62 @@ fun PantallaConfirmarSolicitud(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text("Datos", style = MaterialTheme.typography.titleMedium)
+                Text("Datos Artista", style = MaterialTheme.typography.titleMedium)
 
-                datos.forEach { (label, valor) ->
-                    ElevatedCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(16.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(16.dp)
-                        ) {
-                            Icon(Icons.Default.Person, contentDescription = null)
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                Text(label, style = MaterialTheme.typography.labelSmall)
-                                Text(valor, style = MaterialTheme.typography.titleSmall)
-                            }
+                        Icon(Icons.Default.Person, contentDescription = null)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(registrarSolicitudUIState.artista.nombre, style = MaterialTheme.typography.labelSmall)
+                            Text(registrarSolicitudUIState.artista.dni, style = MaterialTheme.typography.titleSmall)
+                        }
+                    }
+                }
+                Text("Datos Obra", style = MaterialTheme.typography.titleMedium)
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Icon(Icons.Default.Person, contentDescription = null)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(registrarSolicitudUIState.obra.nombre, style = MaterialTheme.typography.labelSmall)
+                            Text(registrarSolicitudUIState.obra.dimensiones, style = MaterialTheme.typography.titleSmall)
+                            Text(registrarSolicitudUIState.obra.fecha, style = MaterialTheme.typography.titleSmall)
+                        }
+                    }
+                }
+                Text("Datos Experto Artistico Asignado", style = MaterialTheme.typography.titleMedium)
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Icon(Icons.Default.Person, contentDescription = null)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text(registrarSolicitudUIState.evaluadorArtisticoElegido.nombre, style = MaterialTheme.typography.labelSmall)
+                            Text(registrarSolicitudUIState.evaluadorArtisticoElegido.correo, style = MaterialTheme.typography.titleSmall)
                         }
                     }
                 }
@@ -132,7 +181,7 @@ fun PantallaConfirmarSolicitud(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { navController.navigate(Rutas.SOLICITUD_EXITOSA) },
+                    onClick = { solicitudExitosa(id, id_perfil); registrarSolicitudViewModel.registrarSolicitud() },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
                 ) {

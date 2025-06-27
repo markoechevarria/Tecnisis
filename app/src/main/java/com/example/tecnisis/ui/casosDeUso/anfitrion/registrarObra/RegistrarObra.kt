@@ -45,16 +45,23 @@ import com.example.tecnisis.navigation.Rutas
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tecnisis.R
+import com.example.tecnisis.ui.casosDeUso.anfitrion.RegistrarSolicitudViewModel
 
 @Composable
 fun PantallaRegistrarObra(
-    navController: NavController,
-    nombreArtista: String = "Juan Perez",
-    registrarObraViewModel: RegistrarObraViewModel = viewModel()
+    id: Int,
+    id_perfil: Int,
+    id_artista: Int,
+    navegarElegirExperto: (Int, Int, Int, Int) -> Unit,
+    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
-    val registrarObraUiState by registrarObraViewModel.uiState.collectAsState()
+    val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
+    registrarSolicitudViewModel.imprimirId(id,id_perfil, id_artista)
+    registrarSolicitudViewModel.obtenerArtista(id_artista, id_perfil, id_artista)
+    registrarSolicitudViewModel.imprimirId(registrarSolicitudUIState.id, registrarSolicitudUIState.id_perfil, registrarSolicitudUIState.artista.id)
 
     Column(
         modifier = Modifier
@@ -95,7 +102,7 @@ fun PantallaRegistrarObra(
                 .clickable {  }
         ) {
             IconButton(
-                onClick = { navController.navigate(Rutas.BUSQUEDA_ARTISTA) }
+                    onClick = {  }
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
@@ -131,17 +138,17 @@ fun PantallaRegistrarObra(
                     ) {
                         Icon(Icons.Default.Person, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(nombreArtista, style = MaterialTheme.typography.titleMedium)
+                        Text(registrarSolicitudUIState.artista.nombre, style = MaterialTheme.typography.titleMedium)
                     }
                 }
 
-                camposTexto("Obra",{ registrarObraViewModel.actualizarNombre(nombre = it) }, registrarObraUiState.nombre )
-                camposTexto("Tecnica",{ registrarObraViewModel.actualizarTecnica(tecnica = it) }, registrarObraUiState.tecnica )
-                camposTexto("Fecha", { registrarObraViewModel.actualizarFecha(fecha = it) }, registrarObraUiState.fecha )
-                camposTexto("Diemsiones", { registrarObraViewModel.actualizarDimensiones(dimensiones = it) }, registrarObraUiState.dimensiones )
+                camposTexto("Obra",{ registrarSolicitudViewModel.actualizarNombreObra(nombre = it) }, registrarSolicitudUIState.nombre_obra )
+                camposTexto("Tecnica",{ registrarSolicitudViewModel.actualizarTecnicaObra(id_tecnica_obra = it.toInt()) }, registrarSolicitudUIState.id_tecnica_obra.toString() )
+                camposTexto("Fecha", { registrarSolicitudViewModel.actualizarFechaObra(fecha = it) }, registrarSolicitudUIState.fecha_obra )
+                camposTexto("Diemsiones", { registrarSolicitudViewModel.actualizarDimensionesObra(dimensiones = it) }, registrarSolicitudUIState.dimensiones_obra )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (registrarObraUiState.habilitadoBoton == false) {
+                if ( registrarSolicitudUIState.habilitadoBotonObra == false) {
                     Button(
                         onClick = {},
                         shape = RoundedCornerShape(12.dp),
@@ -155,7 +162,7 @@ fun PantallaRegistrarObra(
                     }
                 } else {
                     Button(
-                        onClick = { navController.navigate(Rutas.LISTAR_EXPERTOS_DISPONIBLES) },
+                        onClick = { registrarSolicitudViewModel.registrarObra() },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
@@ -182,6 +189,11 @@ fun PantallaRegistrarObra(
             )
         }
     }
+
+    if (registrarSolicitudUIState.obra_registrada) {
+        navegarElegirExperto(id, id_perfil, id_artista, registrarSolicitudUIState.id_obra)
+    }
+
 }
 
 @Composable

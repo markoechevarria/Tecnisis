@@ -1,6 +1,13 @@
 package com.example.tecnisis.data.remote.services
 
+import com.example.tecnisis.data.remote.models.ArtistaRequest
+import com.example.tecnisis.data.remote.models.ArtistaResponse
+import com.example.tecnisis.data.remote.models.ObraRequest
+import com.example.tecnisis.data.remote.models.ObraResponse
 import com.example.tecnisis.data.remote.models.OpcionResponse
+import com.example.tecnisis.data.remote.models.SolicitudRequest
+import com.example.tecnisis.data.remote.models.SolicitudResponse
+import com.example.tecnisis.data.remote.models.TecnicaResponse
 import com.example.tecnisis.data.remote.models.UsuarioResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -8,36 +15,68 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-import javax.inject.Inject
-import javax.inject.Singleton
 
 interface ApiService {
 
     @GET("usuarios/ingresar/")
-    suspend fun ingresarUsuario(
+    suspend fun ingresarUsuarioApi(
         @Query("correo") correo: String,
         @Query("contrasena") contrasena: String
     ): Response<UsuarioResponse>
 
     @GET("opciones/{id_perfil}")
-    suspend fun obtenerOpciones(
+    suspend fun obtenerOpcionesApi(
         @Path("id_perfil") id_perfil: Int
     ): Response<List<OpcionResponse>>
 
-    /**
-    @POST("registro/")
-    suspend fun registrarUsuario(@Body usuario: UsuarioRegistroRequest): Response<UsuarioResponse>
+    @GET("artistas/{dni}")
+    suspend fun obtenerArtistaDniApi(
+        @Path("dni") dni: String
+    ): Response<ArtistaResponse>
 
-    @POST("login/")
-    suspend fun loginUsuario(@Body usuario: UsuarioLoginRequest): Response<UsuarioResponse>
+    @GET("artistas/id/{id}")
+    suspend fun obtenerArtistaIdApi(
+        @Path("id") id: Int
+    ): Response<ArtistaResponse>
 
-    @GET("usuarios/{usuario_id}/perfil/")
-    suspend fun obtenerPerfilUsuario(@Path("usuario_id") usuarioId: Int): Response<UsuarioPerfilResponse>
+    @POST("artistas/")
+    suspend fun registrarArtistaApi(
+        @Body artista: ArtistaRequest
+    ): Response<ArtistaResponse>
 
-    @GET("users/{id}")
-    suspend fun getUser(@Path("id") userId: Int): Response<UserResponse>
+    @GET("solicitudes/{id_evaluador_artistico}")
+    suspend fun obtenerSolicitudesEvaluadorArtisticoApi(
+        @Path("id_evaluador_artistico") id_evaluador_artistico: Int
+    ): Response<List<SolicitudResponse>>
 
-    @GET("posts")
-    suspend fun getPosts(@Query("userId") userId: Int? = null): Response<List<PostResponse>>
-*/
+    @GET("solicitudes/")
+    suspend fun obtenerSolicitudesApi(): Response<List<SolicitudResponse>>
+
+    @GET("obras/id/{id}")
+    suspend fun obtenerObraApi(
+        @Path("id") id: Int
+    ): Response<ObraResponse>
+
+    @GET("tecnica/{id}")
+    suspend fun obtenerTecnicaApi(
+        @Path("id") id: Int
+    ): Response<TecnicaResponse>
+
+    @GET("usuarios/evaluadoresArtisticos/")
+    suspend fun listarEvaluadoresArtisticosApi(): Response<List<UsuarioResponse>>
+
+    @POST("obras/registrar/")
+    suspend fun registrarObraApi(
+        @Body obra: ObraRequest
+    ): Response<ObraResponse>
+
+    @POST("solicitudes/registrarSolicitud")
+    suspend fun registrarSolicitudApi(
+        @Body solicitud: SolicitudRequest
+    ): Response<SolicitudResponse>
+
+    @GET("usuarios/{usuario_id}")
+    suspend fun obtenerUsuarioApi(
+        @Path("usuario_id") usuario_id: Int,
+    ): Response<UsuarioResponse>
 }

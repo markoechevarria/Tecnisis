@@ -13,10 +13,22 @@ data class Inicio(val id: Int, val id_perfil: Int)
 // ANFITRION
 
 @Serializable
-data class BusquedaArtista( val id: Int, val id_perfil: Int )
+data class BusquedaArtista( val id: Int, val id_perfil: Int)
 
 @Serializable
-data class RegistrarArtista( val id: Int, val id_perfil: Int )
+data class RegistrarArtista( val id: Int, val id_perfil: Int  )
+
+@Serializable
+data class RegistrarObra( val id: Int, val id_perfil: Int, val id_artista: Int )
+
+@Serializable
+data class ListarExpertos( val id: Int, val id_perfil: Int, val id_artista: Int, val id_obra: Int )
+
+@Serializable
+data class ConfirmarSolicitud( val id: Int, val id_perfil: Int, val id_artista: Int, val id_obra: Int, val id_evaluador_economico: Int)
+
+@Serializable
+data class SolicitudExitosa(val id: Int, val id_perfil: Int)
 
 @Serializable
 data class SolicitudesRegistradasAnfitrion( val id: Int, val id_perfil: Int )

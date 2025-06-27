@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -28,30 +29,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tecnisis.R
+import com.example.tecnisis.navigation.SolicitudesRegistradasAnfitrion
 
 @Composable
 fun PantallaSolicitudesRegistradasAnfitrion(
     id: Int,
     id_perfil: Int,
-    solicitudes: List<Triple<String, String, String>> = listOf(
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva"),
-        Triple("Juan Perez", "01/05/25", "Técnica nueva")
-    )
-
+    solicitudesRegistradasViewModelAnfitrion: SolicitudesRegistradasViewModelAnfitrion = hiltViewModel()
 ) {
+    val solicitudesRegistradasUiStateAnfitrion by solicitudesRegistradasViewModelAnfitrion.uiState.collectAsState()
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -103,7 +99,8 @@ fun PantallaSolicitudesRegistradasAnfitrion(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxWidth().height(640.dp)
         ) {
-            items(solicitudes) { (nombre, fecha, tecnica) ->
+            items( solicitudesRegistradasUiStateAnfitrion.listaSolicitudes ) { it ->
+                solicitudesRegistradasViewModelAnfitrion.obtenerDatosSolicitudIndividual(it)
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
@@ -117,9 +114,10 @@ fun PantallaSolicitudesRegistradasAnfitrion(
                         horizontalArrangement = Arrangement.End
                     ) {
                         Column {
-                            Text(text = nombre, style = MaterialTheme.typography.titleSmall)
-                            Text(text = fecha, style = MaterialTheme.typography.labelSmall)
-                            Text(text = tecnica, style = MaterialTheme.typography.labelSmall)
+                            Text(text = solicitudesRegistradasUiStateAnfitrion.obra.nombre, style = MaterialTheme.typography.titleSmall)
+                            Text(text = solicitudesRegistradasUiStateAnfitrion.artista.nombre, style = MaterialTheme.typography.labelSmall)
+                            Text(text = solicitudesRegistradasUiStateAnfitrion.obra.fecha, style = MaterialTheme.typography.labelSmall)
+                            Text(text = solicitudesRegistradasUiStateAnfitrion.obra.dimensiones, style = MaterialTheme.typography.labelSmall)
                         }
 
                         Icon(

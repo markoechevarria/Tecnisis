@@ -6,7 +6,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.tecnisis.ui.casosDeUso.anfitrion.busquedaArtista.PantallaBusquedaArtista
+import com.example.tecnisis.ui.casosDeUso.anfitrion.confirmarSolicitud.PantallaConfirmarSolicitud
+import com.example.tecnisis.ui.casosDeUso.anfitrion.listarExpertosDisponibles.PantallaListarExpertosDisponibles
 import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarArtista.PantallaRegistrarArtista
+import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarObra.PantallaRegistrarObra
+import com.example.tecnisis.ui.casosDeUso.anfitrion.solicitudExitosa.PantallaSolicitudExitosa
 import com.example.tecnisis.ui.casosDeUso.anfitrion.solicitudesRegistradasAnfitrion.PantallaSolicitudesRegistradasAnfitrion
 import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.detalleSolicitud.PantallaDetalleSolicitudEvaluadorArtistico
 import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.evaluarSolicitud.PantallaEvaluarSolicitud
@@ -58,11 +62,27 @@ fun NavigationApp () {
         // ANFITRION
         composable<BusquedaArtista> {
             val busquedaArtista: BusquedaArtista = it.toRoute()
-            PantallaBusquedaArtista(id = busquedaArtista.id, id_perfil = busquedaArtista.id_perfil )
+            PantallaBusquedaArtista(id = busquedaArtista.id, id_perfil = busquedaArtista.id_perfil, navegarRegistarArtista = { id, id_perfil -> navController.navigate(route = RegistrarArtista(id = id, id_perfil = id_perfil)) }, navegarRegistrarObra = { id, id_perfil, id_artista -> navController.navigate(route = RegistrarObra(id, id_perfil, id_artista)) } )
         }
         composable<RegistrarArtista> {
             val registrarArtista: RegistrarArtista = it.toRoute()
             PantallaRegistrarArtista(id = registrarArtista.id, id_perfil = registrarArtista.id_perfil )
+        }
+        composable<RegistrarObra> {
+            val registrarObra: RegistrarObra = it.toRoute()
+            PantallaRegistrarObra(id = registrarObra.id, id_perfil = registrarObra.id_perfil, id_artista = registrarObra.id_artista , navegarElegirExperto = { id, id_perfil, id_artista, id_obra -> navController.navigate( route = ListarExpertos(id = id, id_perfil = id_perfil, id_artista = id_artista, id_obra = id_obra )) } )
+        }
+        composable<ListarExpertos> {
+            val listarExpertos: ListarExpertos = it.toRoute()
+            PantallaListarExpertosDisponibles( id=listarExpertos.id, id_perfil = listarExpertos.id_perfil, id_artista = listarExpertos.id_artista ,id_obra = listarExpertos.id_obra, confirmarSolicitud =  {id, id_perfil, id_artista, id_obra, id_evaluador_economico -> navController.navigate(route= ConfirmarSolicitud(id, id_perfil, id_artista, id_obra, id_evaluador_economico))} )
+        }
+        composable<ConfirmarSolicitud> {
+            val confirmarSolicitud: ConfirmarSolicitud = it.toRoute()
+            PantallaConfirmarSolicitud( id=confirmarSolicitud.id, id_perfil = confirmarSolicitud.id_perfil, id_artista = confirmarSolicitud.id_artista, id_obra = confirmarSolicitud.id_obra, id_evaluador_artistico = confirmarSolicitud.id_evaluador_economico, solicitudExitosa =  {id, id_perfil -> navController.navigate(route= SolicitudExitosa(id, id_perfil))} )
+        }
+        composable<SolicitudExitosa> {
+            val solicitudExitosa: SolicitudExitosa = it.toRoute()
+            PantallaSolicitudExitosa( id=solicitudExitosa.id, id_perfil =solicitudExitosa.id_perfil, navegarInicio = {id, id_perfil -> navController.navigate(route = Inicio(id, id_perfil))} )
         }
         composable<SolicitudesRegistradasAnfitrion> {
             val solicitudesRegistradasAnfitrion: SolicitudesRegistradasAnfitrion = it.toRoute()
