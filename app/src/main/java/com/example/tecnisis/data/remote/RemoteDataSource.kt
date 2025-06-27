@@ -27,6 +27,8 @@ interface InterfazRemoteDataSource {
     suspend fun registrarSolicitudRDS(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Double, precio_venta: Double): SolicitudResponse
     suspend fun obtenerUsuarioIdRDS(id: Int): UsuarioResponse
     suspend fun obtenerSolicitudesRDS(): List<SolicitudResponse>
+    suspend fun obtenerSolicitudPorIRDS(id: Int): SolicitudResponse
+    suspend fun evaluarSolicitudArtisticoRDS(id: Int, aprobacion: Int): SolicitudResponse
 }
 
 @Singleton
@@ -41,6 +43,17 @@ class RemoteDataSource @Inject constructor(
         } else {
             val errorBody = response.errorBody()?.string()
             val errorMessage = "Error al verificar usuario: ${response.code()} - $errorBody"
+            throw Exception(errorMessage)
+        }
+    }
+
+    override suspend fun obtenerSolicitudPorIRDS(id: Int): SolicitudResponse {
+        val response = apiService.obtenerSolicitudPorIdApi( id )
+        if ( response.isSuccessful && response.body() != null ) {
+            return response.body()!!
+        } else {
+            val errorBody = response.errorBody()?.string()
+            val errorMessage = "Error al obtener la solicitud para este id: ${response.code()} - $errorBody"
             throw Exception(errorMessage)
         }
     }
@@ -176,6 +189,17 @@ class RemoteDataSource @Inject constructor(
         } else {
             val errorBody = response.errorBody()?.string()
             val errorMessage = "Error al obtener usuario: ${response.code()} - $errorBody"
+            throw Exception(errorMessage)
+        }
+    }
+
+    override suspend fun evaluarSolicitudArtisticoRDS(id: Int, aprobacion: Int): SolicitudResponse {
+        val response = apiService.evaluarSolicitudArtistico(id, aprobacion)
+        if (response.isSuccessful && response.body() != null) {
+            return response.body()!!
+        } else {
+            val errorBody = response.errorBody()?.string()
+            val errorMessage = "Error al evaluar solictidud artistico: ${response.code()} - $errorBody"
             throw Exception(errorMessage)
         }
     }

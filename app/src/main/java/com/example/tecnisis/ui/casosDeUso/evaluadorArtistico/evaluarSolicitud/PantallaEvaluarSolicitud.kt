@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
 
@@ -45,9 +46,10 @@ fun PantallaEvaluarSolicitud(
     id_perfil: Int,
     id_usuario: Int,
     navegarInicio: (Int, Int) -> Unit,
-    pantallaEvaluarSolicitudViewModel: PantallaEvaluarSolicitudViewModel = viewModel()
+    pantallaEvaluarSolicitudViewModel: PantallaEvaluarSolicitudViewModel = hiltViewModel()
 ) {
     val pantallaEvaluarSolicitudUiState by pantallaEvaluarSolicitudViewModel.uiState.collectAsState()
+    pantallaEvaluarSolicitudViewModel.asignarIds(id_usuario, id_perfil, id_solicitud)
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -44,7 +44,7 @@ interface ApiService {
         @Body artista: ArtistaRequest
     ): Response<ArtistaResponse>
 
-    @GET("solicitudes/{id_evaluador_artistico}")
+    @GET("solicitudes/artistico/{id_evaluador_artistico}")
     suspend fun obtenerSolicitudesEvaluadorArtisticoApi(
         @Path("id_evaluador_artistico") id_evaluador_artistico: Int
     ): Response<List<SolicitudResponse>>
@@ -57,7 +57,7 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<ObraResponse>
 
-    @GET("tecnica/{id}")
+    @GET("tecnicas/id/{id}")
     suspend fun obtenerTecnicaApi(
         @Path("id") id: Int
     ): Response<TecnicaResponse>
@@ -75,8 +75,19 @@ interface ApiService {
         @Body solicitud: SolicitudRequest
     ): Response<SolicitudResponse>
 
+    @GET("solicitudes/id/{id}")
+    suspend fun obtenerSolicitudPorIdApi(
+        @Path("id") id: Int
+    ): Response<SolicitudResponse>
+
     @GET("usuarios/{usuario_id}")
     suspend fun obtenerUsuarioApi(
         @Path("usuario_id") usuario_id: Int,
     ): Response<UsuarioResponse>
+
+    @POST("solicitudes/evaluarSolicitud/{id}")
+    suspend fun evaluarSolicitudArtistico(
+        @Path("id") solicitud_id: Int,
+        @Query("aprobacion") aprobacion: Int,
+    ): Response<SolicitudResponse>
 }
