@@ -1,52 +1,81 @@
 package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.detalleSolicitud
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.tecnisis.data.ListaArtistas
-import com.example.tecnisis.data.ListaEvaluadoresArtisticos
-import com.example.tecnisis.data.ListaObras
-import com.example.tecnisis.data.ListaSolicitudesRegistradas
-import com.example.tecnisis.data.ListaTecnicas
+import androidx.lifecycle.viewModelScope
+import com.example.tecnisis.domain.models.Usuario
+import com.example.tecnisis.domain.models.Artista
+import com.example.tecnisis.domain.models.Obra
+import com.example.tecnisis.domain.models.Solicitud
+import com.example.tecnisis.domain.models.Tecnica
+import com.example.tecnisis.domain.repository.InterfazUsuarioRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetalleSolicitudViewModelEvaluadorArtistico:ViewModel() {
+@HiltViewModel
+class DetalleSolicitudViewModelEvaluadorArtistico @Inject constructor(
+    private val usuarioRepository: InterfazUsuarioRepository
+):ViewModel() {
     private val _uiState = MutableStateFlow(DetalleSolicitudUiStateEvaluadorArtistico() )
     val uiState: StateFlow<DetalleSolicitudUiStateEvaluadorArtistico> = _uiState.asStateFlow()
 
     fun asignarIds(idSolicitud: Int, idUsuario: Int, idPerfil: Int) {
         _uiState.update { currentState -> currentState.copy(id_solicitud = idSolicitud, id_usuario = idUsuario, id_perfil = idPerfil ) }
-    }
-    fun obtenerDatosArtista(): artistaEvaluadorArtistico {
-        val id_artista = ListaSolicitudesRegistradas.solicitudesRegistradas.find { solicitud -> solicitud.id == _uiState.value.id_solicitud }?.id_artista
-        val artista = ListaArtistas.artistasRegistrados.find { artista -> artista.id == id_artista }
-        return artistaEvaluadorArtistico(dni = artista!!.dni, nombre = artista.nombre, direccion = artista.direccion, telefono = artista.telefono)
+        obtenerSolicitud(idSolicitud)
+        obtenerDatosExtra(_uiState.value.solicitudObjeto)
     }
 
-    fun obtenerDatosObra(): obraEvaluadorArtistico {
-        val idObra = ListaSolicitudesRegistradas.solicitudesRegistradas.find { solicitud -> solicitud.id == _uiState.value.id_solicitud }?.id_obra
-        val obra = ListaObras.obrasRegistrados.find { obraItem -> obraItem.id == idObra }
-        val tecnica = ListaTecnicas.tecnicasRegistradas.find { tecnica -> tecnica.id == obra?.id_tecnica }
-        val id_experto = ListaSolicitudesRegistradas.solicitudesRegistradas.find { solicitud -> solicitud.id == _uiState.value.id_solicitud }?.id_experto
-        val experto = ListaEvaluadoresArtisticos.evaluadoresArtisticos.find { experto -> experto.id == id_experto }
-        val estadoSolicitud = ListaSolicitudesRegistradas.solicitudesRegistradas.find { solicitud -> solicitud.id == _uiState.value.id_solicitud }
-        return obraEvaluadorArtistico( tecnica = tecnica!!.nombre_tecnica , fecha=obra!!.fecha, dimensiones=obra.dimensiones, experto = experto!!.nombre, estadoSolicitud = estadoSolicitud!!.aprobadaEvaluadorArtistico)
+    fun obtenerSolicitud(id: Int) {
+        viewModelScope.launch {
+            try {
+                val solicitud = usuarioRepository.obtenerSolicitudPorId(id)
+                _uiState.update { currentState -> currentState.copy( solicitudObjeto = solicitud ) }
+                Log.d("viewmodelobtenersolicitudesdetalles", "se llamo a la api para obtener datos extra y se obtuvo esta solicitud de id: ${id}")
+            } catch (e: Exception) {
+                Log.d("viewmodelobtenersolicitudesdetalles", "entro y agarro al catch")
+                Log.d("viewmodelobtenersolicitudesdetalles", e.message.toString())
+            }
+        }
     }
 
-    fun asignarDatos() {
-        val artistatemporal = obtenerDatosArtista()
-        val obratemporal = obtenerDatosObra()
-        _uiState.update { currentState -> currentState.copy(
-            dni = artistatemporal.dni,
-            nombre = artistatemporal.nombre,
-            direccion = artistatemporal.direccion,
-            telefono = artistatemporal.telefono,
-            tecnica = obratemporal.tecnica,
-            fecha = obratemporal.fecha,
-            dimensiones = obratemporal.dimensiones,
-            nombreExperto = obratemporal.experto,
-            estadoSolicitudEconomico = obratemporal.estadoSolicitud
-        ) }
+    fun obtenerDatosExtra( solic: Solicitud ) {
+        viewModelScope.launch {
+            try {
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${solic}")
+                val id_solicitud: Int = solic.id
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}")
+                val artista: Artista = usuarioRepository.buscarArtistaId( solic.id_artista)
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}")
+                val obra: Obra = usuarioRepository.obtenerObra(solic.id_obra)
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}, ${obra}")
+                val tecnica: Tecnica = usuarioRepository.obtenerTecnica(obra.id_tecnica)
+
+                val evaluador_artistico: Usuario = usuarioRepository.obtenerUsuario(solic.id_evaluador_artistico)
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}, ${obra}, ${tecnica}")
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        dni = artista.dni,
+                        nombre = artista.nombre,
+                        direccion = artista.direccion,
+                        telefono = artista.telefono,
+                        tecnica = tecnica.nombre_tecnica,
+                        fecha = obra.fecha,
+                        dimensiones = obra.dimensiones,
+                        nombreExperto = evaluador_artistico.nombre,
+                        estadoSolicitudArtistico = solic.aprobadaEvaluadorArtistico,
+                        estadoSolicitudEconomico = solic.aprobadaEValuadorEconomico
+                    )
+                }
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra y se obtuvieron")
+            } catch (e: Exception) {
+                Log.d("viewmodelsolicitudesregistradas", "entro y agarro al catch")
+                Log.d("viewmodelsolicitudesregistradas", e.message.toString())
+            }
+        }
     }
 }

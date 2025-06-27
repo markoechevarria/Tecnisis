@@ -58,4 +58,10 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     override suspend fun obtenerUsuario(id: Int): Usuario {
         return remoteDataSource.obtenerUsuarioIdRDS( id = id ).toDomain()
     }
+    override suspend fun obtenerSolicitudPorId(id: Int): Solicitud {
+        return remoteDataSource.obtenerSolicitudPorIRDS(id).toDomain()
+    }
+    override suspend fun evaluarSolicitudArtistico(id: Int, aprobacion: Int): Solicitud {
+        return remoteDataSource.evaluarSolicitudArtisticoRDS(id, aprobacion).toDomain()
+    }
 }

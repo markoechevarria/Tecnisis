@@ -21,4 +21,6 @@ interface InterfazUsuarioRepository {
     suspend fun registrarSolicitud(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Double, precio_venta: Double): Solicitud
     suspend fun obtenerUsuario(id: Int): Usuario
     suspend fun obtenerSolicitudes(): List<Solicitud>
+    suspend fun obtenerSolicitudPorId(id: Int): Solicitud
+    suspend fun evaluarSolicitudArtistico(id: Int, aprobacion: Int): Solicitud
 }

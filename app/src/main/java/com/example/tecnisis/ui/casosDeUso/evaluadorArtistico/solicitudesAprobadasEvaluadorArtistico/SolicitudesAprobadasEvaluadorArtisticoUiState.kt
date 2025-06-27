@@ -1,21 +1,18 @@
 package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesAprobadasEvaluadorArtistico
 
+import com.example.tecnisis.domain.models.Solicitud
+
 data class SolicitudesAprobadasEvaluadorArtisticoUiState (
     val idPerfil: Int = 0,
     val id: Int = 0,
-    val listaSolicitudesAprobadas: List<SolicitudArtistaAprobado> = emptyList<SolicitudArtistaAprobado>()
+    val listaSolicitudes: List<Solicitud> = emptyList<Solicitud>(),
+    val solicitudDatosArtista: SolicitudArtistaAprobada = SolicitudArtistaAprobada(),
 )
 
-data class SolicitudArtistaAprobado (
+data class SolicitudArtistaAprobada (
     val id_solicitud: Int = 0,
-    val id_artista: Int = 0,
-    val id_obra: Int = 0,
-    val id_experto: Int = 0,
-    val aprobadaEvaluadorArtistico: Boolean = false,
-
     val nombre: String = "",
+    val nombre_artista: String = "",
     val fecha: String = "",
     val tecnica: String = ""
 )
-
-data class nombreFechaTecnicaAprobado ( val nombre: String, val fecha: String, val tecnica: String )

@@ -75,8 +75,19 @@ interface ApiService {
         @Body solicitud: SolicitudRequest
     ): Response<SolicitudResponse>
 
+    @GET("solicitudes/id/{id}")
+    suspend fun obtenerSolicitudPorIdApi(
+        @Path("id") id: Int
+    ): Response<SolicitudResponse>
+
     @GET("usuarios/{usuario_id}")
     suspend fun obtenerUsuarioApi(
         @Path("usuario_id") usuario_id: Int,
     ): Response<UsuarioResponse>
+
+    @POST("solicitudes/evaluarSolicitud/{id}")
+    suspend fun evaluarSolicitudArtistico(
+        @Path("id") solicitud_id: Int,
+        @Query("aprobacion") aprobacion: Int,
+    ): Response<SolicitudResponse>
 }
