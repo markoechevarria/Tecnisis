@@ -52,7 +52,6 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
 
     LaunchedEffect(id, id_perfil) {
         solicitudesRegistradasViewModelEvaluadorArtistico.actualizarDatos(id, id_perfil)
-        solicitudesRegistradasViewModelEvaluadorArtistico.obtenerDatosExtra()
     }
 
     Column(
@@ -101,19 +100,19 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-
-        if (solicitudesRegistradasUiStateEvaluadorArtistico.solicitudesDatosArtista.size == 0) {
+        if (solicitudesRegistradasUiStateEvaluadorArtistico.listaSolicitudes.size != 0) {
             LazyColumn(
                 contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth().height(640.dp)
             ) {
-                items(solicitudesRegistradasUiStateEvaluadorArtistico.solicitudesDatosArtista) { solicitud ->
+                items(solicitudesRegistradasUiStateEvaluadorArtistico.listaSolicitudes) { solicitud ->
+                    solicitudesRegistradasViewModelEvaluadorArtistico.obtenerDatosExtra(solicitud)
                     ElevatedCard(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                        onClick = { verDetalleSolicitud(solicitud.id_solicitud, id, id_perfil) }
+                        onClick = { verDetalleSolicitud(solicitud.id, id, id_perfil) }
                     ) {
                         Row(
                             modifier = Modifier
@@ -123,19 +122,22 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
                         ) {
                             Column {
                                 Text(
-                                    text = solicitud.nombre,
+                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.nombre,
                                     style = MaterialTheme.typography.titleSmall
                                 )
                                 Text(
-                                    text = solicitud.fecha,
+                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.nombre_artista,
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                Text(
+                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.fecha,
                                     style = MaterialTheme.typography.labelSmall
                                 )
                                 Text(
-                                    text = solicitud.tecnica,
+                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.tecnica,
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             }
-
                             Icon(
                                 imageVector = Icons.Default.Face,
                                 contentDescription = null,

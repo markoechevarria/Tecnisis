@@ -1,15 +1,11 @@
 package com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistradasEvaluadorArtistico
 
 import android.util.Log
-import androidx.compose.runtime.currentComposer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tecnisis.domain.models.Artista
-import com.example.tecnisis.data.ListaArtistas
-import com.example.tecnisis.data.ListaObras
-import com.example.tecnisis.data.ListaSolicitudesRegistradas
-import com.example.tecnisis.data.ListaTecnicas
 import com.example.tecnisis.domain.models.Obra
+import com.example.tecnisis.domain.models.Solicitud
 import com.example.tecnisis.domain.models.Tecnica
 import com.example.tecnisis.domain.repository.InterfazUsuarioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,20 +38,25 @@ class SolicitudesRegistradasViewModelEvaluadorArtistico @Inject constructor(
         }
     }
 
-    fun obtenerDatosExtra() {
-        _uiState.value.listaSolicitudes.forEach {
-            viewModelScope.launch {
-                try {
-                    val artista: Artista = usuarioRepository.buscarArtistaId( it.id_artista)
-                    val obra: Obra = usuarioRepository.obtenerObra(it.id_obra)
-                    val tecnica: Tecnica = usuarioRepository.obtenerTecnica(obra.id_tecnica)
-                    _uiState.value.solicitudesDatosArtista.add(SolicitudArtista(
-                        id_solicitud = it.id, nombre = artista.nombre,fecha = obra.fecha, tecnica = tecnica.nombre_tecnica
-                    ))
-                } catch (e: Exception) {
-                    Log.d("viewmodelsolicitudesregistradas", "entro y agarro al catch")
-                    Log.d("viewmodel", e.message.toString())
+    fun obtenerDatosExtra( solic: Solicitud ) {
+        viewModelScope.launch {
+            try {
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${solic}")
+                val id_solicitud: Int = solic.id
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}")
+                val artista: Artista = usuarioRepository.buscarArtistaId( solic.id_artista)
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}")
+                val obra: Obra = usuarioRepository.obtenerObra(solic.id_obra)
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}, ${obra}")
+                val tecnica: Tecnica = usuarioRepository.obtenerTecnica(obra.id_tecnica)
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}, ${obra}, ${tecnica}")
+                _uiState.update { currentState ->
+                    currentState.copy(solicitudDatosArtista = SolicitudArtista( id_solicitud = id_solicitud, nombre_artista = artista.nombre, nombre=obra.nombre, fecha = obra.fecha, tecnica = tecnica.nombre_tecnica))
                 }
+                Log.d("viewmodelsolicitudesregistradas", "se llamo a la api para obtener datos extra: ${_uiState.value.solicitudDatosArtista}")
+            } catch (e: Exception) {
+                Log.d("viewmodelsolicitudesregistradas", "entro y agarro al catch")
+                Log.d("viewmodelsolicitudesregistradas", e.message.toString())
             }
         }
     }
