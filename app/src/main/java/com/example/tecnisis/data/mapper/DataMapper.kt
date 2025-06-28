@@ -3,12 +3,14 @@ package com.example.tecnisis.data.mapper
 import com.example.tecnisis.data.remote.models.ArtistaResponse
 import com.example.tecnisis.data.remote.models.ObraResponse
 import com.example.tecnisis.data.remote.models.OpcionResponse
+import com.example.tecnisis.data.remote.models.PerfilResponse
 import com.example.tecnisis.data.remote.models.SolicitudResponse
 import com.example.tecnisis.data.remote.models.TecnicaResponse
 import com.example.tecnisis.data.remote.models.UsuarioResponse
 import com.example.tecnisis.domain.models.Artista
 import com.example.tecnisis.domain.models.Obra
 import com.example.tecnisis.domain.models.Opcion
+import com.example.tecnisis.domain.models.Perfil
 import com.example.tecnisis.domain.models.Solicitud
 import com.example.tecnisis.domain.models.Tecnica
 import com.example.tecnisis.domain.models.Usuario
@@ -70,5 +72,12 @@ fun ObraResponse.toDomain(): Obra {
         nombre = this.nombre,
         fecha = this.fecha,
         dimensiones = this.dimensiones
+    )
+}
+
+fun PerfilResponse.toDomain(): Perfil {
+    return Perfil(
+        id = this.id,
+        nombre = this.nombre
     )
 }

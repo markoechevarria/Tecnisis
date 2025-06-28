@@ -5,3 +5,8 @@ data class TecnicaResponse(
     val nombre_tecnica: String,
     val nivel_apreciacion: String
 )
+
+data class TecnicaRequest(
+    val nombre_tecnica: String,
+    val nivel_apreciacion: String
+)

@@ -1,8 +1,6 @@
 package com.example.tecnisis.ui.test
 
-import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistradas.Solicitud
-import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistradas.SolicitudesRegistradasViewModel
-import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.solicitudesRegistradas.SolicitudesRegistradasUiState
+import com.example.tecnisis.ui.views.evaluadorArtistico.solicitudesRegistradas.SolicitudesRegistradasViewModel
 import com.example.tecnisis.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle

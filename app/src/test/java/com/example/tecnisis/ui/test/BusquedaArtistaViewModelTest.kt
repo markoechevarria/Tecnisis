@@ -1,6 +1,6 @@
 package com.example.tecnisis.ui.test
 
-import com.example.tecnisis.ui.casosDeUso.anfitrion.busquedaArtista.BusquedaArtistaViewModel
+import com.example.tecnisis.ui.views.anfitrion.busquedaArtista.BusquedaArtistaViewModel
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

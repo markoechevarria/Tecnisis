@@ -1,6 +1,6 @@
 package com.example.tecnisis.ui.test
 
-import com.example.tecnisis.ui.casosDeUso.register.register.RegisterScreenViewModel
+import com.example.tecnisis.ui.views.register.register.RegisterScreenViewModel
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

@@ -1,0 +1,40 @@
+package com.example.tecnisis.ui.views.gerente.reporte
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.tecnisis.domain.repository.InterfazUsuarioRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+class ReporteViewModel @Inject constructor(
+    private val usuarioRepository: InterfazUsuarioRepository
+) :ViewModel() {
+
+    private val _uiState = MutableStateFlow(ReporteUiState() )
+    val uiState: StateFlow<ReporteUiState> = _uiState.asStateFlow()
+
+    fun asignarIds(id: Int, id_perfil: Int) {
+        _uiState.update { currentState -> currentState.copy( id = id, id_perfil = id_perfil ) }
+    }
+    /*
+    fun actualizarNombreTecnica( nombre_tecnica: String) {
+        _uiState.update { currentState -> currentState.copy( nombre_tecnica = nombre_tecnica) }
+        habilitarBoton()
+    }
+    fun actualizarNivelAprecicacion( nivel_apreciacion: String) {
+        _uiState.update { currentState -> currentState.copy( nivel_apreciacion = nivel_apreciacion) }
+        habilitarBoton()
+    }
+
+    fun habilitarBoton() {
+        if ( _uiState.value.nombre_tecnica != "" && _uiState.value.nivel_apreciacion != "" ) {
+            _uiState.update { currentState -> currentState.copy( habilitadoBoton = true ) }
+        }
+    }
+     */
+}
