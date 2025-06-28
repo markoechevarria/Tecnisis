@@ -1,10 +1,6 @@
 package com.example.tecnisis.di
 
-import com.example.tecnisis.data.remote.InterfazRemoteDataSource
-import com.example.tecnisis.data.remote.RemoteDataSource
 import com.example.tecnisis.data.remote.services.ApiService
-import com.example.tecnisis.data.repository.UsuarioRepositoryImplementacion
-import com.example.tecnisis.domain.repository.InterfazUsuarioRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

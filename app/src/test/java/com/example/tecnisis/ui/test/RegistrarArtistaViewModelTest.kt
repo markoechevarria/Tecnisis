@@ -1,10 +1,8 @@
 package com.example.tecnisis.ui.test
 
-import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarArtista.RegistrarArtistaViewModel
-import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarArtista.RegistrarArtistaUiState
+import com.example.tecnisis.ui.views.anfitrion.registrarArtista.RegistrarArtistaViewModel
 import com.example.tecnisis.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule

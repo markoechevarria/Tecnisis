@@ -1,6 +1,6 @@
 package com.example.tecnisis.ui.test
 
-import com.example.tecnisis.ui.casosDeUso.gerente.nuevoExperto.NuevoExpertoViewModel
+import com.example.tecnisis.ui.views.gerente.nuevoExperto.NuevoExpertoViewModel
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

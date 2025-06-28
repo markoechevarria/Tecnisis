@@ -1,7 +1,6 @@
 package com.example.tecnisis.ui.test
 
-import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarObra.RegistrarObraViewModel
-import com.example.tecnisis.ui.casosDeUso.anfitrion.registrarObra.RegistrarObraUiState
+import com.example.tecnisis.ui.views.anfitrion.registrarObra.RegistrarObraViewModel
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

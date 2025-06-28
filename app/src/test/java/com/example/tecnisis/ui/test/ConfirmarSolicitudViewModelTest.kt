@@ -1,6 +1,6 @@
 package com.example.tecnisis.ui.test
 
-import com.example.tecnisis.ui.casosDeUso.anfitrion.confirmarSolicitud.ConfirmarSolicitudViewModel
+import com.example.tecnisis.ui.views.anfitrion.confirmarSolicitud.ConfirmarSolicitudViewModel
 import com.example.tecnisis.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
