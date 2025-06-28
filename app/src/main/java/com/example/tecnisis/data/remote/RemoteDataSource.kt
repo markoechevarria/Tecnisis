@@ -24,11 +24,12 @@ interface InterfazRemoteDataSource {
     suspend fun obtenerTecnicaRDS(id: Int): TecnicaResponse
     suspend fun listarEvaluadoresArtisticosRDS(): List<UsuarioResponse>
     suspend fun registrarObraRDS(id_tecnica: Int, id_artista: Int, nombre: String, fecha: String, dimensiones: String): ObraResponse
-    suspend fun registrarSolicitudRDS(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Double, precio_venta: Double): SolicitudResponse
+    suspend fun registrarSolicitudRDS(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Int, precio_venta: Int): SolicitudResponse
     suspend fun obtenerUsuarioIdRDS(id: Int): UsuarioResponse
     suspend fun obtenerSolicitudesRDS(): List<SolicitudResponse>
     suspend fun obtenerSolicitudPorIRDS(id: Int): SolicitudResponse
     suspend fun evaluarSolicitudArtisticoRDS(id: Int, aprobacion: Int): SolicitudResponse
+    suspend fun asignarPreciosRDS(id: Int, precio: Int, porcentaje: Int): SolicitudResponse
 }
 
 @Singleton
@@ -46,7 +47,16 @@ class RemoteDataSource @Inject constructor(
             throw Exception(errorMessage)
         }
     }
-
+    override suspend fun asignarPreciosRDS(id: Int, precio: Int, porcentaje: Int): SolicitudResponse {
+        val response = apiService.asignarPreciosApi(id, precio, porcentaje)
+        if (response.isSuccessful && response.body() != null) {
+            return response.body()!!
+        } else {
+            val errorBody = response.errorBody()?.string()
+            val errorMessage = "Error al asignar precios: ${response.code()} - $errorBody"
+            throw Exception(errorMessage)
+        }
+    }
     override suspend fun obtenerSolicitudPorIRDS(id: Int): SolicitudResponse {
         val response = apiService.obtenerSolicitudPorIdApi( id )
         if ( response.isSuccessful && response.body() != null ) {
@@ -170,7 +180,7 @@ class RemoteDataSource @Inject constructor(
         }
     }
 
-    override suspend fun registrarSolicitudRDS(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Double, precio_venta: Double): SolicitudResponse {
+    override suspend fun registrarSolicitudRDS(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Int, precio_venta: Int): SolicitudResponse {
         val solicitudRequest = SolicitudRequest(id_artista, id_obra,id_evaluador_artistico, aprobadaEvaluadorArtistico, aprobadaEValuadorEconomico, porcentaje_ganancia, precio_venta)
         val response = apiService.registrarSolicitudApi(solicitudRequest)
         if (response.isSuccessful && response.body() != null) {
@@ -194,7 +204,7 @@ class RemoteDataSource @Inject constructor(
     }
 
     override suspend fun evaluarSolicitudArtisticoRDS(id: Int, aprobacion: Int): SolicitudResponse {
-        val response = apiService.evaluarSolicitudArtistico(id, aprobacion)
+        val response = apiService.evaluarSolicitudArtisticoApi(id, aprobacion)
         if (response.isSuccessful && response.body() != null) {
             return response.body()!!
         } else {

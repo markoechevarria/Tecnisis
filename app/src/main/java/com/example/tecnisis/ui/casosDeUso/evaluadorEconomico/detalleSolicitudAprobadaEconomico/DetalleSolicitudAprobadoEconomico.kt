@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
 
@@ -43,12 +44,11 @@ fun PantallaDetalleSolicitudAprobadoEconomico(
     id_usuario: Int = 0,
     id_perfil: Int = 0,
     navegarInicio: (Int, Int) -> Unit,
-    detalleSolicitudViewModelAprobadoEconomico: DetalleSolicitudViewModelAprobadoEconomico = viewModel()
+    detalleSolicitudViewModelAprobadoEconomico: DetalleSolicitudViewModelAprobadoEconomico = hiltViewModel()
 ) {
     val detalleSolicitudUiStateAprobadoEconomico by detalleSolicitudViewModelAprobadoEconomico.uiState.collectAsState()
 
     detalleSolicitudViewModelAprobadoEconomico.asignarIds(id_solicitud, id_usuario, id_perfil)
-    detalleSolicitudViewModelAprobadoEconomico.asignarDatos()
 
     Column(
         modifier = Modifier
@@ -111,8 +111,8 @@ fun PantallaDetalleSolicitudAprobadoEconomico(
             ) {
                 Text("Datos Artista", style = MaterialTheme.typography.titleSmall)
                 InfoCardArtista(
-                    detalleSolicitudUiStateAprobadoEconomico.dni,
-                    detalleSolicitudUiStateAprobadoEconomico.nombre,
+                    detalleSolicitudUiStateAprobadoEconomico.dni_artista,
+                    detalleSolicitudUiStateAprobadoEconomico.nombre_artista,
                     detalleSolicitudUiStateAprobadoEconomico.direccion,
                     detalleSolicitudUiStateAprobadoEconomico.telefono)
 
@@ -125,13 +125,8 @@ fun PantallaDetalleSolicitudAprobadoEconomico(
 
                 Text("Datos Experto", style = MaterialTheme.typography.titleSmall)
                 InfoCardExperto(
-                    detalleSolicitudUiStateAprobadoEconomico.nombre,
-                    detalleSolicitudUiStateAprobadoEconomico.dni
-                )
-
-                Text("Estado Solicitud", style = MaterialTheme.typography.titleSmall)
-                InfoCardEstado(
-                    if (detalleSolicitudUiStateAprobadoEconomico.estadoSolicitudEconomico) {"Aprobado"} else {"Pendiente"}
+                    detalleSolicitudUiStateAprobadoEconomico.nombreExperto,
+                    detalleSolicitudUiStateAprobadoEconomico.correo_experto
                 )
             }
         }
@@ -144,13 +139,14 @@ fun PantallaDetalleSolicitudAprobadoEconomico(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
+
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Ya Evaluado")
+                Text("Ir a inicio")
             }
         }
 
