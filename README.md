@@ -1,24 +1,8 @@
-# Tecnisis DSM
+# Tecnisis
 
-Aplicación móvil y backend para la gestión de solicitudes y evaluaciones de obras de arte, artistas y expertos, diseñada para diferentes roles (anfitrión, evaluador artístico, evaluador económico, gerente). El frontend está desarrollado en Kotlin usando Jetpack Compose, y el backend en Java con Spring Boot.
+Aplicación móvil y backend para la gestión de solicitudes y evaluaciones de obras de arte, artistas y expertos, diseñada para diferentes roles (anfitrión, evaluador artístico, evaluador económico, gerente). El frontend está desarrollado en Kotlin usando Jetpack Compose, y el backend en Python con FastAPI.
 
-Este proyecto demuestra el uso de componentes modernos de arquitectura Android (MVVM, ViewModel, StateFlow, Navigation Compose) y una API REST robusta con Spring Boot.
-
----
-
-## Pre-requisitos
-
-### Para la app móvil (Android)
-- Experiencia con sintaxis de Kotlin.
-- Conocimientos básicos de Jetpack Compose.
-- Saber crear y ejecutar proyectos en Android Studio.
-- Conocimientos sobre ViewModel, StateFlow y funciones composables.
-- Conocimientos básicos de navegación en Compose.
-
-### Para el backend (Java)
-- Experiencia con Java y Spring Boot.
-- Conocimientos de APIs REST.
-- Saber ejecutar proyectos con Gradle.
+Este proyecto demuestra el uso de componentes modernos de arquitectura Android (MVVM, ViewModel, StateFlow, Navigation Compose, Inyección de Dependencias con Hilt, Crashlytics y almacenamiento de imágenes con Firebase, Repositories y Retrofit para llamadas a la API) y una API REST con FastAPI.
 
 ---
 
@@ -29,29 +13,20 @@ Este proyecto demuestra el uso de componentes modernos de arquitectura Android (
     - Gestión de estado con ViewModel y UiState.
     - Navegación dinámica con Navigation Compose.
     - Temas personalizados con MaterialTheme.
-- **backend/**: API REST (Java + Spring Boot)
+    - Inyección de dependencias con Hilt.
+    - Integración con Firebase para Crashlytics y almacenamiento de imágenes.
+    - Uso de Patrón Repositorio y Retrofit para la capa de datos.
+- **backend/**: FastAPI
     - Controladores para autenticación, registro, gestión de artistas, obras y evaluaciones.
-    - Entidades y repositorios JPA para persistencia de datos.
-    - DTOs y mapeadores para transferencia de datos.
+    - Endpoints para autenticación, registro, gestión de artistas, obras y evaluaciones.
+    - Modelos de datos con Pydantic.
+    - Interacción con PostgreSQL para persistencia de datos.
 
 ---
 
-## Cómo empezar
+## Enlace al repositorio de backend
 
-### App móvil (Android)
-1. Instala Android Studio si aún no lo tienes.
-2. Descarga o clona este repositorio.
-3. Importa el proyecto en Android Studio.
-4. Construye y ejecuta la app en un emulador o dispositivo físico.
-
-### Backend (Spring Boot)
-1. Asegúrate de tener Java 17+ y Gradle instalados.
-2. Navega a la carpeta `backend/`.
-3. Ejecuta el backend con el comando:
-   ```
-   ./gradlew bootRun
-   ```
-4. El backend estará disponible en `http://localhost:8080`.
+[Tecnisis Backend FastAPI](https://github.com/markoechevarria/Tecnisis-Backend-FastAPI)
 
 ---
 
@@ -59,20 +34,17 @@ Este proyecto demuestra el uso de componentes modernos de arquitectura Android (
 
 - Registro y autenticación de usuarios.
 - Gestión de artistas y obras de arte.
-- Evaluación artística y económica de solicitudes.
+-Evaluación artística y económica de solicitudes.
 - Panel de control y reportes para gerentes.
 - Gestión de expertos y técnicas artísticas.
 - Navegación fluida y moderna con Jetpack Compose.
-
+- Reporte de errores con Crashlytics (Firebase).
+- Almacenamiento de imágenes en la nube (Firebase Storage).
 ---
 
 ## Herramientas y tecnologías utilizadas
 
-- **Frontend:** Kotlin, Jetpack Compose, ViewModel, StateFlow, Navigation Compose, MaterialTheme.
-- **Backend:** Java, Spring Boot, Spring Data JPA, Gradle.
+- **Frontend:** Kotlin, Jetpack Compose, ViewModel, StateFlow, Navigation Compose, MaterialTheme, Hilt, Firebase (Crashlytics, Storage), Retrofit.
+- **Backend:** Python, FastAPI, Pydantic, PostgreSQL, SQLAlchemy.
 
 ---
-
-## Créditos
-
-Desarrollado por el equipo de Tecnisis DSM.
