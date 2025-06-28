@@ -52,7 +52,7 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     override suspend fun registrarObra(id_tecnica: Int, id_artista: Int, nombre: String, fecha: String, dimensiones: String): Obra {
         return remoteDataSource.registrarObraRDS(id_tecnica, id_artista, nombre, fecha, dimensiones).toDomain()
     }
-    override suspend fun registrarSolicitud(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Double, precio_venta: Double): Solicitud {
+    override suspend fun registrarSolicitud(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Int, precio_venta: Int): Solicitud {
         return remoteDataSource.registrarSolicitudRDS(id_artista, id_obra,id_evaluador_artistico,aprobadaEvaluadorArtistico, aprobadaEValuadorEconomico,porcentaje_ganancia, precio_venta).toDomain()
     }
     override suspend fun obtenerUsuario(id: Int): Usuario {
@@ -63,5 +63,8 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     }
     override suspend fun evaluarSolicitudArtistico(id: Int, aprobacion: Int): Solicitud {
         return remoteDataSource.evaluarSolicitudArtisticoRDS(id, aprobacion).toDomain()
+    }
+    override suspend fun asignarPrecios(id: Int, precio: Int, porcentaje: Int): Solicitud {
+        return remoteDataSource.asignarPreciosRDS(id, precio, porcentaje).toDomain()
     }
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
 import com.example.tecnisis.navigation.Rutas
@@ -50,12 +51,11 @@ fun PantallaEvaluacionEconomica(
     id_perfil: Int,
     id_solicitud: Int,
     navegarInicio: (Int, Int) -> Unit,
-    evaluacionEconomicaViewModel: EvaluacionEconomicaViewModel = viewModel(),
+    evaluacionEconomicaViewModel: EvaluacionEconomicaViewModel = hiltViewModel(),
 ) {
     val evaluacionEconomicaUiState by evaluacionEconomicaViewModel.uiState.collectAsState()
 
-    evaluacionEconomicaViewModel.asignarIds(id_solicitud, id, id_perfil)
-    evaluacionEconomicaViewModel.asignarDatos()
+    evaluacionEconomicaViewModel.asignarIds( id, id_perfil, id_solicitud)
 
     Column(
         modifier = Modifier
@@ -117,7 +117,12 @@ fun PantallaEvaluacionEconomica(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text("Obra", style = MaterialTheme.typography.titleSmall)
-                InfoCardObra( tecnica=evaluacionEconomicaUiState.tecnica, fecha=evaluacionEconomicaUiState.fecha ,dimensiones=evaluacionEconomicaUiState.dimensiones, experto = evaluacionEconomicaUiState.nombre_experto)
+                InfoCardObra(
+                    nombre = evaluacionEconomicaUiState.nombre_obra,
+                    tecnica=evaluacionEconomicaUiState.tecnica,
+                    fecha=evaluacionEconomicaUiState.fecha ,
+                    dimensiones=evaluacionEconomicaUiState.dimensiones
+                )
 
                 Text("Experto", style = MaterialTheme.typography.titleSmall)
                 InfoCardExperto( nombre = evaluacionEconomicaUiState.nombre_experto )
@@ -136,7 +141,7 @@ fun PantallaEvaluacionEconomica(
 
                 OutlinedTextField(
                     value = evaluacionEconomicaUiState.precioVenta.toString(),
-                    onValueChange = { it -> if (it.toDoubleOrNull() == null) {evaluacionEconomicaViewModel.asignarVenta(0.0)} else {evaluacionEconomicaViewModel.asignarVenta(it.toDouble())} },
+                    onValueChange ={it ->  evaluacionEconomicaViewModel.asignarVenta( venta = it.toInt() )} ,
                     label = { Text("Precio de venta") },
                     leadingIcon = { Icon(Icons.Default.ShoppingCart, null) },
                     modifier = Modifier.fillMaxWidth(),
@@ -145,7 +150,7 @@ fun PantallaEvaluacionEconomica(
 
                 OutlinedTextField(
                     value = evaluacionEconomicaUiState.porcentajeGanancia.toString(),
-                    onValueChange = { it -> if (it.toDoubleOrNull() == null || it == "" ) {evaluacionEconomicaViewModel.asignarPorcentajeVenta(0.0)} else {evaluacionEconomicaViewModel.asignarPorcentajeVenta(it.toDouble())} },
+                    onValueChange = {it ->  evaluacionEconomicaViewModel.asignarPorcentajeVenta( porcentaje = it.toInt() )},
                     label = { Text("Porcentaje de ganancia") },
                     leadingIcon = { Icon(Icons.Default.ShoppingCart, null) },
                     modifier = Modifier.fillMaxWidth(),
@@ -192,7 +197,7 @@ fun PantallaEvaluacionEconomica(
 }
 
 @Composable
-fun InfoCardObra(tecnica: String, fecha: String, dimensiones: String, experto: String) {
+fun InfoCardObra(nombre: String, tecnica: String, fecha: String, dimensiones: String) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -201,6 +206,12 @@ fun InfoCardObra(tecnica: String, fecha: String, dimensiones: String, experto: S
         Column(
             modifier = Modifier.padding(4.dp)
         ) {
+            Text(
+                text = nombre,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(4.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
             Text(
                 text = tecnica,
                 style = MaterialTheme.typography.bodyMedium,
@@ -214,7 +225,7 @@ fun InfoCardObra(tecnica: String, fecha: String, dimensiones: String, experto: S
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
             Text(
-                text = dimensiones + experto,
+                text = dimensiones,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(4.dp),
                 color = MaterialTheme.colorScheme.onPrimaryContainer

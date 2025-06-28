@@ -7,7 +7,7 @@ data class DetalleSolicitudUiStateEvaluadorArtistico  (
     val id_perfil: Int = 0,
     val id_solicitud: Int = 0,
 
-    val solicitudObjeto: Solicitud = Solicitud(0,0,0,0,false,false, 0.0,0.0),
+    val solicitudObjeto: Solicitud = Solicitud(0,0,0,0,false,false, 0,0),
 
     val dni: String = "",
     val nombre: String = "",

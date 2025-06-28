@@ -116,7 +116,7 @@ class RegistrarSolicitudViewModel @Inject constructor(
                     _uiState.value.evaluadorArtisticoElegido.id,
                     false,
                     false,
-                    0.0, 0.0
+                    0, 0
                 )
             } catch (e: Exception) {
                 Log.d("viewmodelregistrarsolicitud", "entro y agarro al catch")

@@ -1,47 +1,67 @@
 package com.example.tecnisis.ui.casosDeUso.evaluadorEconomico.solicitudesRegistradasEvaluadorEconomico
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tecnisis.data.ListaArtistas
 import com.example.tecnisis.data.ListaObras
 import com.example.tecnisis.data.ListaSolicitudesRegistradas
 import com.example.tecnisis.data.ListaTecnicas
+import com.example.tecnisis.domain.models.Artista
+import com.example.tecnisis.domain.models.Obra
+import com.example.tecnisis.domain.models.Solicitud
+import com.example.tecnisis.domain.models.Tecnica
+import com.example.tecnisis.domain.repository.InterfazUsuarioRepository
+import com.example.tecnisis.ui.casosDeUso.evaluadorEconomico.listaObrasAprobadas.SolicitudArtistaAprobadaPorEconomico
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SolicitudesRegistradasViewModelEvaluadorEconomico : ViewModel() {
+@HiltViewModel
+class SolicitudesRegistradasViewModelEvaluadorEconomico @Inject constructor(
+    private val usuarioRepository: InterfazUsuarioRepository
+) :ViewModel() {
     private val _uiState = MutableStateFlow(SolicitudesRegistradasUiStateEvaluadorEconomico() )
     val uiState: StateFlow<SolicitudesRegistradasUiStateEvaluadorEconomico> = _uiState.asStateFlow()
 
     fun actualizarDatos( id: Int, idPerfil: Int ) {
         _uiState.update { currentState -> currentState.copy( id = id, idPerfil = idPerfil ) }
 
-        val solicitudes: List<SolicitudArtistaEconomico>  = ListaSolicitudesRegistradas.solicitudesRegistradas.map {
-                it -> SolicitudArtistaEconomico( it.id , it.id_artista, it.id_obra, it.id_experto, it.aprobadaEvaluadorArtistico,it.aprobadaEValuadorEconomico )
+        viewModelScope.launch {
+            try {
+                val solicitudes = usuarioRepository.obtenerSolicitudes().filter { it.aprobadaEvaluadorArtistico && it.aprobadaEValuadorEconomico == false }
+                _uiState.update { currentState -> currentState.copy( listaSolicitudes = solicitudes ) }
+            } catch (e: Exception) {
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "entro y agarro al catch")
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", e.message.toString())
+            }
         }
-        _uiState.update { currentState -> currentState.copy( listaSolicitudes = solicitudes ) }
     }
-    fun obtenerNombreFechaTecnica (idArtista: Int, idObra: Int, idSolicitud: Int): nombreFechaTecnicaEconomico {
-        val nombre: String = ListaArtistas.artistasRegistrados.find { it.id == idArtista }?.nombre ?: ""
-        val fecha: String = ListaObras.obrasRegistrados.find { it.id == idObra  }?.fecha ?: ""
-        val id_tecnica: Int = ListaObras.obrasRegistrados.find {it.id == idObra}?.id_tecnica?: 0
-        val tecnica: String = ListaTecnicas.tecnicasRegistradas.find { it.id == id_tecnica }?.nombre_tecnica ?: ""
-        val aprobadaEvaluadorArtistico: Boolean = ListaSolicitudesRegistradas.solicitudesRegistradas.find { it.id == idSolicitud }?.aprobadaEvaluadorArtistico ?: false
-        val aprobadaEvaluadorEconomico: Boolean = ListaSolicitudesRegistradas.solicitudesRegistradas.find { it.id == idSolicitud }?.aprobadaEValuadorEconomico ?: false
-        return nombreFechaTecnicaEconomico(nombre,fecha,tecnica, aprobadaEvaluadorArtistico, aprobadaEvaluadorEconomico)
-    }
-    fun obtenerDatosSolicitudes() {
-        val nuevaSolicitudes: List<SolicitudArtistaEconomico> = _uiState.value.listaSolicitudes.map { solicitud ->
-            solicitud.copy(
-                nombre =  obtenerNombreFechaTecnica(solicitud.id_artista, solicitud.id_obra, solicitud.id_solicitud).nombre,
-                fecha =  obtenerNombreFechaTecnica(solicitud.id_artista, solicitud.id_obra, solicitud.id_solicitud).fecha,
-                tecnica =  obtenerNombreFechaTecnica(solicitud.id_artista, solicitud.id_obra, solicitud.id_solicitud).tecnica,
-                aprobadaEvaluadorArtistico =  obtenerNombreFechaTecnica(solicitud.id_artista, solicitud.id_obra, solicitud.id_solicitud).aprobadaEvaluadorArtistico,
-                aprobadaEvaluadorEconomico =  obtenerNombreFechaTecnica(solicitud.id_artista, solicitud.id_obra, solicitud.id_solicitud).aprobadaEvaluadorEconomico,
-            )
+
+    fun obtenerDatosExtra( solic: Solicitud ) {
+        viewModelScope.launch {
+            try {
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "se llamo a la api para obtener datos extra: ${solic}")
+                val id_solicitud: Int = solic.id
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "se llamo a la api para obtener datos extra: ${id_solicitud}")
+                val artista: Artista = usuarioRepository.buscarArtistaId( solic.id_artista)
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}")
+                val obra: Obra = usuarioRepository.obtenerObra(solic.id_obra)
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}, ${obra}")
+                val tecnica: Tecnica = usuarioRepository.obtenerTecnica(obra.id_tecnica)
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "se llamo a la api para obtener datos extra: ${id_solicitud}, ${artista}, ${obra}, ${tecnica}")
+                _uiState.update { currentState ->
+                    currentState.copy(solicitudDatosArtista = SolicitudArtistaAprobadaPorArtistico( id_solicitud = id_solicitud, nombre_artista = artista.nombre, nombre=obra.nombre, fecha = obra.fecha, tecnica = tecnica.nombre_tecnica))
+                }
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "se llamo a la api para obtener datos extra: ${_uiState.value.solicitudDatosArtista}")
+            } catch (e: Exception) {
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "entro y agarro al catch")
+                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", e.message.toString())
+            }
         }
-        val SolicitudesRevisadas: List<SolicitudArtistaEconomico> = nuevaSolicitudes.filter { it.aprobadaEvaluadorArtistico }
-        _uiState.update { currentState -> currentState.copy( listaSolicitudes = SolicitudesRevisadas ) }
     }
 }

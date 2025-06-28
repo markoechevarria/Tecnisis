@@ -18,9 +18,10 @@ interface InterfazUsuarioRepository {
     suspend fun obtenerTecnica(id: Int): Tecnica
     suspend fun listarEvaluadoresArtisticos(): List<Usuario>
     suspend fun registrarObra(id_tecnica: Int, id_artista: Int, nombre: String, fecha: String, dimensiones: String): Obra
-    suspend fun registrarSolicitud(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Double, precio_venta: Double): Solicitud
+    suspend fun registrarSolicitud(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Int, precio_venta: Int): Solicitud
     suspend fun obtenerUsuario(id: Int): Usuario
     suspend fun obtenerSolicitudes(): List<Solicitud>
     suspend fun obtenerSolicitudPorId(id: Int): Solicitud
     suspend fun evaluarSolicitudArtistico(id: Int, aprobacion: Int): Solicitud
+    suspend fun asignarPrecios(id: Int, precio: Int, porcentaje: Int): Solicitud
 }

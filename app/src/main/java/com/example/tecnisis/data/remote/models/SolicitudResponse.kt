@@ -7,8 +7,8 @@ data class SolicitudResponse (
     val id_evaluador_artistico: Int,
     val aprobadaEvaluadorArtistico: Boolean,
     val aprobadaEValuadorEconomico: Boolean,
-    val porcentaje_ganancia: Double,
-    val precio_venta: Double
+    val porcentaje_ganancia: Int,
+    val precio_venta: Int
 )
 
 data class SolicitudRequest (
@@ -17,6 +17,6 @@ data class SolicitudRequest (
     val id_evaluador_artistico: Int,
     val aprobadaEvaluadorArtistico: Boolean,
     val aprobadaEValuadorEconomico: Boolean,
-    val porcentaje_ganancia: Double,
-    val precio_venta: Double
+    val porcentaje_ganancia: Int,
+    val precio_venta: Int
 )

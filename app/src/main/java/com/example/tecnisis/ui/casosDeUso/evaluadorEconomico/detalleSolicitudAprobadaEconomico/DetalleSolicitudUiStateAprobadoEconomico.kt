@@ -5,19 +5,16 @@ data class DetalleSolicitudUiStateAprobadoEconomico  (
     val id_perfil: Int = 0,
     val id_solicitud: Int = 0,
 
-    val dni: String = "",
-    val nombre: String = "",
+    val dni_artista: String = "",
+    val nombre_artista: String = "",
     val direccion: String = "",
     val telefono: String = "",
 
+    val nombre_obra: String = "",
     val tecnica: String = "",
     val fecha: String = "",
     val dimensiones: String = "",
 
     val nombreExperto: String = "",
-
-    val estadoSolicitudEconomico: Boolean = false,
+    val correo_experto: String = ""
 )
-
-data class artistaAprobadoEconomico( val dni: String = "",  val nombre: String = "", val direccion: String = "", val telefono: String = "")
-data class obraAprobadoEconomico(val tecnica: String = "", val fecha: String = "", val dimensiones: String = "", val experto: String = "", val estadoSolicitud: Boolean)

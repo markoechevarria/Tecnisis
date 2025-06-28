@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tecnisis.R
 import com.example.tecnisis.ui.casosDeUso.evaluadorArtistico.evaluarSolicitud.PantallaEvaluarSolicitudViewModel
@@ -46,13 +47,12 @@ fun PantallaSolicitudesRegistradasEvaluadorEconomico(
     id: Int,
     id_perfil: Int,
     navegarEvaluarSolicitudEconomico: (Int, Int, Int) -> Unit,
-    solicitudesRegistradasViewModelEvaluadorEconomico: SolicitudesRegistradasViewModelEvaluadorEconomico = viewModel()
+    solicitudesRegistradasViewModelEvaluadorEconomico: SolicitudesRegistradasViewModelEvaluadorEconomico = hiltViewModel()
 ) {
     val solicitudesRegistradasUiStateEvaluadorEconomico by solicitudesRegistradasViewModelEvaluadorEconomico.uiState.collectAsState()
 
     LaunchedEffect(id, id_perfil) {
         solicitudesRegistradasViewModelEvaluadorEconomico.actualizarDatos(id, id_perfil)
-        solicitudesRegistradasViewModelEvaluadorEconomico.obtenerDatosSolicitudes()
     }
 
     Column(
@@ -101,36 +101,45 @@ fun PantallaSolicitudesRegistradasEvaluadorEconomico(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth().height(640.dp)
-        ) {
-            items( solicitudesRegistradasUiStateEvaluadorEconomico.listaSolicitudes) { it ->
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                    onClick = { navegarEvaluarSolicitudEconomico(id, id_perfil, it.id_solicitud) }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Column {
-                            Text(text = it.nombre, style = MaterialTheme.typography.titleSmall)
-                            Text(text = it.fecha, style = MaterialTheme.typography.labelSmall)
-                            Text(text = it.tecnica, style = MaterialTheme.typography.labelSmall)
+        if (solicitudesRegistradasUiStateEvaluadorEconomico.listaSolicitudes.size != 0) {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth().height(640.dp)
+            ) {
+                items(solicitudesRegistradasUiStateEvaluadorEconomico.listaSolicitudes) { solicitud ->
+                    solicitudesRegistradasViewModelEvaluadorEconomico.obtenerDatosExtra(solicitud)
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                        onClick = {
+                            navegarEvaluarSolicitudEconomico(
+                                id,
+                                id_perfil,
+                                solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.id_solicitud
+                            )
                         }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Column {
+                                Text(text = solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.nombre, style = MaterialTheme.typography.titleSmall)
+                                Text(text = solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.fecha, style = MaterialTheme.typography.labelSmall)
+                                Text(text = solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.tecnica, style = MaterialTheme.typography.labelSmall)
+                            }
 
-                        Icon(
-                            imageVector = Icons.Default.Face,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
-                        )
+                            Icon(
+                                imageVector = Icons.Default.Face,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                     }
                 }
             }

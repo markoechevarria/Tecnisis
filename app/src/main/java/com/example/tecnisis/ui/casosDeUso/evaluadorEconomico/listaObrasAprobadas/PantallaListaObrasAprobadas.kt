@@ -35,20 +35,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tecnisis.R
 
 @Composable
 fun PantallaListarObrasAprobadas(
     id: Int,
     id_perfil: Int,
-    pantallaListaObrasAprobadasViewModel: PantallaListaObrasAprobadasViewModel = viewModel(),
+    pantallaListaObrasAprobadasViewModel: PantallaListaObrasAprobadasViewModel = hiltViewModel(),
     verDetalleSolicitud: (Int, Int, Int) -> Unit
 ) {
     val pantallaListaObrasAprobadasUiState by pantallaListaObrasAprobadasViewModel.uiState.collectAsState()
     LaunchedEffect(id, id_perfil) {
         pantallaListaObrasAprobadasViewModel.actualizarDatos(id, id_perfil)
-        pantallaListaObrasAprobadasViewModel.obtenerDatosSolicitudes()
     }
 
     Column(
@@ -96,14 +95,23 @@ fun PantallaListarObrasAprobadas(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items( pantallaListaObrasAprobadasUiState.listaObrasAprobadas ) { obra ->
-                carta( autor=obra.nombre, fecha=obra.fecha, tecnica=obra.tecnica, { verDetalleSolicitud(obra.id_solicitud, id, id_perfil) } )
+        if (pantallaListaObrasAprobadasUiState.listaSolicitudes.size != 0) {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(pantallaListaObrasAprobadasUiState.listaSolicitudes) { obra ->
+                    pantallaListaObrasAprobadasViewModel.obtenerDatosExtra(obra)
+                    carta(
+                        autor = pantallaListaObrasAprobadasUiState.solicitudDatosArtista.nombre,
+                        fecha = pantallaListaObrasAprobadasUiState.solicitudDatosArtista.fecha,
+                        tecnica = pantallaListaObrasAprobadasUiState.solicitudDatosArtista.tecnica,
+                        { verDetalleSolicitud(pantallaListaObrasAprobadasUiState.solicitudDatosArtista.id_solicitud, id, id_perfil) })
+                }
             }
+        } else {
+            Text( text = "No hay solicitudes listas para una evaluacion economica")
         }
 
         Box(

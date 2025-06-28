@@ -86,8 +86,15 @@ interface ApiService {
     ): Response<UsuarioResponse>
 
     @POST("solicitudes/evaluarSolicitud/{id}")
-    suspend fun evaluarSolicitudArtistico(
+    suspend fun evaluarSolicitudArtisticoApi(
         @Path("id") solicitud_id: Int,
         @Query("aprobacion") aprobacion: Int,
+    ): Response<SolicitudResponse>
+
+    @POST("solicitudes/asignarPrecio/{id}")
+    suspend fun asignarPreciosApi(
+        @Path("id") id: Int,
+        @Query("precio") precio: Int,
+        @Query("porcentaje") porcentaje: Int
     ): Response<SolicitudResponse>
 }
