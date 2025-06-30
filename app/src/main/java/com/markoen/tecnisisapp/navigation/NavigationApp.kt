@@ -20,6 +20,8 @@ import com.markoen.tecnisisapp.ui.views.evaluadorEconomico.detalleSolicitudAprob
 import com.markoen.tecnisisapp.ui.views.evaluadorEconomico.evaluacionEconomica.PantallaEvaluacionEconomica
 import com.markoen.tecnisisapp.ui.views.evaluadorEconomico.listaObrasAprobadas.PantallaListarObrasAprobadas
 import com.markoen.tecnisisapp.ui.views.evaluadorEconomico.solicitudesRegistradasEvaluadorEconomico.PantallaSolicitudesRegistradasEvaluadorEconomico
+import com.markoen.tecnisisapp.ui.views.gerente.editarExperto.PantallaEditarExperto
+import com.markoen.tecnisisapp.ui.views.gerente.editarTecnica.PantallaEditarTecnica
 import com.markoen.tecnisisapp.ui.views.gerente.listaOpcionesReportes.PantallaListaOpcionesReportes
 import com.markoen.tecnisisapp.ui.views.gerente.gestionExpertos.PantallaGestionExpertos
 import com.markoen.tecnisisapp.ui.views.gerente.gestionTecnicas.PantallaGestionTecnicas
@@ -121,10 +123,10 @@ fun NavigationApp () {
         // GERENTE
 
         composable<VerExpertos> { val verExpertos: VerExpertos = it.toRoute()
-            PantallaGestionExpertos(id = verExpertos.id, id_perfil = verExpertos.id_perfil, registrarNuevoExperto = { id, id_perfil -> navController.navigate(route = NuevoExperto(id, id_perfil)) } )
+            PantallaGestionExpertos(id = verExpertos.id, id_perfil = verExpertos.id_perfil, registrarNuevoExperto = { id, id_perfil -> navController.navigate(route = NuevoExperto(id, id_perfil)) }, actualizarExperto = {id, id_perfil, id_experto -> navController.navigate(route = EditarExperto(id, id_perfil, id_experto))} )
         }
         composable<VerTecnicas> { val verTecnicas: VerTecnicas = it.toRoute()
-            PantallaGestionTecnicas(id = verTecnicas.id, id_perfil = verTecnicas.id_perfil, registrarNuevaTecnica = { id, id_perfil -> navController.navigate(route = NuevaTecnica(id, id_perfil)) } )
+            PantallaGestionTecnicas(id = verTecnicas.id, id_perfil = verTecnicas.id_perfil, registrarNuevaTecnica = { id, id_perfil -> navController.navigate(route = NuevaTecnica(id, id_perfil)) }, actualizarTecnica = {id, id_perfil, id_tecnica -> navController.navigate(route = EditarTecnica(id, id_perfil, id_tecnica))} )
         }
         composable<VerReportes> { val verReportes: VerReportes = it.toRoute()
             PantallaListaOpcionesReportes(id = verReportes.id, id_perfil = verReportes.id_perfil )
@@ -137,6 +139,12 @@ fun NavigationApp () {
         }
         composable<VerReporte> { val verReporte: VerReporte = it.toRoute()
             PantallaReporte(id = verReporte.id, id_perfil = verReporte.id_perfil )
+        }
+        composable<EditarExperto> { val editarExperto: EditarExperto = it.toRoute()
+            PantallaEditarExperto(id = editarExperto.id, id_perfil = editarExperto.id_perfil, id_experto = editarExperto.id_experto )
+        }
+        composable<EditarTecnica> { val editarTecnica: EditarTecnica = it.toRoute()
+            PantallaEditarTecnica(id = editarTecnica.id, id_perfil = editarTecnica.id_perfil, id_tecnica = editarTecnica.id_tecnica )
         }
     }
 }

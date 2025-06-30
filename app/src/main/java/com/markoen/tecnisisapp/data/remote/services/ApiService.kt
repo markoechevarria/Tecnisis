@@ -16,6 +16,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -29,6 +30,8 @@ interface ApiService {
     suspend fun listarEvaluadoresArtisticosApi(): Response<List<UsuarioResponse>>
     @POST("usuarios/registrarExperto/")
     suspend fun registrarExpertoApi( @Body experto: UsuarioRequest ): Response<UsuarioResponse>
+    @PUT("usuarios/actualizar/{id_usuario}")
+    suspend fun actualizarExpertoApi( @Path("id_usuario") id_usuario: Int,  @Body usuario: UsuarioRequest ): Response<UsuarioResponse>
 
 
     @GET("perfil/{id_usuario}")
@@ -59,6 +62,8 @@ interface ApiService {
     suspend fun obtenerTecnicasApi(): Response<List<TecnicaResponse>>
     @POST("tecnicas/registrarTecnica/")
     suspend fun registrarTecnicaApi( @Body tecnica: TecnicaRequest ): Response<TecnicaResponse>
+    @PUT("tecnicas/actualizar/{id_tecnica}")
+    suspend fun actualizarTecnicaApi( @Path("id_tecnica") id_tecnica: Int,  @Body tecnica: TecnicaRequest ): Response<TecnicaResponse>
 
 
     @GET("solicitudes/artistico/{id_evaluador_artistico}")

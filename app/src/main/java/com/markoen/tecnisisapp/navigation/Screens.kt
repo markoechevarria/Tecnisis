@@ -37,4 +37,6 @@ import kotlinx.serialization.Serializable
 @Serializable data class VerReportes( val id: Int, val id_perfil: Int )
 @Serializable data class NuevoExperto( val id: Int, val id_perfil: Int )
 @Serializable data class NuevaTecnica( val id: Int, val id_perfil: Int )
+@Serializable data class EditarExperto( val id: Int, val id_perfil: Int, val id_experto: Int )
+@Serializable data class EditarTecnica( val id: Int, val id_perfil: Int, val id_tecnica: Int )
 @Serializable data class VerReporte( val id: Int, val id_perfil: Int )

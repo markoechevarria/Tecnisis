@@ -28,11 +28,9 @@ class GestionTecnicaViewModel @Inject constructor(
                 val tecnicas: List<Tecnica> = usuarioRepository.obtenerTecnicas()
                 _uiState.update { currentState -> currentState.copy( listaTecnica = tecnicas ) }
             } catch (e: Exception) {
-                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "entro y agarro al catch")
                 Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", e.message.toString())
             }
         }
     }
-    fun editarDatos() {}
     fun eliminarDatos() {}
 }

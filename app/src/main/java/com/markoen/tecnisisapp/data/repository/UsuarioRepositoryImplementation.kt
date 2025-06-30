@@ -30,14 +30,20 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     override suspend fun listarEvaluadoresArtisticos(): List<Usuario> {
         return remoteDataSource.listarEvaluadoresArtisticosRDS().map { it.toDomain() }
     }
+    override suspend fun actualizarExperto(id_usuario: Int, nombre: String, correo: String, contrasena: String, id_perfil: Int): Usuario {
+        return remoteDataSource.actualizarExpertoRDS(id_usuario,nombre,correo,contrasena,id_perfil).toDomain()
+    }
+
 
     override suspend fun obtenerPerfil(id_usuario: Int): Perfil {
         return remoteDataSource.obtenerPerfilRDS(id_usuario).toDomain()
     }
 
+
     override suspend fun obtenerOpciones( id_perfil: Int ): List<Opcion> {
         return remoteDataSource.obtenerOpcionesRDS( id_perfil = id_perfil ).map{ it.toDomain() }
     }
+
 
     override suspend fun buscarArtistaDni(dni: String): Artista {
         return remoteDataSource.buscarArtistaDniRDS( dni = dni ).toDomain()
@@ -49,12 +55,14 @@ class UsuarioRepositoryImplementacion @Inject constructor(
         return remoteDataSource.registrarArtistaRDS(nombre=nombre,dni=dni,direccion=direccion,telefono=telefono ).toDomain()
     }
 
+
     override suspend fun obtenerObra(id: Int): Obra {
         return remoteDataSource.obtenerObraRDS(id = id).toDomain()
     }
     override suspend fun registrarObra(id_tecnica: Int, id_artista: Int, imagen_obra: String, nombre: String, fecha: String, dimensiones: String): Obra {
         return remoteDataSource.registrarObraRDS(id_tecnica, id_artista, imagen_obra, nombre, fecha, dimensiones).toDomain()
     }
+
 
     override suspend fun obtenerTecnica(id: Int): Tecnica {
         return remoteDataSource.obtenerTecnicaRDS(id = id).toDomain()
@@ -65,6 +73,10 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     override suspend fun registrarTecnica( nombre_tecnica: String, nivel_apreciacion: String ): Tecnica {
         return remoteDataSource.registrarTecnicaRDS(nombre_tecnica, nivel_apreciacion).toDomain()
     }
+    override suspend fun actualizarTecnica(id_tecnica: Int, nombre_tecnica: String, nivel_apreciacion: String): Tecnica {
+        return remoteDataSource.actualizarTecnicaRDS(id_tecnica,nombre_tecnica, nivel_apreciacion).toDomain()
+    }
+
 
     override suspend fun obtenerSolicitudesEvaluadorArtistico(id_evaluador_artistico: Int): List<Solicitud> {
         return remoteDataSource.obtenerSolicitudesEvaluadorArtisticoRDS(id_evaluador_artistico = id_evaluador_artistico).map { it.toDomain() }
