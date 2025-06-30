@@ -5,14 +5,17 @@ plugins {
     kotlin("plugin.serialization") version "2.1.21"
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
-    namespace = "com.example.tecnisis"
+    namespace = "com.markoen.tecnisisapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.tecnisis"
+        applicationId = "com.markoen.tecnisisapp"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -77,4 +80,15 @@ dependencies {
 
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-storage")
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.ktor:ktor-client-core:2.3.7")
+    implementation("io.ktor:ktor-client-cio:2.3.7")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 }
