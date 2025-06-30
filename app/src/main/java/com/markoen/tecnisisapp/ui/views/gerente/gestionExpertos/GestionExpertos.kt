@@ -43,9 +43,9 @@ fun PantallaGestionExpertos(
     id: Int,
     id_perfil: Int,
     registrarNuevoExperto: (Int, Int) -> Unit,
+    actualizarExperto: (Int, Int,Int) -> Unit,
     gestionExpertosViewModel: GestionExpertosViewModel = hiltViewModel()
 ) {
-
     val gestionExpertosUiState by gestionExpertosViewModel.uiState.collectAsState()
     gestionExpertosViewModel.actualizarDatos(id, id_perfil)
 
@@ -124,11 +124,10 @@ fun PantallaGestionExpertos(
                             Text(experto.nombre, style = MaterialTheme.typography.titleSmall)
 
                             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                                IconButton(onClick = {  }) {
+                                IconButton(onClick = {
+                                    actualizarExperto(id, id_perfil, experto.id)
+                                }) {
                                     Icon(Icons.Default.Edit, contentDescription = "Editar")
-                                }
-                                IconButton(onClick = {  }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Eliminar")
                                 }
                             }
                         }

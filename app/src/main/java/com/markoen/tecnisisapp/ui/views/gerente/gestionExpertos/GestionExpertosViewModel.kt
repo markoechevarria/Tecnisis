@@ -28,11 +28,9 @@ class GestionExpertosViewModel @Inject constructor(
                 val expertos: List<Usuario> = usuarioRepository.listarEvaluadoresArtisticos()
                 _uiState.update { currentState -> currentState.copy( listaExpertos = expertos ) }
             } catch (e: Exception) {
-                Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", "entro y agarro al catch")
                 Log.d("viewmodelSolicitudesRegistradasRevisarEconomico", e.message.toString())
             }
         }
     }
-    fun editarDatos() {}
     fun eliminarDatos() {}
 }
