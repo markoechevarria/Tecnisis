@@ -37,13 +37,9 @@ import com.markoen.tecnisisapp.R
 fun PantallaListaOpcionesReportes(
     id: Int,
     id_perfil: Int,
-    reportes: List<String> = listOf(
-        "Obras totales",
-        "Ventas totales",
-        "Obras rechazadas",
-        "Técnicas más usadas",
-        "Expertos"
-    )
+    verReporteArtistas: (Int, Int) -> Unit,
+    verReporteTecnicas: (Int, Int) -> Unit,
+    verReporteExpertos: (Int, Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -104,29 +100,64 @@ fun PantallaListaOpcionesReportes(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                reportes.forEach { nombre ->
-                    ElevatedCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                        onClick = { }
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                    onClick = { verReporteArtistas(id, id_perfil) }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(nombre, style = MaterialTheme.typography.titleSmall)
-
-                            Icon(
-                                imageVector = Icons.Default.AccountBox,
-                                contentDescription = "Ícono reporte",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(28.dp)
-                            )
-                        }
+                        Text( "Reporte Artistas" , style = MaterialTheme.typography.titleSmall)
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Ícono reporte",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                }
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                    onClick = { verReporteExpertos(id, id_perfil) }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text( "Reporte Expertos" , style = MaterialTheme.typography.titleSmall)
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Ícono reporte",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                }
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                    onClick = { verReporteTecnicas(id, id_perfil) }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text( "Reporte Tecnicas" , style = MaterialTheme.typography.titleSmall)
+                        Icon(
+                            imageVector = Icons.Default.AccountBox,
+                            contentDescription = "Ícono reporte",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(28.dp)
+                        )
                     }
                 }
             }

@@ -1,10 +1,9 @@
-package com.markoen.tecnisisapp.ui.views.gerente.reporte
+package com.markoen.tecnisisapp.ui.views.gerente.reporte.ReporteExpertos
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,16 +26,34 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import android.graphics.Color
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.markoen.tecnisisapp.R
+import com.github.mikephil.charting.data.Entry
+import androidx.compose.runtime.getValue
+import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.RadarChart
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 @Composable
-fun PantallaReporte(
+fun PantallaReporteExpertos(
     id: Int,
     id_perfil: Int,
+    reporteExpertosViewModel: ReporteExpertosViewModel = hiltViewModel()
 ) {
+
+    val reporteExpertosUiState by reporteExpertosViewModel.uiState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,36 +100,26 @@ fun PantallaReporte(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        val entries = listOf(
+            RadarEntry(80f),
+            RadarEntry(65f),
+            RadarEntry(90f),
+            RadarEntry(70f),
+            RadarEntry(60f)
+        )
+
+        val labels = listOf("Velocidad", "Calidad", "Costo", "Satisfacción", "Innovación")
+
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.pie_chart_example),
-                    contentDescription = "Gráfico de torta",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp),
-                    contentScale = ContentScale.Fit
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.pie_chart_example),
-                    contentDescription = "Gráfico de barras",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp),
-                    contentScale = ContentScale.Fit
-                )
-            }
+            RadarChartCompose(
+                dataPoints = entries,
+                labels = labels,
+                modifier = Modifier.fillMaxWidth().height(500.dp).padding(10.dp)
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -132,4 +139,49 @@ fun PantallaReporte(
             )
         }
     }
+}
+
+@Composable
+fun RadarChartCompose(
+    dataPoints: List<RadarEntry>,
+    labels: List<String>,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        factory = { context ->
+            RadarChart(context).apply {
+                description.isEnabled = false
+                animateXY(1400, 1400, Easing.EaseInOutQuad)
+
+                val dataSet = RadarDataSet(dataPoints, "Evaluación KPIs").apply {
+                    color = Color.rgb(0, 191, 255)
+                    fillColor = Color.rgb(0, 191, 255)
+                    setDrawFilled(true)
+                    lineWidth = 2f
+                    valueTextColor = Color.BLACK
+                    valueTextSize = 12f
+                }
+
+                data = RadarData(dataSet)
+
+                xAxis.apply {
+                    textColor = Color.BLACK
+                    textSize = 12f
+                    valueFormatter = IndexAxisValueFormatter(labels)
+                }
+
+                yAxis.apply {
+                    textColor = Color.GRAY
+                    axisMinimum = 0f
+                    axisMaximum = 100f
+                }
+
+                legend.apply {
+                    textColor = Color.BLACK
+                    textSize = 12f
+                }
+            }
+        },
+        modifier = modifier
+    )
 }

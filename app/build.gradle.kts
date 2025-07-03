@@ -91,4 +91,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.3.7")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+
+    // implementation("com.github.tehras:charts:0.2.4-alpha")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }
