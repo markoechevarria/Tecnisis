@@ -46,7 +46,8 @@ import com.markoen.tecnisisapp.R
 fun PantallaNuevaTecnica(
     id: Int,
     id_perfil: Int,
-    nuevaTecnicaViewModel: NuevaTecnicaViewModel = hiltViewModel()
+    nuevaTecnicaViewModel: NuevaTecnicaViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val nuevaTecnicaUiState by nuevaTecnicaViewModel.uiState.collectAsState()
     nuevaTecnicaViewModel.asignarIds(id, id_perfil)
@@ -88,7 +89,7 @@ fun PantallaNuevaTecnica(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

@@ -43,7 +43,8 @@ import com.markoen.tecnisisapp.R
 fun PantallaSolicitudesAprobadasEvaluadorArtistico(
     id: Int,
     id_perfil: Int,
-    pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel: SolicitudesAprobadasEvaluadorArtisticoViewModel = hiltViewModel()
+    pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel: SolicitudesAprobadasEvaluadorArtisticoViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val pantallaSolicitudesAprobadasEvaluadorArtisticoUiState by pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.uiState.collectAsState()
     pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.actualizarDatos(id, id_perfil)
@@ -89,7 +90,7 @@ fun PantallaSolicitudesAprobadasEvaluadorArtistico(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {}) {
+            IconButton( onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

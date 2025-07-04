@@ -54,7 +54,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 fun PantallaReporteExpertos(
     id: Int,
     id_perfil: Int,
-    reporteExpertosViewModel: ReporteExpertosViewModel = hiltViewModel()
+    reporteExpertosViewModel: ReporteExpertosViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
 
     val reporteExpertosUiState by reporteExpertosViewModel.uiState.collectAsState()
@@ -97,7 +98,7 @@ fun PantallaReporteExpertos(
                 .padding(horizontal = 24.dp)
                 .clickable {}
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

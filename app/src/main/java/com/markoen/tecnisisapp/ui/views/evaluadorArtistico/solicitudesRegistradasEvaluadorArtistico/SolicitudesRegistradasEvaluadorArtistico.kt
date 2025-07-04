@@ -45,6 +45,7 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
     id_perfil: Int,
     verDetalleSolicitud: (Int, Int, Int) -> Unit,
     solicitudesRegistradasViewModelEvaluadorArtistico: SolicitudesRegistradasViewModelEvaluadorArtistico = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
 
     val solicitudesRegistradasUiStateEvaluadorArtistico by solicitudesRegistradasViewModelEvaluadorArtistico.uiState.collectAsState()
@@ -90,7 +91,7 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {}) {
+            IconButton( onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

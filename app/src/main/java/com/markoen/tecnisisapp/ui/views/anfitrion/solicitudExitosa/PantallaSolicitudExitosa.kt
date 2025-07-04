@@ -37,7 +37,8 @@ fun PantallaSolicitudExitosa(
     id: Int,
     id_perfil: Int,
     navegarInicio: (Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel()
+    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
     Column(
@@ -75,18 +76,14 @@ fun PantallaSolicitudExitosa(
             text = "Solicitud",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
             textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
             elevation = CardDefaults.cardElevation(4.dp),
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -116,7 +113,7 @@ fun PantallaSolicitudExitosa(
                     onClick = { navegarInicio(id, id_perfil) },
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Ver lista de solicitudes")
+                    Text("Ir a inicio")
                 }
             }
         }

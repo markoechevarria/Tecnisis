@@ -43,7 +43,8 @@ fun PantallaDetalleSolicitudAprobadoEconomico(
     id_usuario: Int = 0,
     id_perfil: Int = 0,
     navegarInicio: (Int, Int) -> Unit,
-    detalleSolicitudViewModelAprobadoEconomico: DetalleSolicitudViewModelAprobadoEconomico = hiltViewModel()
+    detalleSolicitudViewModelAprobadoEconomico: DetalleSolicitudViewModelAprobadoEconomico = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val detalleSolicitudUiStateAprobadoEconomico by detalleSolicitudViewModelAprobadoEconomico.uiState.collectAsState()
 
@@ -86,7 +87,7 @@ fun PantallaDetalleSolicitudAprobadoEconomico(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

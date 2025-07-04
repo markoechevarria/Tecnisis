@@ -74,7 +74,8 @@ fun PantallaRegistrarObra(
     id_perfil: Int,
     id_artista: Int,
     navegarElegirExperto: (Int, Int, Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel()
+    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
@@ -149,9 +150,7 @@ fun PantallaRegistrarObra(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(
-                    onClick = {  }
-            ) {
+            IconButton( onClick = { navegarAtras() } ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

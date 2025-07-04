@@ -44,7 +44,8 @@ fun PantallaSolicitudesRegistradasEvaluadorEconomico(
     id: Int,
     id_perfil: Int,
     navegarEvaluarSolicitudEconomico: (Int, Int, Int) -> Unit,
-    solicitudesRegistradasViewModelEvaluadorEconomico: SolicitudesRegistradasViewModelEvaluadorEconomico = hiltViewModel()
+    solicitudesRegistradasViewModelEvaluadorEconomico: SolicitudesRegistradasViewModelEvaluadorEconomico = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val solicitudesRegistradasUiStateEvaluadorEconomico by solicitudesRegistradasViewModelEvaluadorEconomico.uiState.collectAsState()
 
@@ -89,7 +90,7 @@ fun PantallaSolicitudesRegistradasEvaluadorEconomico(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {}) {
+            IconButton( onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

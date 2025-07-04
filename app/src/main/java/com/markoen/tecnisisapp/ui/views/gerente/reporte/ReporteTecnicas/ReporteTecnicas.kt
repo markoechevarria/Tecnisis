@@ -49,7 +49,8 @@ import com.github.mikephil.charting.data.PieEntry
 fun PantallaReporteTecnicas(
     id: Int,
     id_perfil: Int,
-    reporteTecnicasViewModel: ReporteTecnicasViewModel = hiltViewModel()
+    reporteTecnicasViewModel: ReporteTecnicasViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
 
     val reporteTecnicasUiState by reporteTecnicasViewModel.uiState.collectAsState()
@@ -92,7 +93,7 @@ fun PantallaReporteTecnicas(
                 .padding(horizontal = 24.dp)
                 .clickable {}
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

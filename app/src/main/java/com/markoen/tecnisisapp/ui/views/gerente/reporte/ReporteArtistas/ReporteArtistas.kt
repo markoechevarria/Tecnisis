@@ -54,7 +54,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 fun PantallaReporteArtistas(
     id: Int,
     id_perfil: Int,
-    reporteArtistasViewModel: ReporteArtistasViewModel = hiltViewModel()
+    reporteArtistasViewModel: ReporteArtistasViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
 
     val reportesUIState by reporteArtistasViewModel.uiState.collectAsState()
@@ -97,7 +98,7 @@ fun PantallaReporteArtistas(
                 .padding(horizontal = 24.dp)
                 .clickable {}
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

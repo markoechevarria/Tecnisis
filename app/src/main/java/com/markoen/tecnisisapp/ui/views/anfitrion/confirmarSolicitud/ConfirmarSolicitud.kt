@@ -51,7 +51,8 @@ fun PantallaConfirmarSolicitud(
     id_obra: Int,
     id_evaluador_artistico: Int,
     solicitudExitosa: (Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel()
+    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
@@ -96,7 +97,7 @@ fun PantallaConfirmarSolicitud(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {navegarAtras()}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
