@@ -7,3 +7,8 @@ data class Usuario(
     val correo: String,
     val contrasena: String
 )
+
+data class ExpertoSolicitudesReporte(
+    val nombre: String,
+    val numero_solicitudes: Int
+)

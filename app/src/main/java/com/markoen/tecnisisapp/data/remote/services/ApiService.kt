@@ -1,13 +1,16 @@
 package com.markoen.tecnisisapp.data.remote.services
 
+import com.markoen.tecnisisapp.data.remote.models.ArtistaReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.ArtistaRequest
 import com.markoen.tecnisisapp.data.remote.models.ArtistaResponse
+import com.markoen.tecnisisapp.data.remote.models.ExpertoSolicitudesReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.ObraRequest
 import com.markoen.tecnisisapp.data.remote.models.ObraResponse
 import com.markoen.tecnisisapp.data.remote.models.OpcionResponse
 import com.markoen.tecnisisapp.data.remote.models.PerfilResponse
 import com.markoen.tecnisisapp.data.remote.models.SolicitudRequest
 import com.markoen.tecnisisapp.data.remote.models.SolicitudResponse
+import com.markoen.tecnisisapp.data.remote.models.TecnicaReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.TecnicaRequest
 import com.markoen.tecnisisapp.data.remote.models.TecnicaResponse
 import com.markoen.tecnisisapp.data.remote.models.UsuarioRequest
@@ -32,6 +35,8 @@ interface ApiService {
     suspend fun registrarExpertoApi( @Body experto: UsuarioRequest ): Response<UsuarioResponse>
     @PUT("usuarios/actualizar/{id_usuario}")
     suspend fun actualizarExpertoApi( @Path("id_usuario") id_usuario: Int,  @Body usuario: UsuarioRequest ): Response<UsuarioResponse>
+    @GET("usuarios/expertoSolicitudes/")
+    suspend fun obtenerReporteExpertoSolicitudesApi(): Response<List<ExpertoSolicitudesReporteResponse>>
 
 
     @GET("perfil/{id_usuario}")
@@ -48,6 +53,8 @@ interface ApiService {
     suspend fun obtenerArtistaIdApi( @Path("id") id: Int ): Response<ArtistaResponse>
     @POST("artistas/")
     suspend fun registrarArtistaApi( @Body artista: ArtistaRequest ): Response<ArtistaResponse>
+    @GET("artistas/precios/")
+    suspend fun obtenerReporteArtistaPreciosApi(): Response<List<ArtistaReporteResponse>>
 
 
     @POST("obras/registrar/")
@@ -64,6 +71,8 @@ interface ApiService {
     suspend fun registrarTecnicaApi( @Body tecnica: TecnicaRequest ): Response<TecnicaResponse>
     @PUT("tecnicas/actualizar/{id_tecnica}")
     suspend fun actualizarTecnicaApi( @Path("id_tecnica") id_tecnica: Int,  @Body tecnica: TecnicaRequest ): Response<TecnicaResponse>
+    @GET("tecnicas/ObrasPorTecnica/")
+    suspend fun obtenerReporteTecnicaApi(): Response<List<TecnicaReporteResponse>>
 
 
     @GET("solicitudes/artistico/{id_evaluador_artistico}")

@@ -14,3 +14,8 @@ data class UsuarioRequest(
     val contrasena: String,
     val id_perfil: Int,
 )
+
+data class ExpertoSolicitudesReporteResponse(
+    val nombre: String,
+    val numero_solicitudes: Int
+)

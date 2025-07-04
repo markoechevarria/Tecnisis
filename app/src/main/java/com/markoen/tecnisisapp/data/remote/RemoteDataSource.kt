@@ -1,22 +1,23 @@
 package com.markoen.tecnisisapp.data.remote
 
+import com.markoen.tecnisisapp.data.remote.models.ArtistaReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.ArtistaRequest
 import com.markoen.tecnisisapp.data.remote.models.ArtistaResponse
+import com.markoen.tecnisisapp.data.remote.models.ExpertoSolicitudesReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.ObraRequest
 import com.markoen.tecnisisapp.data.remote.models.ObraResponse
 import com.markoen.tecnisisapp.data.remote.models.OpcionResponse
 import com.markoen.tecnisisapp.data.remote.models.PerfilResponse
 import com.markoen.tecnisisapp.data.remote.models.SolicitudRequest
 import com.markoen.tecnisisapp.data.remote.models.SolicitudResponse
+import com.markoen.tecnisisapp.data.remote.models.TecnicaReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.TecnicaRequest
 import com.markoen.tecnisisapp.data.remote.models.TecnicaResponse
 import com.markoen.tecnisisapp.data.remote.models.UsuarioRequest
 import com.markoen.tecnisisapp.data.remote.models.UsuarioResponse
 import com.markoen.tecnisisapp.data.remote.services.ApiService
-import com.markoen.tecnisisapp.domain.models.Tecnica
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.exp
 
 interface InterfazRemoteDataSource {
     suspend fun verificarUsuarioRDS(correo: String, contrasena: String): UsuarioResponse
@@ -24,6 +25,7 @@ interface InterfazRemoteDataSource {
     suspend fun registrarExpertoRDS(nombre: String, correo: String, contrasena: String, id_perfil: Int ): UsuarioResponse
     suspend fun listarEvaluadoresArtisticosRDS(): List<UsuarioResponse>
     suspend fun actualizarExpertoRDS(id_usuario: Int, nombre: String, correo: String, contrasena: String, id_perfil: Int): UsuarioResponse
+    suspend fun obtenerReporteExpertoSolicitudesRDS(): List<ExpertoSolicitudesReporteResponse>
 
     suspend fun obtenerPerfilRDS(id_usuario: Int): PerfilResponse
 
@@ -32,6 +34,7 @@ interface InterfazRemoteDataSource {
     suspend fun buscarArtistaDniRDS(dni: String ): ArtistaResponse
     suspend fun buscarArtistaIdRDS(id: Int): ArtistaResponse
     suspend fun registrarArtistaRDS(nombre: String, dni: String, direccion: String, telefono: String ): ArtistaResponse
+    suspend fun obtenerReporteArtistaPreciosRDS(): List<ArtistaReporteResponse>
 
     suspend fun obtenerObraRDS( id: Int ): ObraResponse
     suspend fun registrarObraRDS(id_tecnica: Int, id_artista: Int, imagen_obra: String, nombre: String, fecha: String, dimensiones: String): ObraResponse
@@ -40,6 +43,7 @@ interface InterfazRemoteDataSource {
     suspend fun obtenerTecnicasRDS(): List<TecnicaResponse>
     suspend fun registrarTecnicaRDS(nombre_tecnica: String, nivel_apreciacion: String): TecnicaResponse
     suspend fun actualizarTecnicaRDS(id_tecnica: Int, nombre_tecnica: String, nivel_apreciacion: String): TecnicaResponse
+    suspend fun obtenerReporteTecnicaRDS(): List<TecnicaReporteResponse>
 
     suspend fun obtenerSolicitudesEvaluadorArtisticoRDS (id_evaluador_artistico: Int): List<SolicitudResponse>
     suspend fun registrarSolicitudRDS(id_artista: Int, id_obra: Int, id_evaluador_artistico: Int, aprobadaEvaluadorArtistico: Boolean, aprobadaEValuadorEconomico: Boolean, porcentaje_ganancia: Int, precio_venta: Int): SolicitudResponse
@@ -106,6 +110,16 @@ class RemoteDataSource @Inject constructor(
             throw Exception(errorMessage)
         }
     }
+    override suspend fun obtenerReporteExpertoSolicitudesRDS(): List<ExpertoSolicitudesReporteResponse> {
+        val response = apiService.obtenerReporteExpertoSolicitudesApi()
+        if (response.isSuccessful && response.body() != null) {
+            return response.body()!!
+        } else {
+            val errorBody = response.errorBody()?.string()
+            val errorMessage = "Error al obtener reporte de expertos: ${response.code()} - $errorBody"
+            throw Exception(errorMessage)
+        }
+    }
 
     override suspend fun obtenerPerfilRDS(id_usuario: Int): PerfilResponse {
         val response = apiService.obtenerPerfil( id_usuario )
@@ -157,6 +171,16 @@ class RemoteDataSource @Inject constructor(
         } else {
             val errorBody = response.errorBody()?.string()
             val errorMessage = "Error al registrar artista: ${response.code()} - $errorBody"
+            throw Exception(errorMessage)
+        }
+    }
+    override suspend fun obtenerReporteArtistaPreciosRDS(): List<ArtistaReporteResponse> {
+        val response = apiService.obtenerReporteArtistaPreciosApi()
+        if (response.isSuccessful && response.body() != null) {
+            return response.body()!!
+        } else {
+            val errorBody = response.errorBody()?.string()
+            val errorMessage = "Error al obtener reporte de artistas: ${response.code()} - $errorBody"
             throw Exception(errorMessage)
         }
     }
@@ -222,6 +246,16 @@ class RemoteDataSource @Inject constructor(
         } else {
             val errorBody = response.errorBody()?.string()
             val errorMessage = "Error al obtener tecnica: ${response.code()} - $errorBody"
+            throw Exception(errorMessage)
+        }
+    }
+    override suspend fun obtenerReporteTecnicaRDS(): List<TecnicaReporteResponse> {
+        val response = apiService.obtenerReporteTecnicaApi()
+        if (response.isSuccessful && response.body() != null) {
+            return response.body()!!
+        } else {
+            val errorBody = response.errorBody()?.string()
+            val errorMessage = "Error al obtener reporte de tecnicas: ${response.code()} - $errorBody"
             throw Exception(errorMessage)
         }
     }

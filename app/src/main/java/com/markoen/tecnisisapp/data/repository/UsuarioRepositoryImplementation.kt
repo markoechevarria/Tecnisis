@@ -3,11 +3,14 @@ package com.markoen.tecnisisapp.data.repository
 import com.markoen.tecnisisapp.data.mapper.toDomain
 import com.markoen.tecnisisapp.data.remote.InterfazRemoteDataSource
 import com.markoen.tecnisisapp.domain.models.Artista
+import com.markoen.tecnisisapp.domain.models.ArtistaReporte
+import com.markoen.tecnisisapp.domain.models.ExpertoSolicitudesReporte
 import com.markoen.tecnisisapp.domain.models.Obra
 import com.markoen.tecnisisapp.domain.models.Opcion
 import com.markoen.tecnisisapp.domain.models.Perfil
 import com.markoen.tecnisisapp.domain.models.Solicitud
 import com.markoen.tecnisisapp.domain.models.Tecnica
+import com.markoen.tecnisisapp.domain.models.TecnicaReporte
 import com.markoen.tecnisisapp.domain.models.Usuario
 import com.markoen.tecnisisapp.domain.repository.InterfazUsuarioRepository
 import javax.inject.Inject
@@ -33,6 +36,9 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     override suspend fun actualizarExperto(id_usuario: Int, nombre: String, correo: String, contrasena: String, id_perfil: Int): Usuario {
         return remoteDataSource.actualizarExpertoRDS(id_usuario,nombre,correo,contrasena,id_perfil).toDomain()
     }
+    override suspend fun obtenerReporteExpertoSolicitudes(): List<ExpertoSolicitudesReporte> {
+        return remoteDataSource.obtenerReporteExpertoSolicitudesRDS().map { it.toDomain() }
+    }
 
 
     override suspend fun obtenerPerfil(id_usuario: Int): Perfil {
@@ -53,6 +59,9 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     }
     override suspend fun registarArtista(nombre: String, dni: String, direccion: String, telefono: String): Artista {
         return remoteDataSource.registrarArtistaRDS(nombre=nombre,dni=dni,direccion=direccion,telefono=telefono ).toDomain()
+    }
+    override suspend fun obtenerReporteArtistaPrecios(): List<ArtistaReporte> {
+        return remoteDataSource.obtenerReporteArtistaPreciosRDS().map { it.toDomain() }
     }
 
 
@@ -75,6 +84,9 @@ class UsuarioRepositoryImplementacion @Inject constructor(
     }
     override suspend fun actualizarTecnica(id_tecnica: Int, nombre_tecnica: String, nivel_apreciacion: String): Tecnica {
         return remoteDataSource.actualizarTecnicaRDS(id_tecnica,nombre_tecnica, nivel_apreciacion).toDomain()
+    }
+    override suspend fun obtenerReporteTecnica(): List<TecnicaReporte> {
+        return remoteDataSource.obtenerReporteTecnicaRDS().map { it.toDomain() }
     }
 
 

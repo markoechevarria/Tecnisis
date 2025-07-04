@@ -7,3 +7,8 @@ data class Artista (
     val direccion: String,
     val telefono: String
 )
+
+data class ArtistaReporte (
+    val nombre: String,
+    val precio: Int
+)

@@ -5,3 +5,8 @@ data class Tecnica (
     val nombre_tecnica: String,
     val nivel_apreciacion: String,
 )
+
+data class TecnicaReporte(
+    val nombre_tecnica: String,
+    val numero_obras: Int
+)

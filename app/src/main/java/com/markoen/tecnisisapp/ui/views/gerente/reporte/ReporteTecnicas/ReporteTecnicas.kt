@@ -53,6 +53,7 @@ fun PantallaReporteTecnicas(
 ) {
 
     val reporteTecnicasUiState by reporteTecnicasViewModel.uiState.collectAsState()
+    reporteTecnicasViewModel.asignarIds(id, id_perfil)
 
     Column(
         modifier = Modifier
@@ -100,13 +101,11 @@ fun PantallaReporteTecnicas(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        val entries = listOf(
-            PieEntry(40f, "Producto A"),
-            PieEntry(30f, "Producto B"),
-            PieEntry(20f, "Producto C"),
-            PieEntry(10f, "Producto D")
-        )
-        
+        val entries = reporteTecnicasUiState.tecnicasLista.map { tecnica ->
+            PieEntry(tecnica.numero_obras.toFloat(), tecnica.nombre_tecnica)
+        }
+
+
         Card(
             modifier = Modifier.fillMaxWidth().padding(24.dp),
             shape = RoundedCornerShape(16.dp),
@@ -148,7 +147,7 @@ fun PieChartCompose(
                 description.isEnabled = false
                 animateY(1400, Easing.EaseInOutQuad)
 
-                val dataSet = PieDataSet(dataPoints, "Participación de mercado").apply {
+                val dataSet = PieDataSet(dataPoints, "Distribución de técnicas").apply {
                     colors = listOf(
                         Color.rgb(255, 99, 132),
                         Color.rgb(54, 162, 235),
@@ -171,8 +170,28 @@ fun PieChartCompose(
                     horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
                     setDrawInside(false)
                     isWordWrapEnabled = true
+                    legend.yEntrySpace = 10f
                 }
             }
+        },
+        update = { chart ->
+            val dataSet = PieDataSet(dataPoints, "Distribución de técnicas").apply {
+                colors = listOf(
+                    Color.rgb(255, 99, 132),
+                    Color.rgb(54, 162, 235),
+                    Color.rgb(255, 206, 86),
+                    Color.rgb(75, 192, 192),
+                    Color.rgb(153, 102, 255)
+                )
+                valueTextColor = Color.WHITE
+                valueTextSize = 14f
+                sliceSpace = 3f
+                selectionShift = 5f
+            }
+
+            chart.data = PieData(dataSet)
+            chart.notifyDataSetChanged()
+            chart.invalidate()
         },
         modifier = modifier
     )
