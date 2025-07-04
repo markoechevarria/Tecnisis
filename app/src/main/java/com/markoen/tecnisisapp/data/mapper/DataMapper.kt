@@ -1,18 +1,24 @@
 package com.markoen.tecnisisapp.data.mapper
 
+import com.markoen.tecnisisapp.data.remote.models.ArtistaReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.ArtistaResponse
+import com.markoen.tecnisisapp.data.remote.models.ExpertoSolicitudesReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.ObraResponse
 import com.markoen.tecnisisapp.data.remote.models.OpcionResponse
 import com.markoen.tecnisisapp.data.remote.models.PerfilResponse
 import com.markoen.tecnisisapp.data.remote.models.SolicitudResponse
+import com.markoen.tecnisisapp.data.remote.models.TecnicaReporteResponse
 import com.markoen.tecnisisapp.data.remote.models.TecnicaResponse
 import com.markoen.tecnisisapp.data.remote.models.UsuarioResponse
 import com.markoen.tecnisisapp.domain.models.Artista
+import com.markoen.tecnisisapp.domain.models.ArtistaReporte
+import com.markoen.tecnisisapp.domain.models.ExpertoSolicitudesReporte
 import com.markoen.tecnisisapp.domain.models.Obra
 import com.markoen.tecnisisapp.domain.models.Opcion
 import com.markoen.tecnisisapp.domain.models.Perfil
 import com.markoen.tecnisisapp.domain.models.Solicitud
 import com.markoen.tecnisisapp.domain.models.Tecnica
+import com.markoen.tecnisisapp.domain.models.TecnicaReporte
 import com.markoen.tecnisisapp.domain.models.Usuario
 
 fun UsuarioResponse.toDomain(): Usuario {
@@ -80,5 +86,28 @@ fun PerfilResponse.toDomain(): Perfil {
     return Perfil(
         id = this.id,
         nombre = this.nombre
+    )
+}
+
+// REPORTES
+
+fun ArtistaReporteResponse.toDomain(): ArtistaReporte {
+    return ArtistaReporte(
+        nombre = this.nombre,
+        precio = this.precio
+    )
+}
+
+fun ExpertoSolicitudesReporteResponse.toDomain(): ExpertoSolicitudesReporte {
+    return ExpertoSolicitudesReporte (
+        nombre = this.nombre,
+        numero_solicitudes = this.numero_solicitudes
+    )
+}
+
+fun TecnicaReporteResponse.toDomain(): TecnicaReporte {
+    return TecnicaReporte (
+        nombre_tecnica = this.nombre_tecnica,
+        numero_obras = this.numero_obras
     )
 }

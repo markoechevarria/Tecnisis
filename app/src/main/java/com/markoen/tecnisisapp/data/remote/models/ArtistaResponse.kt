@@ -14,3 +14,8 @@ data class ArtistaRequest (
     val direccion: String,
     val telefono: String
 )
+
+data class ArtistaReporteResponse (
+    val nombre: String,
+    val precio: Int
+)

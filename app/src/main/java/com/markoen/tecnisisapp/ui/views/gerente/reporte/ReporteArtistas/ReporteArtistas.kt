@@ -40,10 +40,15 @@ import com.github.mikephil.charting.data.Entry
 import androidx.compose.runtime.getValue
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 @Composable
 fun PantallaReporteArtistas(
@@ -53,6 +58,7 @@ fun PantallaReporteArtistas(
 ) {
 
     val reportesUIState by reporteArtistasViewModel.uiState.collectAsState()
+    reporteArtistasViewModel.asignarIds(id, id_perfil)
 
     Column(
         modifier = Modifier
@@ -100,22 +106,18 @@ fun PantallaReporteArtistas(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        val entries = listOf(
-            BarEntry(0f, 10f),
-            BarEntry(1f, 20f),
-            BarEntry(2f, 15f),
-            BarEntry(3f, 25f),
-        )
-
+        val entries = reportesUIState.ArtistasLista.map { artista -> RadarEntry(artista.precio.toFloat()) }
+        val labels = reportesUIState.ArtistasLista.map { it.nombre }
 
         Card(
             modifier = Modifier.fillMaxWidth().padding(24.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
-            BarChartCompose(
+            RadarChartCompose(
                 dataPoints = entries,
-                modifier = Modifier.fillMaxWidth().height(400.dp).padding(10.dp)
+                labels = labels,
+                modifier = Modifier.fillMaxWidth().height(500.dp).padding(10.dp)
             )
         }
 
@@ -139,47 +141,62 @@ fun PantallaReporteArtistas(
 }
 
 @Composable
-fun BarChartCompose(
-    dataPoints: List<BarEntry>,
+fun RadarChartCompose(
+    dataPoints: List<RadarEntry>,
+    labels: List<String>,
     modifier: Modifier = Modifier
 ) {
     AndroidView(
         factory = { context ->
-            BarChart(context).apply {
+            RadarChart(context).apply {
                 description.isEnabled = false
-                setFitBars(true)
-                animateY(1500, Easing.EaseInOutBounce)
+                animateXY(1400, 1400, Easing.EaseInOutQuad)
 
-                // estilo
-                setDrawGridBackground(false)
-                setDrawBarShadow(false)
-
-                val dataSet = BarDataSet(dataPoints, "Ventas por trimestre").apply {
-                    color = Color.rgb(30, 144, 255)
+                val dataSet = RadarDataSet(dataPoints, "Promedio de precio de venta de obras").apply {
+                    color = Color.rgb(0, 191, 255)
+                    fillColor = Color.rgb(0, 191, 255)
+                    setDrawFilled(true)
+                    lineWidth = 2f
                     valueTextColor = Color.BLACK
-                    valueTextSize = 14f
-                    barBorderWidth = 0.5f
-                    highLightColor = Color.RED
+                    valueTextSize = 12f
                 }
 
-                data = BarData(dataSet)
+                data = RadarData(dataSet)
 
                 xAxis.apply {
-                    position = XAxis.XAxisPosition.BOTTOM
                     textColor = Color.BLACK
                     textSize = 12f
-                    setDrawGridLines(false)
-                    granularity = 1f
+                    valueFormatter = IndexAxisValueFormatter(labels)
                 }
 
-                axisLeft.textColor = Color.BLACK
-                axisRight.isEnabled = false
+                yAxis.apply {
+                    textColor = Color.GRAY
+                    axisMinimum = 0f
+                    axisMaximum = (dataPoints.maxOfOrNull { it.value } ?: 100f) * 1.2f
+                }
 
                 legend.apply {
                     textColor = Color.BLACK
                     textSize = 12f
                 }
             }
+        },
+        update = { chart ->
+            val dataSet = RadarDataSet(dataPoints, "Promedio de precio de venta de obras").apply {
+                color = Color.rgb(0, 191, 255)
+                fillColor = Color.rgb(0, 191, 255)
+                setDrawFilled(true)
+                lineWidth = 2f
+                valueTextColor = Color.BLACK
+                valueTextSize = 12f
+            }
+
+            chart.data = RadarData(dataSet)
+            chart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            chart.yAxis.axisMinimum = 0f
+            chart.yAxis.axisMaximum = (dataPoints.maxOfOrNull { it.value } ?: 100f) * 1.2f
+            chart.notifyDataSetChanged()
+            chart.invalidate()
         },
         modifier = modifier
     )

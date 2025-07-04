@@ -39,7 +39,12 @@ import com.markoen.tecnisisapp.R
 import com.github.mikephil.charting.data.Entry
 import androidx.compose.runtime.getValue
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.RadarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -53,6 +58,7 @@ fun PantallaReporteExpertos(
 ) {
 
     val reporteExpertosUiState by reporteExpertosViewModel.uiState.collectAsState()
+    reporteExpertosViewModel.asignarIds(id, id_perfil)
 
     Column(
         modifier = Modifier
@@ -100,25 +106,21 @@ fun PantallaReporteExpertos(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        val entries = listOf(
-            RadarEntry(80f),
-            RadarEntry(65f),
-            RadarEntry(90f),
-            RadarEntry(70f),
-            RadarEntry(60f)
-        )
+        val entries =  reporteExpertosUiState.ExpertosLista.mapIndexed { index, experto ->
+            BarEntry(index.toFloat(), experto.numero_solicitudes.toFloat())
+        }
+        val labels = reporteExpertosUiState.ExpertosLista.map { it.nombre }
 
-        val labels = listOf("Velocidad", "Calidad", "Costo", "Satisfacción", "Innovación")
 
         Card(
             modifier = Modifier.fillMaxWidth().padding(24.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
-            RadarChartCompose(
+            BarChartCompose(
                 dataPoints = entries,
-                labels = labels,
-                modifier = Modifier.fillMaxWidth().height(500.dp).padding(10.dp)
+                modifier = Modifier.fillMaxWidth().height(600.dp).padding(10.dp),
+                labels = labels
             )
         }
 
@@ -142,39 +144,43 @@ fun PantallaReporteExpertos(
 }
 
 @Composable
-fun RadarChartCompose(
-    dataPoints: List<RadarEntry>,
-    labels: List<String>,
-    modifier: Modifier = Modifier
+fun BarChartCompose(
+    dataPoints: List<BarEntry>,
+    modifier: Modifier = Modifier,
+    labels: List<String>
 ) {
     AndroidView(
         factory = { context ->
-            RadarChart(context).apply {
+            BarChart(context).apply {
                 description.isEnabled = false
-                animateXY(1400, 1400, Easing.EaseInOutQuad)
+                setFitBars(true)
+                animateY(1500, Easing.EaseInOutBounce)
 
-                val dataSet = RadarDataSet(dataPoints, "Evaluación KPIs").apply {
-                    color = Color.rgb(0, 191, 255)
-                    fillColor = Color.rgb(0, 191, 255)
-                    setDrawFilled(true)
-                    lineWidth = 2f
+                setDrawGridBackground(false)
+                setDrawBarShadow(false)
+
+                val dataSet = BarDataSet(dataPoints, "Obras registradas por experto").apply {
+                    color = Color.rgb(30, 144, 255)
                     valueTextColor = Color.BLACK
-                    valueTextSize = 12f
+                    valueTextSize = 14f
+                    barBorderWidth = 0.5f
+                    highLightColor = Color.RED
                 }
 
-                data = RadarData(dataSet)
+                data = BarData(dataSet)
 
                 xAxis.apply {
+                    position = XAxis.XAxisPosition.BOTTOM
                     textColor = Color.BLACK
                     textSize = 12f
+                    setDrawGridLines(false)
+                    granularity = 1f
                     valueFormatter = IndexAxisValueFormatter(labels)
+                    labelRotationAngle = -30f
                 }
 
-                yAxis.apply {
-                    textColor = Color.GRAY
-                    axisMinimum = 0f
-                    axisMaximum = 100f
-                }
+                axisLeft.textColor = Color.BLACK
+                axisRight.isEnabled = false
 
                 legend.apply {
                     textColor = Color.BLACK
@@ -182,6 +188,36 @@ fun RadarChartCompose(
                 }
             }
         },
+
+        update = { chart ->
+            val dataSet = BarDataSet(dataPoints, "Obras registradas por experto").apply {
+                color = Color.rgb(30, 144, 255)
+                valueTextColor = Color.BLACK
+                valueTextSize = 14f
+            }
+
+            chart.data = BarData(dataSet)
+
+            chart.xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                textColor = Color.BLACK
+                textSize = 12f
+                granularity = 1f
+                valueFormatter = IndexAxisValueFormatter(labels)
+                setDrawGridLines(false)
+                labelRotationAngle = -90f
+            }
+
+            chart.axisLeft.apply {
+                textColor = Color.BLACK
+                axisMinimum = 0f
+            }
+            chart.axisRight.isEnabled = false
+
+            chart.notifyDataSetChanged()
+            chart.invalidate()
+        },
+
         modifier = modifier
     )
 }
