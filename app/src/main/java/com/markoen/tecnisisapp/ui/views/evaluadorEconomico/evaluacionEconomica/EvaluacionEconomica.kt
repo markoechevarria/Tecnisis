@@ -50,6 +50,7 @@ fun PantallaEvaluacionEconomica(
     id_solicitud: Int,
     navegarInicio: (Int, Int) -> Unit,
     evaluacionEconomicaViewModel: EvaluacionEconomicaViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val evaluacionEconomicaUiState by evaluacionEconomicaViewModel.uiState.collectAsState()
 
@@ -92,7 +93,7 @@ fun PantallaEvaluacionEconomica(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {  } ) {
+            IconButton( onClick = { navegarAtras() } ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

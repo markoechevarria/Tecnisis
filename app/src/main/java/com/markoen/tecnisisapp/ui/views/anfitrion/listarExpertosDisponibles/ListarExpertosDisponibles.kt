@@ -48,7 +48,8 @@ fun PantallaListarExpertosDisponibles (
     id_artista: Int,
     id_obra: Int,
     confirmarSolicitud: (Int, Int, Int, Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel()
+    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
@@ -95,7 +96,7 @@ fun PantallaListarExpertosDisponibles (
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {}) {
+            IconButton( onClick = {navegarAtras()}) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

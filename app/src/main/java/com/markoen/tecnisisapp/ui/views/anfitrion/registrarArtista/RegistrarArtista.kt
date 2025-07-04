@@ -48,7 +48,8 @@ import com.markoen.tecnisisapp.R
 fun PantallaRegistrarArtista(
     id: Int,
     id_perfil: Int,
-    registrarArtistaViewModel: RegistrarArtistaViewModel = hiltViewModel()
+    registrarArtistaViewModel: RegistrarArtistaViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val registrarArtistaUiState by registrarArtistaViewModel.uiState.collectAsState()
@@ -91,9 +92,7 @@ fun PantallaRegistrarArtista(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton(
-                onClick = {}
-            ) {
+            IconButton(onClick = {navegarAtras()} ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

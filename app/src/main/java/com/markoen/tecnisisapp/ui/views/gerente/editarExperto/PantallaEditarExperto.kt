@@ -47,7 +47,8 @@ fun PantallaEditarExperto(
     id: Int,
     id_perfil: Int,
     id_experto: Int,
-    nuevoExpertoViewModel: EditarExpertoViewModel = hiltViewModel()
+    nuevoExpertoViewModel: EditarExpertoViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val nuevoExpertoUiState by nuevoExpertoViewModel.uiState.collectAsState()
     nuevoExpertoViewModel.asignarIds(id, id_perfil, id_experto)
@@ -90,7 +91,7 @@ fun PantallaEditarExperto(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

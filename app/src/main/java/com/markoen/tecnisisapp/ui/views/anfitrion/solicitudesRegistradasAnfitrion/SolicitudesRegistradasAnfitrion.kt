@@ -47,7 +47,8 @@ import androidx.compose.ui.window.Dialog
 fun PantallaSolicitudesRegistradasAnfitrion(
     id: Int,
     id_perfil: Int,
-    solicitudesRegistradasViewModelAnfitrion: SolicitudesRegistradasViewModelAnfitrion = hiltViewModel()
+    solicitudesRegistradasViewModelAnfitrion: SolicitudesRegistradasViewModelAnfitrion = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val solicitudesRegistradasUiStateAnfitrion by solicitudesRegistradasViewModelAnfitrion.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -108,7 +109,7 @@ fun PantallaSolicitudesRegistradasAnfitrion(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton( onClick = {} ) {
+            IconButton( onClick = { navegarAtras() } ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

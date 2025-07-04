@@ -47,7 +47,8 @@ fun PantallaEditarTecnica(
     id: Int,
     id_perfil: Int,
     id_tecnica: Int,
-    nuevaTecnicaViewModel: EditarTecnicaViewModel = hiltViewModel()
+    nuevaTecnicaViewModel: EditarTecnicaViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val nuevaTecnicaUiState by nuevaTecnicaViewModel.uiState.collectAsState()
     nuevaTecnicaViewModel.asignarIds(id, id_perfil, id_tecnica)
@@ -90,7 +91,7 @@ fun PantallaEditarTecnica(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

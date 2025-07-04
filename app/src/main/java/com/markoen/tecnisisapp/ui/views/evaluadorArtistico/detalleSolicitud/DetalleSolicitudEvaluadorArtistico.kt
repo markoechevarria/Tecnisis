@@ -46,7 +46,8 @@ fun PantallaDetalleSolicitudEvaluadorArtistico(
     id_usuario: Int = 0,
     id_perfil: Int = 0,
     navegarEvaluacion: (Int, Int, Int) -> Unit,
-    detalleSolicitudViewModelEvaluadorArtistico: DetalleSolicitudViewModelEvaluadorArtistico = hiltViewModel()
+    detalleSolicitudViewModelEvaluadorArtistico: DetalleSolicitudViewModelEvaluadorArtistico = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val detalleSolicitudUiStateEvaluadorArtistico by detalleSolicitudViewModelEvaluadorArtistico.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -91,7 +92,7 @@ fun PantallaDetalleSolicitudEvaluadorArtistico(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

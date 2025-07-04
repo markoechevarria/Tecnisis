@@ -43,7 +43,8 @@ fun PantallaListarObrasAprobadas(
     id: Int,
     id_perfil: Int,
     pantallaListaObrasAprobadasViewModel: PantallaListaObrasAprobadasViewModel = hiltViewModel(),
-    verDetalleSolicitud: (Int, Int, Int) -> Unit
+    verDetalleSolicitud: (Int, Int, Int) -> Unit,
+    navegarAtras: () -> Unit
 ) {
     val pantallaListaObrasAprobadasUiState by pantallaListaObrasAprobadasViewModel.uiState.collectAsState()
     LaunchedEffect(id, id_perfil) {
@@ -86,7 +87,7 @@ fun PantallaListarObrasAprobadas(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

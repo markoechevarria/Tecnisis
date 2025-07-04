@@ -44,7 +44,8 @@ fun PantallaGestionExpertos(
     id_perfil: Int,
     registrarNuevoExperto: (Int, Int) -> Unit,
     actualizarExperto: (Int, Int,Int) -> Unit,
-    gestionExpertosViewModel: GestionExpertosViewModel = hiltViewModel()
+    gestionExpertosViewModel: GestionExpertosViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val gestionExpertosUiState by gestionExpertosViewModel.uiState.collectAsState()
     gestionExpertosViewModel.actualizarDatos(id, id_perfil)
@@ -86,7 +87,7 @@ fun PantallaGestionExpertos(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton( onClick = {} ) {
+            IconButton( onClick = { navegarAtras() } ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

@@ -44,7 +44,8 @@ fun PantallaGestionTecnicas(
     id_perfil: Int,
     registrarNuevaTecnica: (Int, Int) -> Unit,
     actualizarTecnica: (Int, Int, Int) -> Unit,
-    gestionTecnicaViewModel: GestionTecnicaViewModel = hiltViewModel()
+    gestionTecnicaViewModel: GestionTecnicaViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val gestionTecnicaUiState by gestionTecnicaViewModel.uiState.collectAsState()
     gestionTecnicaViewModel.actualizarDatos(id, id_perfil)
@@ -86,7 +87,7 @@ fun PantallaGestionTecnicas(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

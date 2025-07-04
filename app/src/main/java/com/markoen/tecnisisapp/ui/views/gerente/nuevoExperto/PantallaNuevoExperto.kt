@@ -46,7 +46,8 @@ import com.markoen.tecnisisapp.R
 fun PantallaNuevoExperto(
     id: Int,
     id_perfil: Int,
-    nuevoExpertoViewModel: NuevoExpertoViewModel = hiltViewModel()
+    nuevoExpertoViewModel: NuevoExpertoViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val nuevoExpertoUiState by nuevoExpertoViewModel.uiState.collectAsState()
     nuevoExpertoViewModel.asignarIds(id, id_perfil)
@@ -88,7 +89,7 @@ fun PantallaNuevoExperto(
                 .padding(horizontal = 24.dp)
                 .clickable { }
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

@@ -39,7 +39,8 @@ fun PantallaListaOpcionesReportes(
     id_perfil: Int,
     verReporteArtistas: (Int, Int) -> Unit,
     verReporteTecnicas: (Int, Int) -> Unit,
-    verReporteExpertos: (Int, Int) -> Unit
+    verReporteExpertos: (Int, Int) -> Unit,
+    navegarAtras: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -78,7 +79,7 @@ fun PantallaListaOpcionesReportes(
                 .padding(horizontal = 24.dp)
                 .clickable {}
         ) {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

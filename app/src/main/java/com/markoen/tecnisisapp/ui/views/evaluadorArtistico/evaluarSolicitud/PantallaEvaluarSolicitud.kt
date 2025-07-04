@@ -44,7 +44,8 @@ fun PantallaEvaluarSolicitud(
     id_perfil: Int,
     id_usuario: Int,
     navegarInicio: (Int, Int) -> Unit,
-    pantallaEvaluarSolicitudViewModel: PantallaEvaluarSolicitudViewModel = hiltViewModel()
+    pantallaEvaluarSolicitudViewModel: PantallaEvaluarSolicitudViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val pantallaEvaluarSolicitudUiState by pantallaEvaluarSolicitudViewModel.uiState.collectAsState()
     pantallaEvaluarSolicitudViewModel.asignarIds(id_usuario, id_perfil, id_solicitud)
@@ -85,7 +86,7 @@ fun PantallaEvaluarSolicitud(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { navegarAtras() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))

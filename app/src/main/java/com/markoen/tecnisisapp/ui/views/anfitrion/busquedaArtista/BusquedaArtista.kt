@@ -52,7 +52,8 @@ fun PantallaBusquedaArtista(
     id_perfil: Int,
     navegarRegistarArtista: (Int, Int) -> Unit,
     navegarRegistrarObra: (Int, Int, Int) -> Unit,
-    busquedaArtistaViewModel: BusquedaArtistaViewModel = hiltViewModel()
+    busquedaArtistaViewModel: BusquedaArtistaViewModel = hiltViewModel(),
+    navegarAtras: () -> Unit
 ) {
     val busquedaArtistaUiState by busquedaArtistaViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -80,7 +81,7 @@ fun PantallaBusquedaArtista(
                     modifier = Modifier.size(50.dp)
                 )
                 Text(
-                    text = "TECNISIS ${id}",
+                    text = "TECNISIS",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -95,7 +96,7 @@ fun PantallaBusquedaArtista(
                 .padding(horizontal = 24.dp)
                 .clickable {  }
         ) {
-            IconButton(modifier = Modifier, onClick = {} ) {
+            IconButton(modifier = Modifier, onClick = { navegarAtras() } ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             Spacer(modifier = Modifier.width(8.dp))
