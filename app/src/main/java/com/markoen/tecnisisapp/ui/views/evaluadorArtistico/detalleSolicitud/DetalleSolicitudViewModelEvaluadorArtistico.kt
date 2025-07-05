@@ -26,20 +26,28 @@ class DetalleSolicitudViewModelEvaluadorArtistico @Inject constructor(
 
     fun asignarIds(idSolicitud: Int, idUsuario: Int, idPerfil: Int) {
         _uiState.update { currentState -> currentState.copy(id_solicitud = idSolicitud, id_usuario = idUsuario, id_perfil = idPerfil ) }
-        obtenerSolicitud(idSolicitud)
-        obtenerDatosExtra(_uiState.value.solicitudObjeto)
-    }
-
-    fun obtenerSolicitud(id: Int) {
         viewModelScope.launch {
             try {
-                val solicitud = usuarioRepository.obtenerSolicitudPorId(id)
-                _uiState.update { currentState -> currentState.copy( solicitudObjeto = solicitud ) }
-                Log.d("viewmodelobtenersolicitudesdetalles", "se llamo a la api para obtener datos extra y se obtuvo esta solicitud de id: ${id}")
+                val solicitud = obtenerSolicitud(idSolicitud)
+                obtenerDatosExtra(solicitud)
             } catch (e: Exception) {
-                Log.d("viewmodelobtenersolicitudesdetalles", "entro y agarro al catch")
-                Log.d("viewmodelobtenersolicitudesdetalles", e.message.toString())
+                Log.d("viewmodelasignarsolicitud", e.message.toString())
+            } finally {
+                _uiState.update { currentState -> currentState.copy(isLoading = false)}
             }
+        }
+    }
+
+    suspend fun obtenerSolicitud(id: Int): Solicitud {
+        return try {
+            val solicitud = usuarioRepository.obtenerSolicitudPorId(id)
+            _uiState.update { currentState -> currentState.copy( solicitudObjeto = solicitud ) }
+            Log.d("viewmodelobtenersolicitudesdetalles", "se llamo a la api para obtener datos extra y se obtuvo esta solicitud de id: ${id}")
+            solicitud
+        } catch (e: Exception) {
+            Log.d("viewmodelobtenersolicitudesdetalles", "entro y agarro al catch")
+            Log.d("viewmodelobtenersolicitudesdetalles", e.message.toString())
+            throw e
         }
     }
 

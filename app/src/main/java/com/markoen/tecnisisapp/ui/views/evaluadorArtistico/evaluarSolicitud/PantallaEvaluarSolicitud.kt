@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +36,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.markoen.tecnisisapp.R
 
 @Composable
@@ -49,6 +53,21 @@ fun PantallaEvaluarSolicitud(
 ) {
     val pantallaEvaluarSolicitudUiState by pantallaEvaluarSolicitudViewModel.uiState.collectAsState()
     pantallaEvaluarSolicitudViewModel.asignarIds(id_usuario, id_perfil, id_solicitud)
+
+    if (pantallaEvaluarSolicitudUiState.isLoading) {
+        Dialog(
+            onDismissRequest = {  },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Box(
+                modifier = Modifier.size(100.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,7 +127,8 @@ fun PantallaEvaluarSolicitud(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Image( painter = painterResource(R.drawable.maxresdefault), contentDescription = "" )
+
+                CargarImagenConCoil( pantallaEvaluarSolicitudUiState.url_obra)
 
                 Box(
                     modifier = Modifier
@@ -177,4 +197,13 @@ fun PantallaEvaluarSolicitud(
             confirmButton = { Button( onClick = { pantallaEvaluarSolicitudViewModel.cambiarVentanaDesaprobado(); navegarInicio(id_usuario, id_perfil) }) { Text("Aceptar") } },
         )
     }
+}
+
+@Composable
+fun CargarImagenConCoil(imageUrl: String?) {
+    AsyncImage(
+        model = imageUrl,
+        contentDescription = "Descripción de la imagen",
+        modifier = Modifier.size(200.dp),
+    )
 }

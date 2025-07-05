@@ -23,4 +23,7 @@ data class DetalleSolicitudUiStateEvaluadorArtistico  (
 
     val estadoSolicitudArtistico: Boolean = false,
     val estadoSolicitudEconomico: Boolean = false,
+
+    val isLoading: Boolean = true,
+    val error: String? = null,
 )

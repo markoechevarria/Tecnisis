@@ -20,27 +20,21 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
-import com.markoen.tecnisisapp.ui.views.anfitrion.RegistrarSolicitudViewModel
 
 @Composable
 fun PantallaSolicitudExitosa(
     id: Int,
     id_perfil: Int,
     navegarInicio: (Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
     navegarAtras: () -> Unit
 ) {
-    val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()

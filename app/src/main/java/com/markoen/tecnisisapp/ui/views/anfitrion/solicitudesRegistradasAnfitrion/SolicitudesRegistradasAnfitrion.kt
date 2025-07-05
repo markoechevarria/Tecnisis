@@ -41,6 +41,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
 
 @Composable
@@ -61,9 +62,7 @@ fun PantallaSolicitudesRegistradasAnfitrion(
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
+                modifier = Modifier.size(100.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -132,22 +131,24 @@ fun PantallaSolicitudesRegistradasAnfitrion(
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(16.dp),
+                            .padding(vertical = 16.dp, horizontal = 32.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Column {
-                            Text(text = it.first.nombre, style = MaterialTheme.typography.titleSmall)
-                            Text(text = it.second.nombre, style = MaterialTheme.typography.labelSmall)
-                            Text(text = it.first.fecha, style = MaterialTheme.typography.labelSmall)
-                            Text(text = it.first.dimensiones, style = MaterialTheme.typography.labelSmall)
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            texto( "Nombre de la Obra: ", it.first.nombre )
+                            texto( "Nombre del artista: ", it.second.nombre )
+                            texto( "Fecha de la obra: ", it.first.fecha )
+                            texto( "Dimensiones: ", it.first.dimensiones)
                         }
 
                         Icon(
-                            imageVector = Icons.Default.Face,
+                            painter = painterResource( R.drawable.icono_obra ),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(150.dp).padding(start = 12.dp)
                         )
                     }
                 }
@@ -171,4 +172,20 @@ fun PantallaSolicitudesRegistradasAnfitrion(
             )
         }
     }
+}
+
+@Composable
+fun texto( leyenda: String, mensaje: String ) {
+    Text(
+        text = leyenda,
+        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+    )
+    Spacer(modifier = Modifier.height(2.dp))
+    Text(
+        text = mensaje,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onPrimaryContainer
+    )
+    Spacer(modifier = Modifier.height(8.dp))
 }

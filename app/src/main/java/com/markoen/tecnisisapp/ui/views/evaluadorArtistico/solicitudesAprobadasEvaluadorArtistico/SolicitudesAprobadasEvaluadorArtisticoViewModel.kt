@@ -25,7 +25,6 @@ class SolicitudesAprobadasEvaluadorArtisticoViewModel @Inject constructor(
 
     fun actualizarDatos( id: Int, idPerfil: Int ) {
         _uiState.update { currentState -> currentState.copy( id = id, idPerfil = idPerfil ) }
-
         viewModelScope.launch {
             try {
                 val solicitudes = usuarioRepository.obtenerSolicitudesEvaluadorArtistico(_uiState.value.id).filter { it.aprobadaEvaluadorArtistico }

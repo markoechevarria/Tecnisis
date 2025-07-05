@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
@@ -111,31 +112,24 @@ fun PantallaSolicitudesRegistradasEvaluadorEconomico(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                        onClick = {
-                            navegarEvaluarSolicitudEconomico(
-                                id,
-                                id_perfil,
-                                solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.id_solicitud
-                            )
-                        }
+                        onClick = { navegarEvaluarSolicitudEconomico(id, id_perfil, solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.id_solicitud) }
                     ) {
                         Row(
                             modifier = Modifier
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.End
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Column {
-                                Text(text = solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.nombre, style = MaterialTheme.typography.titleSmall)
-                                Text(text = solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.fecha, style = MaterialTheme.typography.labelSmall)
-                                Text(text = solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.tecnica, style = MaterialTheme.typography.labelSmall)
+                                texto( "Nombre de la Obra: " ,solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.nombre)
+                                texto( "Fecha: " ,solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.fecha)
+                                texto( "Tecnica usada: " ,solicitudesRegistradasUiStateEvaluadorEconomico.solicitudDatosArtista.tecnica)
                             }
-
                             Icon(
-                                imageVector = Icons.Default.Face,
+                                painter = painterResource( R.drawable.icono_obra ),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(150.dp).padding(start = 12.dp)
                             )
                         }
                     }
@@ -176,4 +170,20 @@ fun PantallaSolicitudesRegistradasEvaluadorEconomico(
             )
         }
     }
+}
+
+@Composable
+fun texto( leyenda: String, mensaje: String ) {
+    Text(
+        text = leyenda,
+        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+    )
+    Spacer(modifier = Modifier.height(2.dp))
+    Text(
+        text = mensaje,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onPrimaryContainer
+    )
+    Spacer(modifier = Modifier.height(8.dp))
 }
