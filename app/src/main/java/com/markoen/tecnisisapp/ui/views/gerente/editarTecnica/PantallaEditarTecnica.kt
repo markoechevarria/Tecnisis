@@ -48,7 +48,8 @@ fun PantallaEditarTecnica(
     id_perfil: Int,
     id_tecnica: Int,
     nuevaTecnicaViewModel: EditarTecnicaViewModel = hiltViewModel(),
-    navegarAtras: () -> Unit
+    navegarAtras: () -> Unit,
+    navegarInicio: (Int, Int) -> Unit
 ) {
     val nuevaTecnicaUiState by nuevaTecnicaViewModel.uiState.collectAsState()
     nuevaTecnicaViewModel.asignarIds(id, id_perfil, id_tecnica)
@@ -122,7 +123,7 @@ fun PantallaEditarTecnica(
 
                 if ( nuevaTecnicaUiState.habilitadoBoton ) {
                     Button(
-                        onClick = { nuevaTecnicaViewModel.actualizarTecnica() },
+                        onClick = { nuevaTecnicaViewModel.actualizarTecnica(); navegarInicio },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {

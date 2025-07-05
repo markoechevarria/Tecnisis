@@ -67,6 +67,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.markoen.tecnisisapp.domain.models.Tecnica
+import android.app.DatePickerDialog
+import android.widget.DatePicker
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun PantallaRegistrarObra(
@@ -109,6 +116,14 @@ fun PantallaRegistrarObra(
         when {
             ContextCompat.checkSelfPermission( context, Manifest.permission.CAMERA ) == PackageManager.PERMISSION_GRANTED -> { takePictureLauncher.launch(photoUri) }
             else -> { requestPermissionLauncher.launch(Manifest.permission.CAMERA) }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (registrarSolicitudUIState.fecha_obra == "") {
+            val calendar = Calendar.getInstance()
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            registrarSolicitudViewModel.actualizarFechaObra(format.format(calendar.time))
         }
     }
 
@@ -198,7 +213,15 @@ fun PantallaRegistrarObra(
                         registrarSolicitudViewModel.actualizarTecnicaObra(idTecnicaSeleccionada)
                     }
                 )
-                camposTexto("Fecha", { registrarSolicitudViewModel.actualizarFechaObra(fecha = it) }, registrarSolicitudUIState.fecha_obra )
+
+                DateInputField(
+                    label = "Fecha",
+                    selectedDate = registrarSolicitudUIState.fecha_obra,
+                    onDateSelected = { newDate ->
+                        registrarSolicitudViewModel.actualizarFechaObra(newDate)
+                    }
+                )
+
                 camposTextoFinal("Dimensiones", { registrarSolicitudViewModel.actualizarDimensionesObra(dimensiones = it) }, registrarSolicitudUIState.dimensiones_obra )
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -341,4 +364,41 @@ fun DropdownInputField(
             }
         }
     }
+}
+
+@Composable
+fun DateInputField(
+    label: String,
+    selectedDate: String,
+    onDateSelected: (String) -> Unit
+) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            calendar.set(year, month, dayOfMonth)
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            onDateSelected(format.format(calendar.time))
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
+
+    OutlinedTextField(
+        value = selectedDate,
+        onValueChange = {  },
+        label = { Text(label) },
+        readOnly = true,
+        trailingIcon = {
+            IconButton(onClick = { datePickerDialog.show() }) {
+                Icon(painter = painterResource(id = R.drawable.calendar_symbol_svgrepo_com), contentDescription = "Seleccionar fecha")
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { datePickerDialog.show() }
+    )
 }

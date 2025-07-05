@@ -48,7 +48,8 @@ fun PantallaEditarExperto(
     id_perfil: Int,
     id_experto: Int,
     nuevoExpertoViewModel: EditarExpertoViewModel = hiltViewModel(),
-    navegarAtras: () -> Unit
+    navegarAtras: () -> Unit,
+    navegarInicio: (Int, Int) -> Unit
 ) {
     val nuevoExpertoUiState by nuevoExpertoViewModel.uiState.collectAsState()
     nuevoExpertoViewModel.asignarIds(id, id_perfil, id_experto)
@@ -123,7 +124,7 @@ fun PantallaEditarExperto(
 
                 if ( nuevoExpertoUiState.habilitadoBoton ) {
                     Button(
-                        onClick = { nuevoExpertoViewModel.actualizarExperto() },
+                        onClick = { nuevoExpertoViewModel.actualizarExperto(); navegarInicio },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
