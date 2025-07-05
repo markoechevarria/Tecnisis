@@ -1,4 +1,4 @@
-package com.markoen.tecnisisapp.ui.views.anfitrion
+package com.markoen.tecnisisapp.ui.views.anfitrion.registrarObra
 
 import android.net.Uri
 import android.util.Log
@@ -17,48 +17,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-import kotlinx.coroutines.tasks.await
-
 @HiltViewModel
-class RegistrarSolicitudViewModel @Inject constructor(
+class RegistrarObraViewModel @Inject constructor(
     private val usuarioRepository: InterfazUsuarioRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(RegistrarSolicitudUIState() )
-    val uiState: StateFlow<RegistrarSolicitudUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(RegistrarObraUIState() )
+    val uiState: StateFlow<RegistrarObraUIState> = _uiState.asStateFlow()
 
     private val storage = Firebase.storage
     private var _tempPhotoUri: Uri? = null
 
-
-    fun imprimirId(id1: Int, id2: Int, id3:Int){
-        Log.d("aca se ve lo q se recibe", "se recibio estos ids en order ${id1}, ${id2}, ${id3}")
-    }
-    fun imprimirId4(id1: Int, id2: Int, id3:Int, id4: Int){
-        Log.d("aca se ve lo q se recibe", "se recibio estos ids en order ${id1}, ${id2}, ${id3}, ${id4}")
-    }
-
-    fun obtenerDatosSolicitud(id: Int, id_perfil: Int, id_artista: Int, id_obra: Int, id_evaluador_artistico: Int) {
-        _uiState.update { currentState -> currentState.copy( id = id, id_perfil = id_perfil ) }
-        obtenerArtista(id, id_perfil, id_artista)
-        obtenerObra(id_obra)
-        obtenerEvaluadorArtistico(id_evaluador_artistico)
-    }
-
-    fun obtenerObra(id_obra: Int) {
-        viewModelScope.launch {
-            try {
-                Log.d("viewmodelobtenerobra", "aca es donde se obtiene la obra")
-                val obra: Obra = usuarioRepository.obtenerObra( id = id_obra )
-                _uiState.update { currentState -> currentState.copy( obra = obra ) }
-                Log.d("viewmodelobtenerartista", "ya se obtuvo el usuario de id ${_uiState.value.obra}")
-            }catch (e: Exception) {
-                Log.d("viewmodelobtenerobra", "entro y agarro al catch")
-                Log.d("viewmodelobtenerobra", e.message.toString())
-            }
-        }
-    }
     fun actualizarNombreObra( nombre: String) {
         _uiState.update { currentState -> currentState.copy( nombre_obra = nombre) }
         habilitarBotonObra()
@@ -105,83 +76,20 @@ class RegistrarSolicitudViewModel @Inject constructor(
         }
     }
 
-    fun obtenerEvaluadorArtistico(id_evaluador_artistico: Int) {
-        viewModelScope.launch {
-            try {
-                Log.d("viewmodelobtenerevaluardorartistico", "aca es donde se obtiene el evaluador Artistico")
-                val usuario: Usuario = usuarioRepository.obtenerUsuario( id = id_evaluador_artistico )
-                _uiState.update { currentState -> currentState.copy( evaluadorArtisticoElegido = usuario ) }
-            }catch (e: Exception) {
-                Log.d("viewmodelobtenerevaluardorartistico", "entro y agarro al catch")
-                Log.d("viewmodelobtenerevaluardorartistico", e.message.toString())
-            }
-        }
-    }
-    fun listarEvaluadoresArtisticos() {
-        viewModelScope.launch {
-            try {
-                Log.d("viewmodelregistrarsoli", "aca es donde se obtiene lso evaluadores artisticos")
-                val evaluadoresArtisticos = usuarioRepository.listarEvaluadoresArtisticos()
-                _uiState.update { currentState ->
-                    currentState.copy(listaEvaluadoresArtisticos = evaluadoresArtisticos )
-                }
-            } catch (e: Exception) {
-                Log.d("viewmodelregistrarsoli", "entro y agarro al catch")
-                Log.d("viewmodel", e.message.toString())
-            }
-        }
-    }
-
-    fun obtenerArtista( id: Int, id_perfil: Int, id_artista: Int ) {
+    fun obtenerDatos(id: Int, id_perfil: Int, id_artista: Int) {
         _uiState.update { currentState -> currentState.copy( id = id, id_perfil = id_perfil, )}
         viewModelScope.launch {
             try {
-                Log.d("viewmodelobtenerartista", "aca es donde se obtiene el usuario")
                 val artista: Artista = usuarioRepository.buscarArtistaId( id = id_artista )
-                _uiState.update { currentState -> currentState.copy( artista = artista ) }
-                Log.d("viewmodelobtenerartista", "ya se obtuvo el usuario de id ${_uiState.value.artista}")
-            } catch (e: Exception) {
-                Log.d("viewmodelobtenerartista", "entro y agarro al catch")
-                Log.d("viewmodelobtenerartista", e.message.toString())
-            }
-        }
-    }
-    fun seleccionarExperto(id: Int) {
-        _uiState.update { currentState ->
-            currentState.copy( expertoSeleccionadoId = id, habilitadoBotonExpertoSeleccionado = true )
-        }
-    }
-
-    fun obtenerTecnicas() {
-        viewModelScope.launch {
-            try {
                 val tecnicas: List<Tecnica> = usuarioRepository.obtenerTecnicas()
-                _uiState.update { currentState -> currentState.copy( tecnicasLista = tecnicas ) }
+                _uiState.update { currentState -> currentState.copy( artista = artista, tecnicasLista = tecnicas ) }
+
             } catch (e: Exception) {
-                Log.d("viewmodelregistrarsolicitud", e.message.toString())
+                Log.d("viewmodelobtenerDatos", "aca se obtienen los datos: ${e.message}")
             }
         }
     }
 
-    fun registrarSolicitud() {
-        viewModelScope.launch {
-            try {
-                Log.d("viewmodelregistrarsolicitud", "aca es donde se registra una solicitud")
-                var solicitudRegistrada = usuarioRepository.registrarSolicitud(
-                    _uiState.value.artista.id ,
-                    _uiState.value.obra.id,
-                    _uiState.value.evaluadorArtisticoElegido.id,
-                    false,
-                    false,
-                    0, 0
-                )
-            } catch (e: Exception) {
-                Log.d("viewmodelregistrarsolicitud", "entro y agarro al catch")
-                Log.d("viewmodelregistrarsolicitud", e.message.toString())
-            }
-        }
-    }
-    
     fun actualizarFotoUriTemporal(uri: Uri?) { _tempPhotoUri = uri }
     private suspend fun subirImagenFirebase(imageUri: Uri): String {
         val storageRef = storage.reference

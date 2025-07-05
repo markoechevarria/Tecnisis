@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,14 +35,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.markoen.tecnisisapp.R
-import com.markoen.tecnisisapp.ui.views.anfitrion.RegistrarSolicitudViewModel
 
 @Composable
 fun PantallaConfirmarSolicitud(
@@ -51,13 +54,27 @@ fun PantallaConfirmarSolicitud(
     id_obra: Int,
     id_evaluador_artistico: Int,
     solicitudExitosa: (Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
+    confirmarSolicitudViewModel: ConfirmarSolicitudViewModel = hiltViewModel(),
     navegarAtras: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
+    val confirmarSolicitudUiState by confirmarSolicitudViewModel.uiState.collectAsState()
 
-    registrarSolicitudViewModel.obtenerDatosSolicitud(id, id_perfil, id_artista, id_obra, id_evaluador_artistico)
+    confirmarSolicitudViewModel.obtenerDatosSolicitud(id, id_perfil, id_artista, id_obra, id_evaluador_artistico)
+
+    if (confirmarSolicitudUiState.isLoading) {
+        Dialog(
+            onDismissRequest = {  },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Box(
+                modifier = Modifier.size(100.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -107,16 +124,12 @@ fun PantallaConfirmarSolicitud(
         Spacer(modifier = Modifier.height(24.dp))
 
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
             Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(24.dp).fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text("Datos Artista", style = MaterialTheme.typography.titleMedium)
@@ -134,8 +147,8 @@ fun PantallaConfirmarSolicitud(
                         Icon(Icons.Default.Person, contentDescription = null)
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
-                            Text(registrarSolicitudUIState.artista.nombre, style = MaterialTheme.typography.labelSmall)
-                            Text(registrarSolicitudUIState.artista.dni, style = MaterialTheme.typography.titleSmall)
+                            Text(confirmarSolicitudUiState.artista.nombre, style = MaterialTheme.typography.labelSmall)
+                            Text(confirmarSolicitudUiState.artista.dni, style = MaterialTheme.typography.titleSmall)
                         }
                     }
                 }
@@ -153,9 +166,9 @@ fun PantallaConfirmarSolicitud(
                         Icon(Icons.Default.Person, contentDescription = null)
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
-                            Text(registrarSolicitudUIState.obra.nombre, style = MaterialTheme.typography.labelSmall)
-                            Text(registrarSolicitudUIState.obra.dimensiones, style = MaterialTheme.typography.titleSmall)
-                            Text(registrarSolicitudUIState.obra.fecha, style = MaterialTheme.typography.titleSmall)
+                            Text(confirmarSolicitudUiState.obra.nombre, style = MaterialTheme.typography.labelSmall)
+                            Text(confirmarSolicitudUiState.obra.dimensiones, style = MaterialTheme.typography.titleSmall)
+                            Text(confirmarSolicitudUiState.obra.fecha, style = MaterialTheme.typography.titleSmall)
                         }
                     }
                 }
@@ -173,8 +186,8 @@ fun PantallaConfirmarSolicitud(
                         Icon(Icons.Default.Person, contentDescription = null)
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
-                            Text(registrarSolicitudUIState.evaluadorArtisticoElegido.nombre, style = MaterialTheme.typography.labelSmall)
-                            Text(registrarSolicitudUIState.evaluadorArtisticoElegido.correo, style = MaterialTheme.typography.titleSmall)
+                            Text(confirmarSolicitudUiState.evaluadorArtisticoElegido.nombre, style = MaterialTheme.typography.labelSmall)
+                            Text(confirmarSolicitudUiState.evaluadorArtisticoElegido.correo, style = MaterialTheme.typography.titleSmall)
                         }
                     }
                 }
@@ -187,28 +200,25 @@ fun PantallaConfirmarSolicitud(
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(16.dp)
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {
-                        Icon(Icons.Default.Person, contentDescription = null)
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            CargarImagenConCoil(registrarSolicitudUIState.fotoObraUrl)
-                        }
+                        CargarImagenConCoil(confirmarSolicitudUiState.fotoObraUrl)
                     }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { solicitudExitosa(id, id_perfil); registrarSolicitudViewModel.registrarSolicitud() },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Confirmar solicitud")
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+                onClick = { solicitudExitosa(id, id_perfil); confirmarSolicitudViewModel.registrarSolicitud() },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                shape = RoundedCornerShape(12.dp)
+        ) {
+            Text("Confirmar solicitud")
+        }
+
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -235,5 +245,7 @@ fun CargarImagenConCoil(imageUrl: String?) {
         model = imageUrl,
         contentDescription = "Descripción de la imagen",
         modifier = Modifier.size(200.dp),
+        contentScale = ContentScale.Fit,
+        alignment = Alignment.Center
     )
 }

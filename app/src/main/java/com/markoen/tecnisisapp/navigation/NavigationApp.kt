@@ -143,10 +143,10 @@ fun NavigationApp () {
             PantallaNuevaTecnica(id = nuevaTecnica.id, id_perfil = nuevaTecnica.id_perfil, navegarAtras = { navController.popBackStack() } )
         }
         composable<EditarExperto> { val editarExperto: EditarExperto = it.toRoute()
-            PantallaEditarExperto(id = editarExperto.id, id_perfil = editarExperto.id_perfil, id_experto = editarExperto.id_experto, navegarAtras = { navController.popBackStack() } )
+            PantallaEditarExperto(id = editarExperto.id, id_perfil = editarExperto.id_perfil, id_experto = editarExperto.id_experto, navegarAtras = { navController.popBackStack() }, navegarInicio = {id, id_perfil -> navController.navigate(route = Inicio(id, id_perfil))} )
         }
         composable<EditarTecnica> { val editarTecnica: EditarTecnica = it.toRoute()
-            PantallaEditarTecnica(id = editarTecnica.id, id_perfil = editarTecnica.id_perfil, id_tecnica = editarTecnica.id_tecnica, navegarAtras = { navController.popBackStack() } )
+            PantallaEditarTecnica(id = editarTecnica.id, id_perfil = editarTecnica.id_perfil, id_tecnica = editarTecnica.id_tecnica, navegarAtras = { navController.popBackStack() }, navegarInicio = {id, id_perfil -> navController.navigate(route = Inicio(id, id_perfil))} )
         }
         composable<VerReporteArtistas> { val verReporteArtistas: VerReporteArtistas = it.toRoute()
             PantallaReporteArtistas(id = verReporteArtistas.id, id_perfil = verReporteArtistas.id_perfil, navegarAtras = { navController.popBackStack() } )

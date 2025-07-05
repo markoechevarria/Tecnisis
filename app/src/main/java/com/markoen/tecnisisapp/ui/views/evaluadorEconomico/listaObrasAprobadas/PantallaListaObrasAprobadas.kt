@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
@@ -158,20 +159,35 @@ fun carta(autor: String, fecha: String, tecnica: String, verSolicitudes: () -> U
             modifier = Modifier
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Column {
-                Text(autor, style = MaterialTheme.typography.titleSmall)
-                Text(fecha, style = MaterialTheme.typography.labelSmall)
-                Text(tecnica, style = MaterialTheme.typography.labelSmall)
+                texto("Nombre de autor: ", autor)
+                texto("Fecha: ", fecha)
+                texto("Tecnica usada: ", tecnica)
             }
-
             Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "Técnica",
+                painter = painterResource( R.drawable.icono_obra ),
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(150.dp).padding(start = 12.dp)
             )
         }
     }
+}
+
+@Composable
+fun texto( leyenda: String, mensaje: String ) {
+    Text(
+        text = leyenda,
+        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+    )
+    Spacer(modifier = Modifier.height(2.dp))
+    Text(
+        text = mensaje,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onPrimaryContainer
+    )
+    Spacer(modifier = Modifier.height(8.dp))
 }

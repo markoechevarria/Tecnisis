@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -41,15 +40,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
-import com.markoen.tecnisisapp.ui.views.anfitrion.RegistrarSolicitudViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import java.io.File
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import com.markoen.tecnisisapp.ui.views.anfitrion.PhotoUploadState
 import coil.compose.rememberAsyncImagePainter
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -67,6 +63,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.markoen.tecnisisapp.domain.models.Tecnica
+import android.app.DatePickerDialog
+import android.widget.DatePicker
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun PantallaRegistrarObra(
@@ -74,15 +79,12 @@ fun PantallaRegistrarObra(
     id_perfil: Int,
     id_artista: Int,
     navegarElegirExperto: (Int, Int, Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
+    registrarObraViewModel: RegistrarObraViewModel = hiltViewModel(),
     navegarAtras: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
-    registrarSolicitudViewModel.imprimirId(id,id_perfil, id_artista)
-    registrarSolicitudViewModel.obtenerArtista(id_artista, id_perfil, id_artista)
-    registrarSolicitudViewModel.imprimirId(registrarSolicitudUIState.id, registrarSolicitudUIState.id_perfil, registrarSolicitudUIState.artista.id)
-    registrarSolicitudViewModel.obtenerTecnicas()
+    val registrarObraUIState by registrarObraViewModel.uiState.collectAsState()
+    registrarObraViewModel.obtenerDatos(id, id_perfil, id_artista)
 
     val context = LocalContext.current
 
@@ -93,22 +95,42 @@ fun PantallaRegistrarObra(
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
-            if (success) { tempPhotoUri = photoUri; registrarSolicitudViewModel.actualizarFotoUriTemporal(photoUri) }
-            else { tempPhotoUri = null; registrarSolicitudViewModel.actualizarFotoUriTemporal(null) }
+            if (success) { tempPhotoUri = photoUri; registrarObraViewModel.actualizarFotoUriTemporal(photoUri) }
+            else { tempPhotoUri = null; registrarObraViewModel.actualizarFotoUriTemporal(null) }
         }
     )
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted: Boolean ->
-            if (isGranted) { takePictureLauncher.launch(photoUri) }
-        }
+        onResult = { isGranted: Boolean -> if (isGranted) { takePictureLauncher.launch(photoUri) } }
     )
 
     val checkAndRequestCameraPermission: () -> Unit = {
         when {
             ContextCompat.checkSelfPermission( context, Manifest.permission.CAMERA ) == PackageManager.PERMISSION_GRANTED -> { takePictureLauncher.launch(photoUri) }
             else -> { requestPermissionLauncher.launch(Manifest.permission.CAMERA) }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (registrarObraUIState.fecha_obra == "") {
+            val calendar = Calendar.getInstance()
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            registrarObraViewModel.actualizarFechaObra(format.format(calendar.time))
+        }
+    }
+
+    if (registrarObraUIState.isLoading) {
+        Dialog(
+            onDismissRequest = {  },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Box(
+                modifier = Modifier.size(100.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
         }
     }
 
@@ -185,21 +207,41 @@ fun PantallaRegistrarObra(
                     ) {
                         Icon(Icons.Default.Person, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(registrarSolicitudUIState.artista.nombre, style = MaterialTheme.typography.titleMedium)
+                        Text(registrarObraUIState.artista.nombre, style = MaterialTheme.typography.titleMedium)
                     }
                 }
 
-                camposTexto("Obra",{ registrarSolicitudViewModel.actualizarNombreObra(nombre = it) }, registrarSolicitudUIState.nombre_obra )
+                camposTexto("Obra",{ registrarObraViewModel.actualizarNombreObra(nombre = it) }, registrarObraUIState.nombre_obra )
                 DropdownInputField(
                     label = "Técnica",
-                    options = registrarSolicitudUIState.tecnicasLista,
-                    selectedTecnicaId = registrarSolicitudUIState.id_tecnica_obra,
+                    options = registrarObraUIState.tecnicasLista,
+                    selectedTecnicaId = registrarObraUIState.id_tecnica_obra,
                     onOptionSelected = { idTecnicaSeleccionada ->
-                        registrarSolicitudViewModel.actualizarTecnicaObra(idTecnicaSeleccionada)
+                        registrarObraViewModel.actualizarTecnicaObra(idTecnicaSeleccionada)
                     }
                 )
-                camposTexto("Fecha", { registrarSolicitudViewModel.actualizarFechaObra(fecha = it) }, registrarSolicitudUIState.fecha_obra )
-                camposTextoFinal("Dimensiones", { registrarSolicitudViewModel.actualizarDimensionesObra(dimensiones = it) }, registrarSolicitudUIState.dimensiones_obra )
+
+                DateInputField(
+                    label = "Fecha",
+                    selectedDate = registrarObraUIState.fecha_obra,
+                    onDateSelected = { newDate ->
+                        registrarObraViewModel.actualizarFechaObra(newDate)
+                    }
+                )
+
+                /*
+                camposTextoFinal("Dimensiones", { registrarObraViewModel.actualizarDimensionesObra(dimensiones = it) }, registrarObraUIState.dimensiones_obra )
+                 */
+
+                DropdownStringInputField(
+                    label = "Dimensiones",
+                    options = listOf("Pequeño", "Mediano", "Grande"),
+                    selectedOption = registrarObraUIState.dimensiones_obra,
+                    onOptionSelected = { selectedDim ->
+                        registrarObraViewModel.actualizarDimensionesObra(dimensiones = selectedDim)
+                    }
+                )
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text("Foto de la Obra", style = MaterialTheme.typography.titleMedium)
@@ -226,11 +268,11 @@ fun PantallaRegistrarObra(
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
-                        registrarSolicitudViewModel.registrarObra()
+                        registrarObraViewModel.registrarObra()
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    enabled = tempPhotoUri != null && registrarSolicitudUIState.photoUploadState !is PhotoUploadState.Loading
+                    enabled = tempPhotoUri != null && registrarObraUIState.photoUploadState !is PhotoUploadState.Loading
                 ) {
                     Text("Registrar Obra")
                 }
@@ -255,8 +297,8 @@ fun PantallaRegistrarObra(
         }
     }
 
-    if (registrarSolicitudUIState.obra_registrada) {
-        navegarElegirExperto(id, id_perfil, id_artista, registrarSolicitudUIState.id_obra)
+    if (registrarObraUIState.obra_registrada) {
+        navegarElegirExperto(id, id_perfil, id_artista, registrarObraUIState.id_obra)
     }
 }
 
@@ -341,4 +383,84 @@ fun DropdownInputField(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownStringInputField(
+    label: String,
+    options: List<String>,
+    selectedOption: String,
+    onOptionSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val selectedText = if (selectedOption.isBlank()) "Seleccione una opción" else selectedOption
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
+    ) {
+        TextField(
+            value = selectedText,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier.menuAnchor()
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            options.forEach { optionText ->
+                DropdownMenuItem(
+                    text = { Text(optionText) },
+                    onClick = {
+                        onOptionSelected(optionText)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DateInputField(
+    label: String,
+    selectedDate: String,
+    onDateSelected: (String) -> Unit
+) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            calendar.set(year, month, dayOfMonth)
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            onDateSelected(format.format(calendar.time))
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
+
+    OutlinedTextField(
+        value = selectedDate,
+        onValueChange = {  },
+        label = { Text(label) },
+        readOnly = true,
+        trailingIcon = {
+            IconButton(onClick = { datePickerDialog.show() }) {
+                Icon(painter = painterResource(id = R.drawable.calendar_symbol_svgrepo_com), contentDescription = "Seleccionar fecha")
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { datePickerDialog.show() }
+    )
 }

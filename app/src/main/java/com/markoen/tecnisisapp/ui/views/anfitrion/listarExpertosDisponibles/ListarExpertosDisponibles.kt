@@ -25,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,9 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
-import com.markoen.tecnisisapp.ui.views.anfitrion.RegistrarSolicitudViewModel
 
 @Composable
 fun PantallaListarExpertosDisponibles (
@@ -48,15 +50,27 @@ fun PantallaListarExpertosDisponibles (
     id_artista: Int,
     id_obra: Int,
     confirmarSolicitud: (Int, Int, Int, Int, Int) -> Unit,
-    registrarSolicitudViewModel: RegistrarSolicitudViewModel = hiltViewModel(),
+    listarExpertosDisponiblesViewModel: ListarExpertosDisponiblesViewModel = hiltViewModel(),
     navegarAtras: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val registrarSolicitudUIState by registrarSolicitudViewModel.uiState.collectAsState()
-    registrarSolicitudViewModel.imprimirId4(id, id_perfil, id_artista, id_obra)
-    registrarSolicitudViewModel.obtenerDatosSolicitud(id, id_perfil, id_artista, id_obra, 0)
-    registrarSolicitudViewModel.listarEvaluadoresArtisticos()
-    registrarSolicitudViewModel.imprimirId4(registrarSolicitudUIState.id, registrarSolicitudUIState.id_perfil, registrarSolicitudUIState.artista.id, registrarSolicitudUIState.id_obra)
+    val listarExpertosDisponiblesUiState by listarExpertosDisponiblesViewModel.uiState.collectAsState()
+
+    listarExpertosDisponiblesViewModel.obtenerDatosSolicitud(id, id_perfil, id_artista, id_obra)
+
+    if (listarExpertosDisponiblesUiState.isLoading) {
+        Dialog(
+            onDismissRequest = {  },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Box(
+                modifier = Modifier.size(100.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -118,13 +132,13 @@ fun PantallaListarExpertosDisponibles (
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                 registrarSolicitudUIState.listaEvaluadoresArtisticos.forEach {
-                    cartaExperto( it.nombre, it.id , ( it.id == registrarSolicitudUIState.expertoSeleccionadoId ), { registrarSolicitudViewModel.seleccionarExperto(it.id) } )
+                listarExpertosDisponiblesUiState.listaEvaluadoresArtisticos.forEach {
+                    cartaExperto( it.nombre, it.id , ( it.id == listarExpertosDisponiblesUiState.expertoSeleccionadoId ), { listarExpertosDisponiblesViewModel.seleccionarExperto(it.id) } )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (registrarSolicitudUIState.habilitadoBotonExpertoSeleccionado == false) {
+                if (listarExpertosDisponiblesUiState.habilitadoBotonExpertoSeleccionado == false) {
                     Button(
                         onClick = {},
                         shape = RoundedCornerShape(12.dp),
@@ -138,7 +152,7 @@ fun PantallaListarExpertosDisponibles (
                     }
                 } else {
                     Button(
-                        onClick = { confirmarSolicitud(id, id_perfil, id_artista, id_obra, registrarSolicitudUIState.expertoSeleccionadoId) },
+                        onClick = { confirmarSolicitud(id, id_perfil, id_artista, id_obra, listarExpertosDisponiblesUiState.expertoSeleccionadoId) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {

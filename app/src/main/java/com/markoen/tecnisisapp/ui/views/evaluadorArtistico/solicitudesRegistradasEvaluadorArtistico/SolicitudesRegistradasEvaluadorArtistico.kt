@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
@@ -47,12 +48,8 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
     solicitudesRegistradasViewModelEvaluadorArtistico: SolicitudesRegistradasViewModelEvaluadorArtistico = hiltViewModel(),
     navegarAtras: () -> Unit
 ) {
-
     val solicitudesRegistradasUiStateEvaluadorArtistico by solicitudesRegistradasViewModelEvaluadorArtistico.uiState.collectAsState()
-
-    LaunchedEffect(id, id_perfil) {
-        solicitudesRegistradasViewModelEvaluadorArtistico.actualizarDatos(id, id_perfil)
-    }
+    solicitudesRegistradasViewModelEvaluadorArtistico.actualizarDatos(id, id_perfil)
 
     Column(
         modifier = Modifier
@@ -118,31 +115,19 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
                             modifier = Modifier
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.End
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Column {
-                                Text(
-                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.nombre,
-                                    style = MaterialTheme.typography.titleSmall
-                                )
-                                Text(
-                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.nombre_artista,
-                                    style = MaterialTheme.typography.titleSmall
-                                )
-                                Text(
-                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.fecha,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                                Text(
-                                    text = solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.tecnica,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
+                                texto("Nombre obra", solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.nombre )
+                                texto("Nombre de artista", solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.nombre_artista )
+                                texto("Fecha", solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.fecha )
+                                texto("Tecnica usada", solicitudesRegistradasUiStateEvaluadorArtistico.solicitudDatosArtista.tecnica )
                             }
                             Icon(
-                                imageVector = Icons.Default.Face,
+                                painter = painterResource( R.drawable.icono_obra ),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(150.dp).padding(start = 12.dp)
                             )
                         }
                     }
@@ -183,4 +168,20 @@ fun PantallaSolicitudesRegistradasEvaluadorArtistico(
             )
         }
     }
+}
+
+@Composable
+fun texto( leyenda: String, mensaje: String ) {
+    Text(
+        text = leyenda,
+        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+    )
+    Spacer(modifier = Modifier.height(2.dp))
+    Text(
+        text = mensaje,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onPrimaryContainer
+    )
+    Spacer(modifier = Modifier.height(8.dp))
 }
