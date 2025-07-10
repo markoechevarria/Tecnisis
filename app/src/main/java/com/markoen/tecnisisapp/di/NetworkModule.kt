@@ -13,7 +13,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = "http://10.0.2.2:8000/tecnisis/"
+    //private const val BASE_URL = "http://10.0.2.2:8000/tecnisis/"
+    private const val BASE_URL = "https://tecnisis-backend-fastapi.onrender.com/tecnisis/"
 
     @Singleton
     @Provides
