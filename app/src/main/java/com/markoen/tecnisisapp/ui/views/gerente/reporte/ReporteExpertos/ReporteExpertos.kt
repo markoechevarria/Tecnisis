@@ -224,3 +224,106 @@ fun BarChartCompose(
     )
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewPantallaReporteExpertos() {
+    PantallaReporteExpertosPreview()
+}
+
+@Composable
+fun PantallaReporteExpertosPreview() {
+    val listaExpertos = listOf(
+        "Ana Pérez" to 10,
+        "Carlos Ruiz" to 8,
+        "Lucía Torres" to 15,
+        "Javier Gómez" to 6
+    )
+
+    val entries = listaExpertos.mapIndexed { index, (nombre, cantidad) ->
+        BarEntry(index.toFloat(), cantidad.toFloat())
+    }
+
+    val labels = listaExpertos.map { it.first }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada),
+                    contentDescription = null,
+                    modifier = Modifier.size(50.dp)
+                )
+                Text(
+                    text = "TECNISIS",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+        ) {
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Reportes Ventas totales", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Gráfico de barras
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            BarChartCompose(
+                dataPoints = entries,
+                labels = labels,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+                    .padding(10.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "© 2025 Todos los derechos reservados",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+    }
+}

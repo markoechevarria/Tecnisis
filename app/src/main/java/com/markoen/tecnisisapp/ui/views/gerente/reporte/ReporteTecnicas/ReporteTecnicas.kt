@@ -198,3 +198,97 @@ fun PieChartCompose(
         modifier = modifier
     )
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPantallaReporteTecnicas() {
+    PantallaReporteTecnicasPreview()
+}
+
+@Composable
+fun PantallaReporteTecnicasPreview() {
+    val tecnicasEjemplo = listOf(
+        PieEntry(12f, "Óleo"),
+        PieEntry(8f, "Acrílico"),
+        PieEntry(5f, "Acuarela"),
+        PieEntry(10f, "Tinta"),
+        PieEntry(6f, "Grafito")
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada),
+                    contentDescription = null,
+                    modifier = Modifier.size(50.dp)
+                )
+                Text(
+                    text = "TECNISIS",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+        ) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Reportes Ventas totales", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            PieChartCompose(
+                dataPoints = tecnicasEjemplo,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(500.dp)
+                    .padding(10.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "© 2025 Todos los derechos reservados",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+    }
+}
