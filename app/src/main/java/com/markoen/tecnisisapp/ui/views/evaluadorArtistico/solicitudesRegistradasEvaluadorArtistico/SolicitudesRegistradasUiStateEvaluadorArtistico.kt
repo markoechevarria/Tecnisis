@@ -7,6 +7,7 @@ data class SolicitudesRegistradasUiStateEvaluadorArtistico (
     val id: Int = 0,
     val listaSolicitudes: List<Solicitud> = emptyList<Solicitud>(),
     val solicitudDatosArtista: SolicitudArtista = SolicitudArtista(),
+    val isLoading: Boolean = true
 )
 
 data class SolicitudArtista (

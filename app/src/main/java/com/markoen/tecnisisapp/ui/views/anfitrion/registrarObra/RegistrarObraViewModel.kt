@@ -86,6 +86,8 @@ class RegistrarObraViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 Log.d("viewmodelobtenerDatos", "aca se obtienen los datos: ${e.message}")
+            } finally {
+                _uiState.update { it.copy(isLoading = false, error = null) }
             }
         }
     }

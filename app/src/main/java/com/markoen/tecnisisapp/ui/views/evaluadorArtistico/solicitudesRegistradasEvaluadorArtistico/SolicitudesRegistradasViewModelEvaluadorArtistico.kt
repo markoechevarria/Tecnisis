@@ -28,7 +28,7 @@ class SolicitudesRegistradasViewModelEvaluadorArtistico @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val solicitudes = usuarioRepository.obtenerSolicitudesEvaluadorArtistico(_uiState.value.id)
+                val solicitudes = usuarioRepository.obtenerSolicitudesEvaluadorArtistico(_uiState.value.id).filter { it.aprobadaEvaluadorArtistico == false }
                 _uiState.update { currentState -> currentState.copy( listaSolicitudes = solicitudes ) }
 
             } catch (e: Exception) {
@@ -57,7 +57,10 @@ class SolicitudesRegistradasViewModelEvaluadorArtistico @Inject constructor(
             } catch (e: Exception) {
                 Log.d("viewmodelsolicitudesregistradas", "entro y agarro al catch")
                 Log.d("viewmodelsolicitudesregistradas", e.message.toString())
+            } finally {
+                _uiState.update { currentState -> currentState.copy(isLoading = false) }
             }
         }
     }
+    fun cargar() { _uiState.update {  currentState -> currentState.copy(isLoading = false) } }
 }

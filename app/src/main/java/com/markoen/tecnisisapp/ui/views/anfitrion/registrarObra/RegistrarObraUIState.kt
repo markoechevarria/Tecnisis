@@ -24,7 +24,7 @@ data class RegistrarObraUIState(
     val photoUploadState: PhotoUploadState = PhotoUploadState.Idle,
     val fotoObraUrl: String = "",
 
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val error: String? = null,
 )
 

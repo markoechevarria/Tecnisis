@@ -56,7 +56,10 @@ class SolicitudesAprobadasEvaluadorArtisticoViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.d("viewmodelsolicitudesregistradas", "entro y agarro al catch")
                 Log.d("viewmodelsolicitudesregistradas", e.message.toString())
+            } finally {
+                _uiState.update { currentState -> currentState.copy( isLoading = false ) }
             }
         }
     }
+    fun cargar() { _uiState.update {  currentState -> currentState.copy(isLoading = false) } }
 }

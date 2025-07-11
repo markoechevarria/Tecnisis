@@ -26,7 +26,7 @@ class SolicitudesRegistradasViewModelAnfitrion @Inject constructor(
         viewModelScope.launch {
             try {
                 Log.d("viewmodelListarSolicitiudes", "entrando al try")
-                val solicitudes: List<Solicitud> = usuarioRepository.obtenerSolicitudes().filter { it -> it.id_obra >= 18 }
+                val solicitudes: List<Solicitud> = usuarioRepository.obtenerSolicitudes()
                 _uiState.update { currentState -> currentState.copy( listaSolicitudes = solicitudes ) }
                 Log.d("viewmodelListarSolicitiudes", "se obtuvo: ${_uiState.value.listaSolicitudes}")
 
