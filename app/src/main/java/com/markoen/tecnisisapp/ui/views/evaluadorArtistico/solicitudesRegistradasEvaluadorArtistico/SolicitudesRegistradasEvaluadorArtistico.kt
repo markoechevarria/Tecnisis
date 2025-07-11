@@ -196,7 +196,6 @@ fun PreviewPantallaSolicitudesRegistradasEvaluadorArtistico() {
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            // Encabezado
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
