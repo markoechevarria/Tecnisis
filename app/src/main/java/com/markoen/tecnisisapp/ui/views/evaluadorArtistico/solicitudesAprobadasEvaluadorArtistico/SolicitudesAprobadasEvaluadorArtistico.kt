@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +38,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
 
@@ -50,6 +53,20 @@ fun PantallaSolicitudesAprobadasEvaluadorArtistico(
     val pantallaSolicitudesAprobadasEvaluadorArtisticoUiState by pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.uiState.collectAsState()
 
     pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.actualizarDatos(id, id_perfil)
+
+    if (pantallaSolicitudesAprobadasEvaluadorArtisticoUiState.isLoading) {
+        Dialog(
+            onDismissRequest = {  },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Box(
+                modifier = Modifier.size(100.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -136,6 +153,7 @@ fun PantallaSolicitudesAprobadasEvaluadorArtistico(
                 }
             }
         } else {
+            pantallaSolicitudesAprobadasEvaluadorArtisticoViewModel.cargar()
             Column(
                 modifier = Modifier
                     .weight(1f)

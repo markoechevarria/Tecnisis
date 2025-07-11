@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
 
@@ -46,6 +49,20 @@ fun PantallaInicio(
 ) {
     val pantallaInicioUiState by pantallaInicioViewModel.uiState.collectAsState()
     pantallaInicioViewModel.cargarDatos(id, id_perfil)
+
+    if (pantallaInicioUiState.isLoading) {
+        Dialog(
+            onDismissRequest = {  },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Box(
+                modifier = Modifier.size(100.dp).background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
