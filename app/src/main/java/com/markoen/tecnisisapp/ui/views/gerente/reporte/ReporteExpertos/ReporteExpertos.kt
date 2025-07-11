@@ -38,6 +38,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.markoen.tecnisisapp.R
 import com.github.mikephil.charting.data.Entry
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.tooling.preview.Preview
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.RadarChart
@@ -222,3 +223,4 @@ fun BarChartCompose(
         modifier = modifier
     )
 }
+

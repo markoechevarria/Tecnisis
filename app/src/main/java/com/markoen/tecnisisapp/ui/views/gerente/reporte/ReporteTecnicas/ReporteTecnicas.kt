@@ -38,13 +38,14 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.markoen.tecnisisapp.R
 import com.github.mikephil.charting.data.Entry
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.tooling.preview.Preview
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-
+import androidx.compose.ui.graphics.Color as ComposeColor
 @Composable
 fun PantallaReporteTecnicas(
     id: Int,
