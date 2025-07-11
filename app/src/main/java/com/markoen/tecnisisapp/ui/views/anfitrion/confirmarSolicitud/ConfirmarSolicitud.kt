@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -219,9 +220,6 @@ fun PantallaConfirmarSolicitud(
             Text("Confirmar solicitud")
         }
 
-
-        Spacer(modifier = Modifier.weight(1f))
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -249,3 +247,183 @@ fun CargarImagenConCoil(imageUrl: String?) {
         alignment = Alignment.Center
     )
 }
+
+@Preview(showBackground = true, heightDp = 1020)
+@Composable
+fun PreviewPantallaConfirmarSolicitud() {
+    MaterialTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            PantallaConfirmarSolicitudSimuladaScrollable(modifier = Modifier.weight(1f))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "© 2025 Todos los derechos reservados",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(vertical = 12.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PantallaConfirmarSolicitudSimuladaScrollable(modifier: Modifier = Modifier) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(scrollState)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada) ,
+                    contentDescription = null,
+                    modifier = Modifier.size(50.dp)
+                )
+                Text(
+                    text = "TECNISIS",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .clickable { }
+        ) {
+            IconButton(onClick = { }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Confirmar solicitud", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text("Datos Artista", style = MaterialTheme.typography.titleMedium)
+
+                datosCard("María Elena Vásquez", "76548932")
+                Text("Datos Obra", style = MaterialTheme.typography.titleMedium)
+                datosCard("Paisaje Serrano", "120 x 80 cm", "15/03/2024")
+                Text("Datos Experto Artistico Asignado", style = MaterialTheme.typography.titleMedium)
+                datosCard("Dr. Carlos Mendoza", "carlos.mendoza@tecnisis.com")
+
+                Text("Imagen de la obra asignada", style = MaterialTheme.typography.titleMedium)
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(200.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surfaceVariant,
+                                    RoundedCornerShape(8.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(
+                                    Icons.Default.Person,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(48.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    "Imagen de la obra",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text("Confirmar solicitud")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun datosCard(vararg lines: String) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(Icons.Default.Person, contentDescription = null)
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                lines.forEach {
+                    Text(it, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        }
+    }
+}
+

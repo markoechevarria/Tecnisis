@@ -1,5 +1,6 @@
 package com.markoen.tecnisisapp.ui.views.anfitrion.busquedaArtista
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
@@ -42,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.markoen.tecnisisapp.R
@@ -234,5 +236,359 @@ fun PantallaBusquedaArtista(
                 modifier = Modifier.padding(vertical = 12.dp)
             )
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PantallaBusquedaArtistaPreview() {
+    MaterialTheme {
+        PantallaBusquedaArtistaPreviewContent()
+    }
+}
+
+@Composable
+fun PantallaBusquedaArtistaPreviewContent() {
+    val scrollState = rememberScrollState()
+
+    val dniEjemplo = "12345678"
+    val seEncontroEjemplo = true
+    val nombreArtistaEjemplo = "Juan Pérez García"
+    val cantDigitosEjemplo = 8
+    val habilitadoBotonArtistaEjemplo = false
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(scrollState)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada) ,
+                    contentDescription = null,
+                    modifier = Modifier.size(50.dp)
+                )
+                Text(
+                    text = "TECNISIS",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        ) {
+            IconButton(
+                modifier = Modifier,
+                onClick = {  }
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Búsqueda de artista", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text("Ingresar DNI:", style = MaterialTheme.typography.bodyLarge)
+
+                OutlinedTextField(
+                    value = dniEjemplo,
+                    onValueChange = {  },
+                    label = { Text("DNI") },
+                    leadingIcon = { Icon(Icons.Default.Person, null) },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Number
+                    )
+                )
+
+                if (seEncontroEjemplo) {
+                    Text("Se encontró:", style = MaterialTheme.typography.bodyLarge)
+                }
+
+                ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Icon(Icons.Default.Person, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = nombreArtistaEjemplo,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedButton(
+                        onClick = {  },
+                        colors = ButtonDefaults.buttonColors(),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Verificar Dni")
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {  },
+                        colors = ButtonDefaults.buttonColors(),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Registrar obra")
+                    }
+
+                    OutlinedButton(
+                        onClick = {  },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary
+                        ),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Registrar artista")
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "© 2025 Todos los derechos reservados",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true, name = "Estado: DNI no encontrado")
+@Composable
+fun PantallaBusquedaArtistaPreviewNoEncontrado() {
+    MaterialTheme {
+        PantallaBusquedaArtistaPreviewContentNoEncontrado()
+    }
+}
+
+@Composable
+fun PantallaBusquedaArtistaPreviewContentNoEncontrado() {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(scrollState)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada) ,
+                    contentDescription = null,
+                    modifier = Modifier.size(50.dp)
+                )
+                Text(
+                    text = "TECNISIS",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        ) {
+            IconButton(onClick = {  }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Búsqueda de artista", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text("Ingresar DNI:", style = MaterialTheme.typography.bodyLarge)
+
+                OutlinedTextField(
+                    value = "87654321",
+                    onValueChange = { },
+                    label = { Text("DNI") },
+                    leadingIcon = { Icon(Icons.Default.Person, null) },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Number
+                    )
+                )
+
+                Text("No se encontró registro", style = MaterialTheme.typography.bodyLarge)
+
+                ElevatedCard(
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Icon(Icons.Default.Person, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "DNI no encontrado",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedButton(
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Verificar Dni")
+                    }
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary
+                        ),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Registrar obra")
+                    }
+
+                    OutlinedButton(
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary
+                        ),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Registrar artista")
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "© 2025 Todos los derechos reservados",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+    }
+}
+
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Modo Oscuro"
+)
+@Composable
+fun PantallaBusquedaArtistaPreviewDark() {
+    MaterialTheme {
+        PantallaBusquedaArtistaPreviewContent()
     }
 }

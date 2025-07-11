@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -211,6 +212,130 @@ fun cartaExperto( nombreExperto: String, numeroExperto: Int, seleccionado: Boole
                 color = if (seleccionado) MaterialTheme.colorScheme.onSecondaryContainer
                 else MaterialTheme.colorScheme.onPrimaryContainer
             )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPantallaListarExpertosDisponibles() {
+    MaterialTheme {
+        PantallaListarExpertosDisponiblesSimulada()
+    }
+}
+
+@Composable
+fun PantallaListarExpertosDisponiblesSimulada() {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(scrollState)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.image_fx_redondeada) ,
+                    contentDescription = null,
+                    modifier = Modifier.size(50.dp)
+                )
+                Text(
+                    text = "TECNISIS",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .clickable {  }
+        ) {
+            IconButton( onClick = { }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Expertos disponibles", style = MaterialTheme.typography.titleMedium)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                cartaExperto("Dr. María González", 1, false) { }
+                cartaExperto("Ing. Carlos Ruiz", 2, true) { }
+                cartaExperto("Arq. Ana Martínez", 3, false) { }
+                cartaExperto("Lic. Roberto Silva", 4, false) { }
+                cartaExperto("Dra. Carmen López", 5, false) { }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Asignar experto")
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "© 2025 Todos los derechos reservados",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewCartaExperto() {
+    MaterialTheme {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            cartaExperto("Dr. María González", 1, false) { }
+            cartaExperto("Ing. Carlos Ruiz", 2, true) { }
+            cartaExperto("Arq. Ana Martínez", 3, false) { }
         }
     }
 }
