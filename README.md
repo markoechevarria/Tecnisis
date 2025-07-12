@@ -14,6 +14,16 @@ Este proyecto demuestra el uso de componentes modernos de arquitectura Android (
 
 ---
 
+## APK de la aplicacion
+
+<p align="center">
+  <a href="https://github.com/markoechevarria/Tecnisis/blob/main/app/release/app-release.apk" download>
+    <img src="https://img.shields.io/badge/Descargar%20APK-Última%20Versión-green?style=for-the-badge&logo=android" alt="Descargar APK">
+  </a>
+</p>
+
+---
+
 ## Estructura del Proyecto
 
 - **app/**: Aplicación Android (Kotlin + Jetpack Compose)
