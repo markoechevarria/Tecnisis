@@ -9,7 +9,7 @@ Este proyecto demuestra el uso de componentes modernos de arquitectura Android (
 ## Demostracion
 
 <p align="center">
-![Demo](preview.gif)
+    ![Demo](preview.gif)
 </p>
 
 ---
