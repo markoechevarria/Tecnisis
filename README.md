@@ -6,6 +6,12 @@ Este proyecto demuestra el uso de componentes modernos de arquitectura Android (
 
 ---
 
+## Demostracion
+
+![Demo](preview.gif)
+
+---
+
 ## Estructura del Proyecto
 
 - **app/**: Aplicación Android (Kotlin + Jetpack Compose)
